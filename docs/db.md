@@ -4,38 +4,50 @@
 * `id`: number; primary key
 * `username`: string; unique
 * `secretKey`: string; unique
-* `role`
-    - `0`: admin
-    - `1`: TA
-    - `2`: student
-    - `3`: etcetera
+* `role`: enum UserRole
+    - Admin
+    - TA
+    - Student
+    - Default
+* `isActive`: boolean
 
 ## labs
 * `id`: number; primary key
 * `name`: string; unique
+
+## lab_versions
+* `id`: number; primary key
+* `lab`: labs.id
+* `author`: users.id
 * `openAt`: Date
 * `dueDate`: Date
 * `closeAt`: Date
 * `needsSubmission`: boolean
 * `skeletonPath`: string
+* `createdAt`: Date
+* `isActive`: boolean
 
 ## lab_files
 * `id`: number; primary key
-* `lab`: lab.id
-* `fileName`: string
+* `lab`: labs.id
+* `filename`: string
 
-## lab_submissions
+## submissions
 * `id`: number; primary key
 * `user`: users.id
-* `lab`: labs.id
-* `fileName`: string
-* `submittedAt`: Date
-* `content`: text
+* `file`: lab_files.id
 
-## bomblab_history
+## submission_versions
+* `id`: number; primary key
+* `submission`: submissions.id
+* `content`: string (text)
+* `createdAt`: Date
+
+## bombs
 * `id`: number; primary key
 * `bombId`: string
 * `user`: users.id
 * `phase`: number
 * `explosions`: number
+* `createdAt`: Date
 * `updatedAt`: Date
