@@ -1,5 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
-import { UserRole } from './common/enums';
+import { UserRole } from '../lib/enums';
 import LabVersion from './lab-version';
 import Submission from './submission';
 import Bomb from './bomb';
