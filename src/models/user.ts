@@ -11,6 +11,9 @@ export default class User extends BaseEntity {
     id!: number;
 
     @Column()
+    name!: string;
+
+    @Column()
     username!: string;
 
     @Column({ name: 'secret_key' })

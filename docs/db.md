@@ -2,8 +2,9 @@
 
 ## users
 * `id`: number; primary key
+* `name`: string
 * `username`: string; unique
-* `secretKey`: string; unique
+* `secretKey`: string
 * `role`: enum UserRole
     - Admin
     - TA
