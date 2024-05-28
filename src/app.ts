@@ -7,6 +7,8 @@ import controller from './controllers';
 import errorHandler from './lib/error-handler';
 import { initDatabase } from './lib/database';
 import { loggerStream } from './lib/logger';
+import { identifyUser } from './lib/identify-user';
+import cookieParser from 'cookie-parser';
 
 const { NODE_ENV } = process.env;
 
@@ -17,10 +19,11 @@ app.use(
         stream: loggerStream,
     }),
 );
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(controller);
+app.use('/api', identifyUser, controller);
 app.use(errorHandler);
 
 initDatabase();
