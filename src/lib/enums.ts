@@ -1,5 +1,5 @@
 export enum UserRole {
-    DEFAULT = 'default',
+    NONE    = 'none',
     STUDENT = 'student',
     TA      = 'ta',
     ADMIN   = 'admin',

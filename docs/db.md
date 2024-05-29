@@ -9,7 +9,7 @@
     - Admin
     - TA
     - Student
-    - Default
+    - None
 * `isActive`: boolean
 
 ## labs

@@ -19,7 +19,7 @@ export default class User extends BaseEntity {
     @Column({ name: 'secret_key' })
     secretKey!: string;
 
-    @Column({ type: 'enum', enum: UserRole })
+    @Column({ type: 'enum', enum: UserRole, default: UserRole.NONE })
     role!: UserRole;
 
     @Column({ name: 'is_active', default: true })
@@ -39,4 +39,16 @@ export default class User extends BaseEntity {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt!: Date;
+
+    public isAdmin() {
+        return this.role === UserRole.ADMIN;
+    }
+
+    public isTA() {
+        return this.role === UserRole.TA;
+    }
+
+    public isStudent() {
+        return this.role === UserRole.STUDENT;
+    }
 }
