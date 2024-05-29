@@ -1,7 +1,15 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import User from './user';
 
-@Entity({ name: 'bombs'})
+@Entity({ name: 'bombs' })
 export default class Bomb extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;

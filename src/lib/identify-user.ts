@@ -8,10 +8,13 @@ export const identifyUser: RequestHandler = async (req, res, next) => {
     const { username, secretKey } = req.cookies;
     if (!username || !secretKey) throw UnauthorizedError;
 
-    const requester = await UserDAO.getByUsernameAndSecretKey(username, secretKey);
+    const requester = await UserDAO.getByUsernameAndSecretKey(
+        username,
+        secretKey,
+    );
     if (!requester) throw NotFoundError;
-    
+
     res.locals = { requester };
 
     return next();
-}
+};

@@ -18,9 +18,12 @@ rules:
     - 'ignorePackages'
     - { js: 'never', ts: 'never', json: 'never' }
   import/prefer-default-export: 'off'
-  no-unused-vars:
+  no-unused-vars: 'off'
+  '@typescript-eslint/no-unused-vars':
     - 'warn'
     - argsIgnorePattern: '^_'
+  no-shadow: 'off'
+  '@typescript-eslint/no-shadow': 'warn'
 settings:
   import/resolver:
     node:

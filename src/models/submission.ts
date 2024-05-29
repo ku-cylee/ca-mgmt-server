@@ -1,4 +1,10 @@
-import { BaseEntity, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    BaseEntity,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import User from './user';
 import LabFile from './lab-file';
 import SubmissionVersion from './submission-version';
