@@ -17,6 +17,7 @@ rules:
     - 'error'
     - 'ignorePackages'
     - { js: 'never', ts: 'never', json: 'never' }
+  import/prefer-default-export: 'off'
   no-unused-vars:
     - 'warn'
     - argsIgnorePattern: '^_'
