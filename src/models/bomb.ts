@@ -14,8 +14,8 @@ export default class Bomb extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ name: 'bomb_id' })
-    bombId!: string;
+    @Column()
+    name!: string;
 
     @ManyToOne(() => User, user => user.bombs)
     user!: User;
@@ -26,9 +26,9 @@ export default class Bomb extends BaseEntity {
     @Column()
     explosions!: number;
 
-    @CreateDateColumn({ name: 'created_at' })
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt!: Date;
 
-    @UpdateDateColumn({ name: 'updated_at' })
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
     updatedAt!: Date;
 }

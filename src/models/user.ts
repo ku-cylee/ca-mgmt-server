@@ -9,9 +9,9 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { UserRole } from '../lib/enums';
-import LabVersion from './lab-version';
 import Submission from './submission';
 import Bomb from './bomb';
+import LabLog from './lab-log';
 
 @Entity({ name: 'users' })
 @Unique(['username'])
@@ -34,8 +34,8 @@ export default class User extends BaseEntity {
     @Column({ name: 'is_active', default: true })
     isActive!: boolean;
 
-    @OneToMany(() => LabVersion, ver => ver.author)
-    labVersions!: LabVersion[];
+    @OneToMany(() => LabLog, log => log.author)
+    labLogs!: LabLog[];
 
     @OneToMany(() => Submission, submission => submission.user)
     submissions!: Submission[];
@@ -43,10 +43,10 @@ export default class User extends BaseEntity {
     @OneToMany(() => Bomb, bomb => bomb.user)
     bombs!: Bomb[];
 
-    @CreateDateColumn({ name: 'created_at' })
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt!: Date;
 
-    @UpdateDateColumn({ name: 'updated_at' })
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
     updatedAt!: Date;
 
     public isAdmin() {

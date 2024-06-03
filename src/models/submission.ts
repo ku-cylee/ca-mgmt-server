@@ -1,13 +1,14 @@
 import {
     BaseEntity,
+    Column,
+    CreateDateColumn,
     Entity,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import User from './user';
-import LabFile from './lab-file';
-import SubmissionVersion from './submission-version';
+import SubmissionFilename from './submission-filename';
 
 @Entity({ name: 'submissions' })
 export default class Submission extends BaseEntity {
@@ -17,9 +18,15 @@ export default class Submission extends BaseEntity {
     @ManyToOne(() => User, user => user.submissions)
     user!: User;
 
-    @ManyToOne(() => LabFile, file => file.submissions)
-    file!: LabFile;
+    @ManyToOne(() => SubmissionFilename, file => file.submissions)
+    filename!: SubmissionFilename;
 
-    @OneToMany(() => SubmissionVersion, ver => ver.submission)
-    versions!: SubmissionVersion[];
+    @Column({ type: 'text' })
+    content!: string;
+
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+    createdAt!: Date;
+
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+    updatedAt!: Date;
 }

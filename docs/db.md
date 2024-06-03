@@ -5,50 +5,70 @@
 * `name`: string
 * `username`: string; unique
 * `secretKey`: string
-* `role`: enum UserRole
+* `role`: enum UserRole; default None
     - Admin
     - TA
     - Student
     - None
-* `isActive`: boolean
+* `createdAt`: Date (timestamp)
+* `updatedAt`: Date (timestamp)
+* `isActive`: boolean; default true
 
 ## labs
 * `id`: number; primary key
 * `name`: string; unique
+* `openAt`: Date (timestamp)
+* `dueDate`: Date (timestamp)
+* `closeAt`: Date (timestamp)
+* `needsSubmission`: boolean
+* `createdAt`: Date (timestamp)
+* `updatedAt`: Date (timestamp)
+* `isDeleted`: boolean; default false
 
-## lab_versions
+## skeleton_files
 * `id`: number; primary key
 * `lab`: labs.id
-* `author`: users.id
-* `openAt`: Date
-* `dueDate`: Date
-* `closeAt`: Date
-* `needsSubmission`: boolean
-* `skeletonPath`: string
-* `createdAt`: Date
-* `isActive`: boolean
+* `path`: string
+* `content`: string (text)
+* `isExecutable`: boolean
+* `createdAt`: Date (timestamp)
 
-## lab_files
+## submission_filenames
 * `id`: number; primary key
 * `lab`: labs.id
 * `filename`: string
+* `createdAt`: Date (timestamp)
+* `updatedAt`: Date (timestamp)
+* `isDeleted`: boolean
+
+## lab_logs
+* `id`: number; primary key
+* `lab`: labs.id
+* `author`: users.id
+* `action`: enum LabLogAction
+    - Create
+    - Update
+    - Delete
+* `category`: enum LabLogCategory
+    - Lab
+    - Skeleton
+    - Filename
+* `content`: string (text); default `''`
+* `createdAt`: Date (timestamp)
 
 ## submissions
 * `id`: number; primary key
 * `user`: users.id
-* `file`: lab_files.id
-
-## submission_versions
-* `id`: number; primary key
-* `submission`: submissions.id
+* `filename`: submission_filenames.id
 * `content`: string (text)
-* `createdAt`: Date
+* `createdAt`: Date (timestamp)
+* `updatedAt`: Date (timestamp)
 
 ## bombs
 * `id`: number; primary key
-* `bombId`: string
+* `name`: string
 * `user`: users.id
 * `phase`: number
 * `explosions`: number
-* `createdAt`: Date
-* `updatedAt`: Date
+* `createdAt`: Date (timestamp)
+* `updatedAt`: Date (timestamp)
