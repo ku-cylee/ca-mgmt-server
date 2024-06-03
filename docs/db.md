@@ -53,7 +53,7 @@
     - Lab
     - Skeleton
     - Filename
-* `content`: string (text); default `''`
+* `content`: string (long text); default `''`
 * `createdAt`: Date (timestamp)
 
 ## submissions

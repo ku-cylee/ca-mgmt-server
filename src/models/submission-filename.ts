@@ -22,9 +22,6 @@ export default class SubmissionFilename extends BaseEntity {
     @Column()
     filename!: string;
 
-    @OneToMany(() => Submission, submission => submission.filename)
-    submissions!: Submission[];
-
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt!: Date;
 
@@ -33,4 +30,7 @@ export default class SubmissionFilename extends BaseEntity {
 
     @Column({ name: 'is_deleted', default: false })
     isDeleted!: boolean;
+
+    @OneToMany(() => Submission, submission => submission.filename)
+    submissions!: Submission[];
 }

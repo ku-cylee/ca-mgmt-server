@@ -31,11 +31,14 @@ export default class User extends BaseEntity {
     @Column({ type: 'enum', enum: UserRole, default: UserRole.NONE })
     role!: UserRole;
 
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+    createdAt!: Date;
+
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+    updatedAt!: Date;
+
     @Column({ name: 'is_active', default: true })
     isActive!: boolean;
-
-    @OneToMany(() => LabLog, log => log.author)
-    labLogs!: LabLog[];
 
     @OneToMany(() => Submission, submission => submission.user)
     submissions!: Submission[];
@@ -43,11 +46,8 @@ export default class User extends BaseEntity {
     @OneToMany(() => Bomb, bomb => bomb.user)
     bombs!: Bomb[];
 
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt!: Date;
-
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt!: Date;
+    @OneToMany(() => LabLog, log => log.author)
+    labLogs!: LabLog[];
 
     public isAdmin() {
         return this.role === UserRole.ADMIN;

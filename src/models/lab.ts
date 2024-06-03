@@ -33,15 +33,6 @@ export default class Lab extends BaseEntity {
     @Column({ name: 'needs_submission' })
     needsSubmission!: boolean;
 
-    @OneToMany(() => SkeletonFile, file => file.lab)
-    skeletonFiles!: SkeletonFile[];
-
-    @OneToMany(() => SubmissionFilename, file => file.lab)
-    submissionFilenames!: SubmissionFilename[];
-
-    @OneToMany(() => LabLog, log => log.lab)
-    logs!: LabLog[];
-
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt!: Date;
 
@@ -50,4 +41,13 @@ export default class Lab extends BaseEntity {
 
     @Column({ name: 'is_deleted', default: false })
     isDeleted!: boolean;
+
+    @OneToMany(() => SkeletonFile, file => file.lab)
+    skeletonFiles!: SkeletonFile[];
+
+    @OneToMany(() => SubmissionFilename, file => file.lab)
+    submissionFilenames!: SubmissionFilename[];
+
+    @OneToMany(() => LabLog, log => log.lab)
+    logs!: LabLog[];
 }
