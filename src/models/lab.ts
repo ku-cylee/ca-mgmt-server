@@ -1,16 +1,16 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
     Entity,
+    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     Unique,
-    UpdateDateColumn,
 } from 'typeorm';
-import SubmissionFilename from './submission-filename';
+import Bomb from './bomb';
 import SkeletonFile from './skeleton-file';
-import LabLog from './lab-log';
+import Submission from './submission';
+import User from './user';
 
 @Entity({ name: 'labs' })
 @Unique(['name'])
@@ -21,33 +21,36 @@ export default class Lab extends BaseEntity {
     @Column()
     name!: string;
 
-    @Column({ type: 'timestamp', name: 'open_at' })
-    openAt!: Date;
+    @Column({ name: 'open_at' })
+    openAt!: number;
 
-    @Column({ type: 'timestamp', name: 'due_date' })
-    dueDate!: Date;
+    @Column({ name: 'due_date' })
+    dueDate!: number;
 
-    @Column({ type: 'timestamp', name: 'close_at' })
-    closeAt!: Date;
+    @Column({ name: 'close_at' })
+    closeAt!: number;
 
-    @Column({ name: 'needs_submission' })
-    needsSubmission!: boolean;
+    @Column({ type: 'simple-array', name: 'submission_filenames' })
+    submissionFiles!: string[];
 
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt!: Date;
+    @ManyToOne(() => User, user => user.labs)
+    author!: User;
 
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt!: Date;
+    @Column({ name: 'created_at' })
+    createdAt!: number;
 
-    @Column({ name: 'is_deleted', default: false })
-    isDeleted!: boolean;
+    @Column({ name: 'updated_at' })
+    updatedAt!: number;
+
+    @Column({ name: 'deleted_at', default: null, nullable: true })
+    deletedAt!: number;
 
     @OneToMany(() => SkeletonFile, file => file.lab)
     skeletonFiles!: SkeletonFile[];
 
-    @OneToMany(() => SubmissionFilename, file => file.lab)
-    submissionFilenames!: SubmissionFilename[];
+    @OneToMany(() => Submission, submission => submission.lab)
+    submissions!: Submission[];
 
-    @OneToMany(() => LabLog, log => log.lab)
-    logs!: LabLog[];
+    @OneToMany(() => Bomb, bomb => bomb.lab)
+    bombs!: Bomb[];
 }

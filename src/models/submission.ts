@@ -1,32 +1,36 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
-    UpdateDateColumn,
 } from 'typeorm';
+import Lab from './lab';
 import User from './user';
-import SubmissionFilename from './submission-filename';
 
 @Entity({ name: 'submissions' })
 export default class Submission extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne(() => User, user => user.submissions)
-    user!: User;
+    @ManyToOne(() => Lab, lab => lab.submissions)
+    lab!: Lab;
 
-    @ManyToOne(() => SubmissionFilename, file => file.submissions)
-    filename!: SubmissionFilename;
+    @ManyToOne(() => User, user => user.submissions)
+    author!: User;
+
+    @Column()
+    filename!: string;
 
     @Column({ type: 'text' })
     content!: string;
 
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt!: Date;
+    @Column()
+    checksum!: string;
 
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt!: Date;
+    @Column({ name: 'created_at' })
+    createdAt!: number;
+
+    @Column({ name: 'updated_at' })
+    updatedAt!: number;
 }

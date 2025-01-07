@@ -1,34 +1,50 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
     Entity,
     ManyToOne,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
+    OneToMany,
+    PrimaryColumn,
 } from 'typeorm';
+import Lab from './lab';
 import User from './user';
+import Defuse from './defuse';
 
 @Entity({ name: 'bombs' })
 export default class Bomb extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id!: number;
+    @PrimaryColumn()
+    id!: string;
 
     @Column()
-    name!: string;
+    longId!: string;
+
+    @ManyToOne(() => Lab, lab => lab.bombs)
+    lab!: Lab;
 
     @ManyToOne(() => User, user => user.bombs)
-    user!: User;
+    author!: User;
 
     @Column()
-    phase!: number;
+    phase1_answer!: string;
 
     @Column()
-    explosions!: number;
+    phase2_answer!: string;
 
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt!: Date;
+    @Column()
+    phase3_answer!: string;
 
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt!: Date;
+    @Column()
+    phase4_answer!: string;
+
+    @Column()
+    phase5_answer!: string;
+
+    @Column()
+    phase6_answer!: string;
+
+    @Column({ name: 'created_at' })
+    createdAt!: number;
+
+    @OneToMany(() => Defuse, defuse => defuse.bomb)
+    defuses!: Defuse[];
 }

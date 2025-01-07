@@ -53,7 +53,12 @@
 * `longId`: string; unique
 * `lab`: number; labs.id
 * `author`: number; users.id
-* `answers`: [string]
+* `phase1_answer`: string
+* `phase2_answer`: string
+* `phase3_answer`: string
+* `phase4_answer`: string
+* `phase5_answer`: string
+* `phase6_answer`: string
 * `createdAt`: timestamp
 
 ## defuses

@@ -570,6 +570,8 @@
         exploded: boolean,
     }
     ```
+    - 400
+        + `phase` value is not an integer in [1, 5].
     - 403
         + Requester is not the author of bomb `bombId`.
         + The lab of the bomb `bombId` is not yet open or closed.

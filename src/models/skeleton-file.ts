@@ -1,7 +1,6 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
@@ -22,9 +21,12 @@ export default class SkeletonFile extends BaseEntity {
     @Column({ type: 'text' })
     content!: string;
 
+    @Column()
+    checksum!: string;
+
     @Column({ name: 'is_executable' })
     isExecutable!: boolean;
 
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt!: Date;
+    @Column({ name: 'created_at' })
+    createdAt!: number;
 }
