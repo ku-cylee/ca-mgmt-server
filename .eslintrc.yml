@@ -23,6 +23,7 @@ rules:
     - 'warn'
     - argsIgnorePattern: '^_'
   no-shadow: 'off'
+  no-plusplus: 'off'
   '@typescript-eslint/no-shadow': 'warn'
 settings:
   import/resolver:

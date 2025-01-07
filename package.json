@@ -6,7 +6,7 @@
     "build": "tsc --build",
     "start": "node dist/index.js",
     "prod": "cross-env NODE_ENV=prod yarn start",
-    "dev": "cross-env NODE_ENV=dev ts-node-dev --rs --watch src --notify --respawn src/index.ts",
+    "dev": "cross-env NODE_ENV=dev ts-node-dev --rs --watch src --notify src/index.ts",
     "eslint": "eslint src/**/*.ts",
     "pretest": "yarn eslint",
     "test": "cross-env NODE_ENV=test nyc mocha --exit -r ts-node/register test/**/*.spec.ts --timeout 100000",
