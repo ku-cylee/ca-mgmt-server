@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import logger from './logger';
+import { UserDAO } from '../daos';
 
 const {
     DB_HOST,
@@ -10,6 +11,8 @@ const {
     DB_SYNC,
     DB_LOGGING,
     DB_ENTITIES,
+    ADMIN_USERNAME,
+    ADMIN_SECRETKEY,
 } = process.env;
 
 export const dataSource = new DataSource({
@@ -30,5 +33,25 @@ export const initDatabase = async (): Promise<void> => {
         logger.info('DB connection established');
     } catch (err) {
         logger.error(`[ERR] DB Connection: ${err}`);
+    }
+};
+
+export const initAdmin = async (): Promise<void> => {
+    if (!ADMIN_USERNAME || !ADMIN_SECRETKEY) {
+        logger.error('[ERR] Admin account is not provided.');
+    } else {
+        const adminUser = await UserDAO.getAdmin();
+
+        if (!adminUser) {
+            await UserDAO.createAdmin(ADMIN_USERNAME, ADMIN_SECRETKEY);
+            return;
+        }
+
+        if (
+            adminUser.username !== ADMIN_USERNAME ||
+            adminUser.secretKey !== ADMIN_SECRETKEY
+        ) {
+            await UserDAO.updateAdmin(ADMIN_USERNAME, ADMIN_SECRETKEY);
+        }
     }
 };

@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 
 import controller from './controllers';
 import errorHandler from './lib/error-handler';
-import { initDatabase } from './lib/database';
+import { initAdmin, initDatabase } from './lib/database';
 import { loggerStream } from './lib/logger';
 import { identifyUser } from './lib/identify-user';
 
@@ -26,6 +26,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api', identifyUser, controller);
 app.use(errorHandler);
 
-initDatabase();
+(async () => {
+    await initDatabase();
+    await initAdmin();
+})();
 
 export default app;
