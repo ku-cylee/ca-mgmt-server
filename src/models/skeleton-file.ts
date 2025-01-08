@@ -27,6 +27,6 @@ export default class SkeletonFile extends BaseEntity {
     @Column({ name: 'is_executable' })
     isExecutable!: boolean;
 
-    @Column({ name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at' })
     createdAt!: number;
 }

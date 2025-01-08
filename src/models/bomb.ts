@@ -42,7 +42,7 @@ export default class Bomb extends BaseEntity {
     @Column()
     phase6_answer!: string;
 
-    @Column({ name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at' })
     createdAt!: number;
 
     @OneToMany(() => Defuse, defuse => defuse.bomb)

@@ -26,13 +26,13 @@ export default class User extends BaseEntity {
     @Column({ type: 'enum', enum: UserRole })
     role!: UserRole;
 
-    @Column({ name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at' })
     createdAt!: number;
 
-    @Column({ name: 'updated_at' })
+    @Column({ type: 'bigint', name: 'updated_at' })
     updatedAt!: number;
 
-    @Column({ name: 'deleted_at', default: null, nullable: true })
+    @Column({ type: 'bigint', name: 'deleted_at', default: 0 })
     deletedAt!: number;
 
     @OneToMany(() => Lab, lab => lab.author)
@@ -54,5 +54,9 @@ export default class User extends BaseEntity {
 
     public isStudent() {
         return this.role === UserRole.STUDENT;
+    }
+
+    public isDeleted() {
+        return this.deletedAt !== 0;
     }
 }

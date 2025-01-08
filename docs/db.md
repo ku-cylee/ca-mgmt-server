@@ -13,7 +13,7 @@
     - Student
 * `createdAt`: timestamp
 * `updatedAt`: timestamp
-* `deletedAt`: timestamp | null
+* `deletedAt`: timestamp
 
 ## labs
 * `id`: number; primary key
@@ -27,7 +27,7 @@
 * `author`: number; users.id
 * `createdAt`: timestamp
 * `updatedAt`: timestamp
-* `deletedAt`: timestamp | null
+* `deletedAt`: timestamp
 
 ## skeleton_files
 * `id`: number; primary key

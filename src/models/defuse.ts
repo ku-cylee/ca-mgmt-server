@@ -18,6 +18,6 @@ export default class Defuse extends BaseEntity {
     @Column()
     exploded!: boolean;
 
-    @Column({ name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at' })
     createdAt!: number;
 }

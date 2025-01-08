@@ -21,13 +21,13 @@ export default class Lab extends BaseEntity {
     @Column()
     name!: string;
 
-    @Column({ name: 'open_at' })
+    @Column({ type: 'bigint', name: 'open_at' })
     openAt!: number;
 
-    @Column({ name: 'due_date' })
+    @Column({ type: 'bigint', name: 'due_date' })
     dueDate!: number;
 
-    @Column({ name: 'close_at' })
+    @Column({ type: 'bigint', name: 'close_at' })
     closeAt!: number;
 
     @Column({ type: 'simple-array', name: 'submission_filenames' })
@@ -36,13 +36,13 @@ export default class Lab extends BaseEntity {
     @ManyToOne(() => User, user => user.labs)
     author!: User;
 
-    @Column({ name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at' })
     createdAt!: number;
 
-    @Column({ name: 'updated_at' })
+    @Column({ type: 'bigint', name: 'updated_at' })
     updatedAt!: number;
 
-    @Column({ name: 'deleted_at', default: null, nullable: true })
+    @Column({ type: 'bigint', name: 'deleted_at', default: 0 })
     deletedAt!: number;
 
     @OneToMany(() => SkeletonFile, file => file.lab)
@@ -53,4 +53,8 @@ export default class Lab extends BaseEntity {
 
     @OneToMany(() => Bomb, bomb => bomb.lab)
     bombs!: Bomb[];
+
+    public isDeleted() {
+        return this.deletedAt !== 0;
+    }
 }

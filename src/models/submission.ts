@@ -28,9 +28,9 @@ export default class Submission extends BaseEntity {
     @Column()
     checksum!: string;
 
-    @Column({ name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at' })
     createdAt!: number;
 
-    @Column({ name: 'updated_at' })
+    @Column({ type: 'bigint', name: 'updated_at' })
     updatedAt!: number;
 }
