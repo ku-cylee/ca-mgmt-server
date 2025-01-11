@@ -1,9 +1,7 @@
 import Joi from 'joi';
 import { UserRole } from './enums';
 
-export default class RequestDTO {
-    validate = Joi.attempt;
-
+class Schemes {
     integer = Joi.number().integer();
 
     string = Joi.string().trim();
@@ -21,4 +19,10 @@ export default class RequestDTO {
     userRoleRequired = this.string
         .required()
         .valid(UserRole.TA, UserRole.STUDENT);
+}
+
+export default class RequestDTO {
+    validate = Joi.attempt;
+
+    schemes = new Schemes();
 }

@@ -5,7 +5,7 @@ import {
     DeleteUserListRequest,
     GetUserListRequest,
 } from './request.dto';
-import { PermissionDeniedError } from '../../lib/http-errors';
+import { NotFoundError, PermissionDeniedError } from '../../lib/http-errors';
 import { GetUserListResponse } from './response.dto';
 import { toResponse } from '../../lib/response';
 
@@ -40,5 +40,7 @@ export const deleteUser: RequestHandler = async (req, res, _next) => {
 
     const deletedUserCount = await UserDAO.deleteById(userId);
 
-    return res.status(deletedUserCount ? 200 : 404).send();
+    if (!deletedUserCount) throw NotFoundError;
+
+    return res.send();
 };
