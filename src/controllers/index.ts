@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import 'express-async-errors';
 import { handleUndefinedRoute } from './ctrl';
 
 import user from './user';

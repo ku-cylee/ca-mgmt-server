@@ -101,6 +101,9 @@ export const deleteById = async (id: number): Promise<number> => {
     const currentTimestamp = Date.now();
 
     const repo = getRepo();
-    const result = await repo.update(id, { deletedAt: currentTimestamp });
+    const result = await repo.update(
+        { id, deletedAt: 0 },
+        { deletedAt: currentTimestamp },
+    );
     return result.affected ?? 0;
 };
