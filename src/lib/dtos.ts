@@ -1,3 +1,4 @@
+import { ClassConstructor, plainToInstance } from 'class-transformer';
 import Joi from 'joi';
 import { UserRole } from './enums';
 
@@ -21,8 +22,11 @@ class Schemes {
         .valid(UserRole.TA, UserRole.STUDENT);
 }
 
-export default class RequestDTO {
-    validate = Joi.attempt;
+export const schemes = new Schemes();
 
-    schemes = new Schemes();
-}
+export const validate = Joi.attempt;
+
+export const toResponse = <T, V>(
+    cls: ClassConstructor<T>,
+    plain: V | V[],
+): T | T[] => plainToInstance(cls, plain, { excludeExtraneousValues: true });

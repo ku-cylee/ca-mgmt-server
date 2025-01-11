@@ -1,10 +1,10 @@
 import { Request } from 'express';
 import Joi from 'joi';
-import RequestDTO from '../../lib/request';
 import { stringToEnum, UserRole } from '../../lib/enums';
 import { BadRequestError } from '../../lib/http-errors';
+import { schemes, validate } from '../../lib/dtos';
 
-export class GetUserListRequest extends RequestDTO {
+export class GetUserListRequest {
     ta!: boolean;
 
     student!: boolean;
@@ -12,54 +12,48 @@ export class GetUserListRequest extends RequestDTO {
     deleted!: boolean;
 
     constructor(req: Request) {
-        super();
-
         const { ta, student, deleted } = req.query;
 
-        this.ta = this.validate(ta, this.schemes.bool.required());
-        this.student = this.validate(student, this.schemes.bool.required());
-        this.deleted = this.validate(deleted, this.schemes.bool.default(false));
+        this.ta = validate(ta, schemes.bool.required());
+        this.student = validate(student, schemes.bool.required());
+        this.deleted = validate(deleted, schemes.bool.default(false));
     }
 }
 
-export class CreateUserListRequest extends RequestDTO {
+export class CreateUserListRequest {
     role!: UserRole;
 
     usersData!: { username: string; secretKey: string }[];
 
     constructor(req: Request) {
-        super();
-
         const { role, usersData } = req.body;
 
         const roleEnum = stringToEnum(
             UserRole,
-            this.validate(role, this.schemes.userRole),
+            validate(role, schemes.userRole),
         );
         if (!roleEnum) throw BadRequestError;
 
         this.role = roleEnum;
 
-        this.usersData = this.validate(
+        this.usersData = validate(
             usersData,
             Joi.array()
                 .items({
-                    username: this.schemes.username.required(),
-                    secretKey: this.schemes.secretKey.required(),
+                    username: schemes.username.required(),
+                    secretKey: schemes.secretKey.required(),
                 })
                 .required(),
         );
     }
 }
 
-export class DeleteUserListRequest extends RequestDTO {
+export class DeleteUserListRequest {
     userId!: number;
 
     constructor(req: Request) {
-        super();
-
         const { userId } = req.params;
 
-        this.userId = this.validate(userId, this.schemes.id.required());
+        this.userId = validate(userId, schemes.id.required());
     }
 }

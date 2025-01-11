@@ -7,7 +7,7 @@ import {
 } from './request.dto';
 import { NotFoundError, PermissionDeniedError } from '../../lib/http-errors';
 import { GetUserListResponse } from './response.dto';
-import { toResponse } from '../../lib/response';
+import { toResponse } from '../../lib/dtos';
 
 export const getUserList: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
