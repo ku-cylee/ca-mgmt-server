@@ -44,19 +44,19 @@ export default class User extends BaseEntity {
     @OneToMany(() => Bomb, bomb => bomb.author)
     bombs!: Bomb[];
 
-    public isAdmin() {
+    get isAdmin() {
         return this.role === UserRole.ADMIN;
     }
 
-    public isTA() {
+    get isTA() {
         return this.role === UserRole.TA;
     }
 
-    public isStudent() {
+    get isStudent() {
         return this.role === UserRole.STUDENT;
     }
 
-    public isDeleted() {
+    get isDeleted() {
         return this.deletedAt !== 0;
     }
 }

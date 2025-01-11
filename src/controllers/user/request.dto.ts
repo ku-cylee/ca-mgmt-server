@@ -16,9 +16,9 @@ export class GetUserListRequest extends RequestDTO {
 
         const { ta, student, deleted } = req.query;
 
-        this.ta = this.validate(ta, this.bool.required());
-        this.student = this.validate(student, this.bool.required());
-        this.deleted = this.validate(deleted, this.bool.default(false));
+        this.ta = this.validate(ta, this.schemes.bool.required());
+        this.student = this.validate(student, this.schemes.bool.required());
+        this.deleted = this.validate(deleted, this.schemes.bool.default(false));
     }
 }
 
@@ -34,7 +34,7 @@ export class CreateUserListRequest extends RequestDTO {
 
         const roleEnum = stringToEnum(
             UserRole,
-            this.validate(role, this.userRole),
+            this.validate(role, this.schemes.userRole),
         );
         if (!roleEnum) throw BadRequestError;
 
@@ -44,8 +44,8 @@ export class CreateUserListRequest extends RequestDTO {
             usersData,
             Joi.array()
                 .items({
-                    username: this.username.required(),
-                    secretKey: this.secretKey.required(),
+                    username: this.schemes.username.required(),
+                    secretKey: this.schemes.secretKey.required(),
                 })
                 .required(),
         );
@@ -60,6 +60,6 @@ export class DeleteUserListRequest extends RequestDTO {
 
         const { userId } = req.params;
 
-        this.userId = this.validate(userId, this.id.required());
+        this.userId = this.validate(userId, this.schemes.id.required());
     }
 }
