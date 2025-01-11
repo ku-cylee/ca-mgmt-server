@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { NotFoundError, UnauthorizedError } from './http-errors';
+import { UnauthorizedError } from './http-errors';
 import { UserDAO } from '../daos';
 
 export const identifyUser: RequestHandler = async (req, res, next) => {
@@ -12,7 +12,7 @@ export const identifyUser: RequestHandler = async (req, res, next) => {
         username,
         secretKey,
     );
-    if (!requester) throw NotFoundError;
+    if (!requester) throw UnauthorizedError;
 
     res.locals = { requester };
 

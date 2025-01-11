@@ -5,7 +5,7 @@
 
 ## users
 * `id`: number; primary key
-* `username`: string; unique
+* `username`: string; unique, maxlength 16
 * `secretKey`: string; maxlength 64
 * `role`: enum UserRole
     - Admin

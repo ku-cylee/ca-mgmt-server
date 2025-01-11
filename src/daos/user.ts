@@ -1,3 +1,5 @@
+import { FindOptionsWhere, In, Not } from 'typeorm';
+
 import { dataSource } from '../lib/database';
 import User from '../models/user';
 import { UserRole } from '../lib/enums';
@@ -19,6 +21,26 @@ export const getByUsernameAndSecretKey = async (
     return user;
 };
 
+export const getList = async (
+    includeTA: boolean,
+    includeStudent: boolean,
+    includeDeleted: boolean,
+): Promise<User[]> => {
+    const repo = getRepo();
+
+    const options: FindOptionsWhere<User> = {};
+
+    const excludeRoles = [UserRole.ADMIN];
+    if (!includeTA) excludeRoles.push(UserRole.TA);
+    if (!includeStudent) excludeRoles.push(UserRole.STUDENT);
+    options.role = Not(In(excludeRoles));
+
+    if (!includeDeleted) options.deletedAt = 0;
+
+    const users = await repo.find({ where: options });
+    return users;
+};
+
 export const getAdmin = async (): Promise<User | null> => {
     const repo = getRepo();
     const user = await repo.findOne({
@@ -30,29 +52,39 @@ export const getAdmin = async (): Promise<User | null> => {
     return user;
 };
 
-export const createAdmin = async (
-    username: string,
-    secretKey: string,
-): Promise<User | null> => {
-    const repo = getRepo();
+export const createList = async (
+    role: UserRole,
+    usersData: {
+        username: string;
+        secretKey: string;
+    }[],
+): Promise<User[]> => {
     const currentTimestamp = Date.now();
-    const user = repo.create({
-        username,
-        secretKey,
-        role: UserRole.ADMIN,
-        createdAt: currentTimestamp,
-        updatedAt: currentTimestamp,
-    });
-    await repo.save(user);
-    return user;
+
+    const repo = getRepo();
+    const users = repo.create(
+        usersData.map(user => {
+            const { username, secretKey } = user;
+            return {
+                username,
+                secretKey,
+                role,
+                createdAt: currentTimestamp,
+                updatedAt: currentTimestamp,
+            };
+        }),
+    );
+    await repo.save(users);
+    return users;
 };
 
 export const updateAdmin = async (
     username: string,
     secretKey: string,
 ): Promise<void> => {
-    const repo = getRepo();
     const currentTimestamp = Date.now();
+
+    const repo = getRepo();
     await repo.update(
         {
             role: UserRole.ADMIN,
@@ -63,4 +95,12 @@ export const updateAdmin = async (
             updatedAt: currentTimestamp,
         },
     );
+};
+
+export const deleteById = async (id: number): Promise<number> => {
+    const currentTimestamp = Date.now();
+
+    const repo = getRepo();
+    const result = await repo.update(id, { deletedAt: currentTimestamp });
+    return result.affected ?? 0;
 };

@@ -25,6 +25,7 @@ rules:
   no-shadow: 'off'
   no-plusplus: 'off'
   '@typescript-eslint/no-shadow': 'warn'
+  max-classes-per-file: 'off'
 settings:
   import/resolver:
     node:

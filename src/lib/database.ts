@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import logger from './logger';
 import { UserDAO } from '../daos';
+import { UserRole } from './enums';
 
 const {
     DB_HOST,
@@ -43,7 +44,12 @@ export const initAdmin = async (): Promise<void> => {
         const adminUser = await UserDAO.getAdmin();
 
         if (!adminUser) {
-            await UserDAO.createAdmin(ADMIN_USERNAME, ADMIN_SECRETKEY);
+            await UserDAO.createList(UserRole.ADMIN, [
+                {
+                    username: ADMIN_USERNAME,
+                    secretKey: ADMIN_SECRETKEY,
+                },
+            ]);
             return;
         }
 

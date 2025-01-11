@@ -10,7 +10,6 @@
     },
 }
 ```
-* All responses without body returns `{}`.
 * Response
     - 401
         + Cookie values are not given.
@@ -27,7 +26,7 @@
     query: {
         ta: boolean,
         student: boolean,
-        deleted = true,
+        deleted = false,
     },
 }
 ```
@@ -37,10 +36,10 @@
     [{
         id: number,
         username: string,
-        role: 'admin' | 'ta' | 'student',
+        role: 'ta' | 'student',
         createdAt: timestamp,
         updatedAt: timestamp,
-        deletedAt: timestamp | null,
+        deletedAt: timestamp,
     }]
     ```
     - 403
@@ -54,7 +53,7 @@
 {
     body: {
         role: 'ta' | 'student',
-        users: [{
+        usersData: [{
             username: string,
             secretKey: string,
         }],
@@ -62,13 +61,13 @@
 }
 ```
 * Response
-    - 200: `{}`
+    - 200
     - 400
         + Some secretKeys exceed the maxlength.
     - 403
         + Requester is not admin.
     - 409
-        + Some usernames already exist. Responds a list of duplicate usernames in `[string]`.
+        + Some usernames already exist.
 
 ### DELETE /user/:userId
 * Deletes users `userId`.
@@ -81,7 +80,7 @@
 }
 ```
 * Response
-    - 200: `{}`
+    - 200
     - 403
         + Requester is not admin.
     - 404

@@ -1,5 +1,10 @@
 import { ErrorRequestHandler } from 'express';
-import { BadRequestError, HttpError, InternalServerError } from './http-errors';
+import {
+    BadRequestError,
+    ConflictError,
+    HttpError,
+    InternalServerError,
+} from './http-errors';
 import logger from './logger';
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -7,8 +12,12 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
         switch (err.name) {
             case 'HttpError':
                 return <HttpError>err;
+            case 'SyntaxError':
             case 'ValidationError':
                 return BadRequestError;
+            case 'QueryFailedError':
+                if (err.code === 'ER_DUP_ENTRY') return ConflictError;
+                return InternalServerError;
             default:
                 logger.error(err);
                 return InternalServerError;

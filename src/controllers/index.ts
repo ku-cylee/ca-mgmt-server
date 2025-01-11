@@ -2,17 +2,11 @@ import { Router } from 'express';
 import 'express-async-errors';
 import { handleUndefinedRoute } from './ctrl';
 
+import user from './user';
+
 const router = Router();
 
-router.get('/', async (req, res, _next) => {
-    const { requester } = res.locals;
-
-    return res.json({
-        isAdmin: requester.isAdmin(),
-        isTA: requester.isTA(),
-        isStudent: requester.isStudent(),
-    });
-});
+router.use('/user', user);
 
 router.use(handleUndefinedRoute);
 
