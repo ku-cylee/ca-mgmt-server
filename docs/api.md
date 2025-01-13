@@ -430,7 +430,6 @@
         + Invalid `labName`: Lab `labName` does not exist or is deleted. Requester is student and the lab `labName` is not yet open.
     - 403
         + Requester is not admin and `content` is `true` and `author`, `labName` are both `undefined`.
-        + Requester is student and `author` is not requester.
 
 ### POST /submission
 * Creates the submission of `labName`.
@@ -447,7 +446,13 @@
 }
 ```
 * Response
-    - 200: `{ checksum: string }`
+    - 200
+        ```
+        {
+            id: string,
+            checksum: string,
+        }
+        ```
     - 400
         + Some `content` exceeds maxlength.
     - 403
@@ -457,8 +462,6 @@
     - 404
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
-    - 409
-        + Skeleton files of `labName` already exist.
 
 ## Bomb
 

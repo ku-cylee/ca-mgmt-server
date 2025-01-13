@@ -24,12 +24,12 @@ export const getByName = async (
     const currentTimestamp = Date.now();
     const repo = getRepo();
 
-    const options: FindOptionsWhere<Lab> = { name };
-    if (!includeUnopen) options.openAt = LessThanOrEqual(currentTimestamp);
-    if (!includeDeleted) options.deletedAt = 0;
+    const where: FindOptionsWhere<Lab> = { name };
+    if (!includeUnopen) where.openAt = LessThanOrEqual(currentTimestamp);
+    if (!includeDeleted) where.deletedAt = 0;
 
     const lab = await repo.findOne({
-        where: options,
+        where,
         relations: { author: true, skeletonFiles: true },
     });
 

@@ -42,7 +42,7 @@
 * `id`: number; primary key
 * `lab`: number; labs.id
 * `author`: number; users.id
-* `filename`: string
+* `filename`: string; maxlength: 256
 * `content`: string (text)
 * `checksum`: string; maxlength: 16
 * `createdAt`: timestamp
