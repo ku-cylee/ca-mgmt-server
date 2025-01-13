@@ -101,13 +101,13 @@
         openAt: timestamp,
         dueDate: timestamp,
         closeAt: timestamp,
-        submissionFilenames: [string],
+        submissionFiles: [string],
         author: {
             username: string,
         },
         createdAt: timestamp,
         updatedAt: timestamp,
-        deletedAt: timestamp | null,
+        deletedAt: timestamp,
     }]
     ```
     + Student requester receives undeleted, open labs.
@@ -133,13 +133,13 @@
         openAt: timestamp,
         dueDate: timestamp,
         closeAt: timestamp,
-        submissionFilenames: [string],
+        submissionFiles: [string],
         author: {
             username: string,
         },
         createdAt: timestamp,
         updatedAt: timestamp,
-        deletedAt: timestamp | null,
+        deletedAt: timestamp,
         skeletonFiles: [{
             id: number,
             path: string,
@@ -147,11 +147,10 @@
         }],
     }
     ```
-    - 403
-        + Requester is student and the lab `labName` is not yet open.
     - 404
         + Lab `labName` does not exist.
         + Requester is not admin and the lab `labName` is deleted.
+        + Requester is student and the lab `labName` is not yet open.
 
 ### POST /lab
 * Creates a lab from the request.
@@ -175,13 +174,13 @@
         openAt: number,
         dueDate: number,
         closeAt: number,
-        submissionFilenames: [string],
+        submissionFiles: [string],
         author: {
             username: string,
         },
         createdAt: number,
         updatedAt: number,
-        deletedAt: number | null,
+        deletedAt: number,
     }
     ```
     - 400
@@ -217,13 +216,13 @@
         openAt: number,
         dueDate: number,
         closeAt: number,
-        submissionFilenames: [string],
+        submissionFiles: [string],
         author: {
             username: string,
         },
         createdAt: number,
         updatedAt: number,
-        deletedAt: number | null,
+        deletedAt: number,
     }
     ```
     - 400
@@ -247,7 +246,7 @@
         labName: string,
     },
     body: {
-        submissionFilenames: [string],
+        submissionFiles: [string],
     },
 }
 ```
@@ -260,13 +259,13 @@
         openAt: number,
         dueDate: number,
         closeAt: number,
-        submissionFilenames: [string],
+        submissionFiles: [string],
         author: {
             username: string,
         },
         createdAt: number,
         updatedAt: number,
-        deletedAt: number | null,
+        deletedAt: number,
     }
     ```
     - 403
@@ -292,6 +291,7 @@
         + Requester is student.
         + Requester is neither admin nor the author of the lab `labName`.
     - 404
+        + Lab `labName` does not exist.
         + Lab `labName` is already deleted.
 
 ## Skeleton

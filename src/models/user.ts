@@ -56,7 +56,7 @@ export default class User extends BaseEntity {
         return this.role === UserRole.STUDENT;
     }
 
-    get isDeleted() {
-        return this.deletedAt !== 0;
+    public is(other: User): boolean {
+        return this.id === other.id;
     }
 }

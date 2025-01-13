@@ -26,6 +26,9 @@ rules:
   no-plusplus: 'off'
   '@typescript-eslint/no-shadow': 'warn'
   max-classes-per-file: 'off'
+  no-param-reassign:
+    - 'error'
+    - props: false
 settings:
   import/resolver:
     node:

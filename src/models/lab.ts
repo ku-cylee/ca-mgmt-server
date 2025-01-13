@@ -53,8 +53,4 @@ export default class Lab extends BaseEntity {
 
     @OneToMany(() => Bomb, bomb => bomb.lab)
     bombs!: Bomb[];
-
-    public isDeleted() {
-        return this.deletedAt !== 0;
-    }
 }

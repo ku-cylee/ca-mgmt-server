@@ -1,4 +1,4 @@
-import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { ClassConstructor, Expose, plainToInstance } from 'class-transformer';
 import Joi from 'joi';
 import { UserRole } from './enums';
 
@@ -20,6 +20,10 @@ class Schemes {
     userRoleRequired = this.string
         .required()
         .valid(UserRole.TA, UserRole.STUDENT);
+
+    labName = this.string.max(32);
+
+    submissionFiles = Joi.array().items(this.string.max(256));
 }
 
 export const schemes = new Schemes();
@@ -30,3 +34,8 @@ export const toResponse = <T, V>(
     cls: ClassConstructor<T>,
     plain: V | V[],
 ): T | T[] => plainToInstance(cls, plain, { excludeExtraneousValues: true });
+
+export class AuthorDTO {
+    @Expose()
+    username!: string;
+}
