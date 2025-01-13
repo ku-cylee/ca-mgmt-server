@@ -318,7 +318,7 @@
         content: string,
         checksum: string,
         isExecutable: boolean,
-        createdAt: Date,
+        createdAt: timestamp,
     }]
     ```
     - 403
@@ -328,7 +328,7 @@
         + Lab `labName` is deleted.
 
 ### POST /skeleton
-* Creates the skeleton files of `labName`.
+* Creates the skeleton file of `labName`.
 * Request
 ```
 {
@@ -343,9 +343,16 @@
 }
 ```
 * Response
-    - 200: `{ checksum: string }`
+    - 200
+    ```
+    {
+        id: number,
+        checksum: string,
+        createdAt: timestamp,
+    }
+    ```
     - 400
-        + Some `content` exceeds maxlength.
+        + `content` exceeds maxlength.
     - 403
         + Requester is not TA.
         + Requester is not an author of lab `labName`.
@@ -369,12 +376,10 @@
     - 200
     - 403
         + Requester is not TA.
-        + Requester is not an author of lab `labName`.
+        + Requester is neither admin nor the author of the lab `labName`.
     - 404
-        + Requester is not TA.
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
-        + Requester is neither admin nor the author of the lab `labName`.
 
 ## Submission
 

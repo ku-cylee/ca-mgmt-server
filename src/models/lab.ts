@@ -53,4 +53,12 @@ export default class Lab extends BaseEntity {
 
     @OneToMany(() => Bomb, bomb => bomb.lab)
     bombs!: Bomb[];
+
+    get isOpen() {
+        return Date.now() >= this.openAt;
+    }
+
+    get isClosed() {
+        return Date.now() >= this.closeAt;
+    }
 }
