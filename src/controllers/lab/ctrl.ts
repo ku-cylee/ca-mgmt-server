@@ -63,9 +63,12 @@ export const updateLab: RequestHandler = async (req, res) => {
     if (!lab) throw NotFoundError;
     if (!lab.author.is(requester)) throw PermissionDeniedError;
 
-    await LabDAO.updateByName(lab, name, openAt, dueDate, closeAt);
+    await LabDAO.updateById(lab.id, name, openAt, dueDate, closeAt);
 
-    return res.send(toResponse(UpdateLabResponse, lab));
+    const updatedLab = await LabDAO.getById(lab.id);
+    if (!updatedLab) throw NotFoundError;
+
+    return res.send(toResponse(UpdateLabResponse, updatedLab));
 };
 
 export const updateSubmissionFiles: RequestHandler = async (req, res) => {
@@ -78,9 +81,12 @@ export const updateSubmissionFiles: RequestHandler = async (req, res) => {
     if (!lab) throw NotFoundError;
     if (!lab.author.is(requester)) throw PermissionDeniedError;
 
-    await LabDAO.updateSubmissionFilesByName(lab, submissionFiles);
+    await LabDAO.updateSubmissionFilesById(lab.id, submissionFiles);
 
-    return res.send(toResponse(UpdateSubmissionFilesResponse, lab));
+    const updatedLab = await LabDAO.getById(lab.id);
+    if (!updatedLab) throw NotFoundError;
+
+    return res.send(toResponse(UpdateSubmissionFilesResponse, updatedLab));
 };
 
 export const deleteLab: RequestHandler = async (req, res) => {
@@ -96,7 +102,7 @@ export const deleteLab: RequestHandler = async (req, res) => {
     if (!requester.isAdmin && !lab.author.is(requester))
         throw PermissionDeniedError;
 
-    await LabDAO.deleteByName(lab);
+    await LabDAO.deleteById(lab.id);
 
     return res.send();
 };

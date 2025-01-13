@@ -23,7 +23,9 @@ class Schemes {
 
     labName = this.string.max(32);
 
-    submissionFiles = Joi.array().items(this.string.max(256));
+    submissionFiles = Joi.array().items(
+        this.string.max(256).pattern(/^[^,]+$/),
+    );
 }
 
 export const schemes = new Schemes();

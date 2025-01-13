@@ -268,6 +268,8 @@
         deletedAt: number,
     }
     ```
+    - 400
+        + Items of `submissionFiles` contain comma.
     - 403
         + Requester is not TA.
         + Requester is not the author of the lab `labName`.

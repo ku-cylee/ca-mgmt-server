@@ -5,6 +5,17 @@ import User from '../models/user';
 
 const getRepo = () => dataSource.getRepository(Lab);
 
+export const getById = async (id: number): Promise<Lab | null> => {
+    const repo = getRepo();
+
+    const lab = await repo.findOne({
+        where: { id, deletedAt: 0 },
+        relations: { author: true },
+    });
+
+    return lab;
+};
+
 export const getByName = async (
     name: string,
     includeUnopen = false,
@@ -69,43 +80,44 @@ export const create = async (
     return lab;
 };
 
-export const updateByName = async (
-    lab: Lab,
+export const updateById = async (
+    id: number,
     name: string,
     openAt: number,
     dueDate: number,
     closeAt: number,
-): Promise<void> => {
+): Promise<number> => {
     const currentTimestamp = Date.now();
     const repo = getRepo();
 
-    lab.name = name;
-    lab.openAt = openAt;
-    lab.dueDate = dueDate;
-    lab.closeAt = closeAt;
-    lab.updatedAt = currentTimestamp;
+    const result = await repo.update(
+        { id },
+        { name, openAt, dueDate, closeAt, updatedAt: currentTimestamp },
+    );
 
-    await repo.save(lab);
+    return result.affected ?? 0;
 };
 
-export const updateSubmissionFilesByName = async (
-    lab: Lab,
+export const updateSubmissionFilesById = async (
+    id: number,
     submissionFiles: string[],
-): Promise<void> => {
+): Promise<number> => {
     const currentTimestamp = Date.now();
     const repo = getRepo();
 
-    lab.submissionFiles = submissionFiles;
-    lab.updatedAt = currentTimestamp;
+    const result = await repo.update(
+        { id },
+        { submissionFiles, updatedAt: currentTimestamp },
+    );
 
-    await repo.save(lab);
+    return result.affected ?? 0;
 };
 
-export const deleteByName = async (lab: Lab): Promise<void> => {
+export const deleteById = async (id: number): Promise<number> => {
     const currentTimestamp = Date.now();
     const repo = getRepo();
 
-    lab.deletedAt = currentTimestamp;
+    const result = await repo.update({ id }, { deletedAt: currentTimestamp });
 
-    await repo.save(lab);
+    return result.affected ?? 0;
 };
