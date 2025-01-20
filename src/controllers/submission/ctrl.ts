@@ -4,7 +4,7 @@ import {
     CreateSubmissionRequest,
     GetSubmissionListRequest,
 } from './request.dto';
-import { NotFoundError, PermissionDeniedError } from '../../lib/http-errors';
+import { NotFoundError, ForbiddenError } from '../../lib/http-errors';
 import { LabDAO, SubmissionDAO, UserDAO } from '../../daos';
 import { CreateSubmissionResponse } from './response.dto';
 
@@ -15,7 +15,7 @@ export const getSubmissionList: RequestHandler = async (req, res) => {
     );
 
     if (!requester.isAdmin && content && !authorUsername && !labName)
-        throw PermissionDeniedError;
+        throw ForbiddenError;
 
     const author = authorUsername
         ? await UserDAO.getByUsername(authorUsername)
@@ -39,7 +39,7 @@ export const getSubmissionList: RequestHandler = async (req, res) => {
 
 export const createSubmission: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (requester.isAdmin) throw PermissionDeniedError;
+    if (requester.isAdmin) throw ForbiddenError;
 
     const { labName, filename, content } = new CreateSubmissionRequest(req);
 

@@ -8,7 +8,7 @@ import {
     UpdateLabRequest,
     UpdateSubmissionFilesRequest,
 } from './request.dto';
-import { NotFoundError, PermissionDeniedError } from '../../lib/http-errors';
+import { NotFoundError, ForbiddenError } from '../../lib/http-errors';
 import {
     CreateLabResponse,
     GetLabListResponse,
@@ -42,7 +42,7 @@ export const getLab: RequestHandler = async (req, res) => {
 
 export const createLab: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (!requester.isTA) throw PermissionDeniedError;
+    if (!requester.isTA) throw ForbiddenError;
 
     const { name, openAt, dueDate, closeAt } = new CreateLabRequest(req);
 
@@ -53,7 +53,7 @@ export const createLab: RequestHandler = async (req, res) => {
 
 export const updateLab: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (!requester.isTA) throw PermissionDeniedError;
+    if (!requester.isTA) throw ForbiddenError;
 
     const { labName, name, openAt, dueDate, closeAt } = new UpdateLabRequest(
         req,
@@ -61,7 +61,7 @@ export const updateLab: RequestHandler = async (req, res) => {
 
     const lab = await LabDAO.getByName(labName, true);
     if (!lab) throw NotFoundError;
-    if (!lab.author.is(requester)) throw PermissionDeniedError;
+    if (!lab.author.is(requester)) throw ForbiddenError;
 
     await LabDAO.updateById(lab.id, name, openAt, dueDate, closeAt);
 
@@ -73,13 +73,13 @@ export const updateLab: RequestHandler = async (req, res) => {
 
 export const updateSubmissionFiles: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (!requester.isTA) throw PermissionDeniedError;
+    if (!requester.isTA) throw ForbiddenError;
 
     const { labName, submissionFiles } = new UpdateSubmissionFilesRequest(req);
 
     const lab = await LabDAO.getByName(labName, true);
     if (!lab) throw NotFoundError;
-    if (!lab.author.is(requester)) throw PermissionDeniedError;
+    if (!lab.author.is(requester)) throw ForbiddenError;
 
     await LabDAO.updateSubmissionFilesById(lab.id, submissionFiles);
 
@@ -91,7 +91,7 @@ export const updateSubmissionFiles: RequestHandler = async (req, res) => {
 
 export const deleteLab: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (requester.isStudent) throw PermissionDeniedError;
+    if (requester.isStudent) throw ForbiddenError;
 
     const { labName } = new DeleteLabRequest(req);
 
@@ -99,8 +99,7 @@ export const deleteLab: RequestHandler = async (req, res) => {
 
     if (!lab) throw NotFoundError;
 
-    if (!requester.isAdmin && !lab.author.is(requester))
-        throw PermissionDeniedError;
+    if (!requester.isAdmin && !lab.author.is(requester)) throw ForbiddenError;
 
     await LabDAO.deleteById(lab.id);
 

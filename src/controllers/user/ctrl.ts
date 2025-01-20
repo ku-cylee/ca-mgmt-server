@@ -5,16 +5,16 @@ import {
     DeleteUserRequest,
     GetUserListRequest,
 } from './request.dto';
-import { NotFoundError, PermissionDeniedError } from '../../lib/http-errors';
+import { NotFoundError, ForbiddenError } from '../../lib/http-errors';
 import { GetUserListResponse } from './response.dto';
 import { toResponse } from '../../lib/dtos';
 
 export const getUserList: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (requester.isStudent) throw PermissionDeniedError;
+    if (requester.isStudent) throw ForbiddenError;
 
     const { ta, student, deleted } = new GetUserListRequest(req);
-    if (requester.isTA && deleted) throw PermissionDeniedError;
+    if (requester.isTA && deleted) throw ForbiddenError;
 
     const users = await UserDAO.getList(ta, student, deleted);
 
@@ -23,7 +23,7 @@ export const getUserList: RequestHandler = async (req, res) => {
 
 export const createUserList: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (!requester.isAdmin) throw PermissionDeniedError;
+    if (!requester.isAdmin) throw ForbiddenError;
 
     const { role, usersData } = new CreateUserListRequest(req);
 
@@ -36,11 +36,11 @@ export const deleteUser: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
     const { userId } = new DeleteUserRequest(req);
 
-    if (!requester.isAdmin) throw PermissionDeniedError;
+    if (!requester.isAdmin) throw ForbiddenError;
 
     const user = await UserDAO.getById(userId);
     if (!user || user.isDeleted) throw NotFoundError;
-    if (user.isAdmin) throw PermissionDeniedError;
+    if (user.isAdmin) throw ForbiddenError;
 
     await UserDAO.deleteById(userId);
 

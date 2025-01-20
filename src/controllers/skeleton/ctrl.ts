@@ -9,7 +9,7 @@ import {
 import {
     ConflictError,
     NotFoundError,
-    PermissionDeniedError,
+    ForbiddenError,
 } from '../../lib/http-errors';
 import {
     CreateSkeletonResponse,
@@ -24,7 +24,7 @@ export const getSkeletonList: RequestHandler = async (req, res) => {
     const lab = await LabDAO.getByName(labName, true);
 
     if (!lab) throw NotFoundError;
-    if (requester.isStudent && lab.isOpen) throw PermissionDeniedError;
+    if (requester.isStudent && lab.isOpen) throw ForbiddenError;
 
     const skeletons = await SkeletonDAO.getListByLab(lab.id);
 
@@ -33,7 +33,7 @@ export const getSkeletonList: RequestHandler = async (req, res) => {
 
 export const createSkeleton: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (!requester.isTA) throw PermissionDeniedError;
+    if (!requester.isTA) throw ForbiddenError;
 
     const { labName, path, content, isExecutable } = new CreateSkeletonRequest(
         req,
@@ -42,7 +42,7 @@ export const createSkeleton: RequestHandler = async (req, res) => {
     const lab = await LabDAO.getByName(labName, true);
 
     if (!lab) throw NotFoundError;
-    if (!lab.author.is(requester)) throw PermissionDeniedError;
+    if (!lab.author.is(requester)) throw ForbiddenError;
     if (lab.skeletonFiles.length) throw ConflictError;
 
     const skeleton = await SkeletonDAO.create(lab, path, content, isExecutable);
@@ -52,14 +52,13 @@ export const createSkeleton: RequestHandler = async (req, res) => {
 
 export const deleteSkeleton: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    if (!requester.isTA) throw PermissionDeniedError;
+    if (!requester.isTA) throw ForbiddenError;
 
     const { labName } = new DeleteSkeletonRequest(req);
 
     const lab = await LabDAO.getByName(labName, true);
     if (!lab) throw NotFoundError;
-    if (!requester.isAdmin && !lab.author.is(requester))
-        throw PermissionDeniedError;
+    if (!requester.isAdmin && !lab.author.is(requester)) throw ForbiddenError;
 
     await SkeletonDAO.deleteListByLab(lab.id);
 
