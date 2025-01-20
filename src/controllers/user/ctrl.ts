@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { UserDAO } from '../../daos';
 import {
     CreateUserListRequest,
-    DeleteUserListRequest,
+    DeleteUserRequest,
     GetUserListRequest,
 } from './request.dto';
 import { NotFoundError, PermissionDeniedError } from '../../lib/http-errors';
@@ -34,13 +34,15 @@ export const createUserList: RequestHandler = async (req, res) => {
 
 export const deleteUser: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    const { userId } = new DeleteUserListRequest(req);
+    const { userId } = new DeleteUserRequest(req);
 
     if (!requester.isAdmin) throw PermissionDeniedError;
 
-    const deletedUserCount = await UserDAO.deleteById(userId);
+    const user = await UserDAO.getById(userId);
+    if (!user || user.isDeleted) throw NotFoundError;
+    if (user.isAdmin) throw PermissionDeniedError;
 
-    if (!deletedUserCount) throw NotFoundError;
+    await UserDAO.deleteById(userId);
 
     return res.send();
 };

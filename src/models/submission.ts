@@ -13,10 +13,10 @@ export default class Submission extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne(() => Lab, lab => lab.submissions)
+    @ManyToOne(() => Lab, lab => lab.submissions, { onDelete: 'CASCADE' })
     lab!: Lab;
 
-    @ManyToOne(() => User, user => user.submissions)
+    @ManyToOne(() => User, user => user.submissions, { onDelete: 'CASCADE' })
     author!: User;
 
     @Column()

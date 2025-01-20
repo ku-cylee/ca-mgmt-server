@@ -24,7 +24,7 @@ export const dataSource = new DataSource({
     password: DB_PASS,
     database: DB_NAME,
     synchronize: DB_SYNC === 'true',
-    logging: DB_LOGGING !== 'true',
+    logging: DB_LOGGING === 'true',
     entities: DB_ENTITIES?.split(',') ?? [],
 });
 

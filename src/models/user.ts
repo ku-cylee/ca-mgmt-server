@@ -35,13 +35,15 @@ export default class User extends BaseEntity {
     @Column({ type: 'bigint', name: 'deleted_at', default: 0 })
     deletedAt!: number;
 
-    @OneToMany(() => Lab, lab => lab.author)
+    @OneToMany(() => Lab, lab => lab.author, { cascade: true })
     labs!: Lab[];
 
-    @OneToMany(() => Submission, submission => submission.author)
+    @OneToMany(() => Submission, submission => submission.author, {
+        cascade: true,
+    })
     submissions!: Submission[];
 
-    @OneToMany(() => Bomb, bomb => bomb.author)
+    @OneToMany(() => Bomb, bomb => bomb.author, { cascade: true })
     bombs!: Bomb[];
 
     get isAdmin() {
@@ -54,6 +56,10 @@ export default class User extends BaseEntity {
 
     get isStudent() {
         return this.role === UserRole.STUDENT;
+    }
+
+    get isDeleted() {
+        return this.deletedAt !== 0;
     }
 
     public is(other: User): boolean {

@@ -12,7 +12,7 @@ export default class SkeletonFile extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne(() => Lab, lab => lab.skeletonFiles)
+    @ManyToOne(() => Lab, lab => lab.skeletonFiles, { onDelete: 'CASCADE' })
     lab!: Lab;
 
     @Column()

@@ -11,7 +11,7 @@ class Schemes {
 
     id = this.integer.min(1);
 
-    username = this.string.max(16);
+    username = this.string.max(16).pattern(/^[a-zA-Z0-9-]+$/);
 
     secretKey = this.string.max(64);
 
@@ -21,7 +21,7 @@ class Schemes {
         .required()
         .valid(UserRole.TA, UserRole.STUDENT);
 
-    labName = this.string.max(32);
+    labName = this.string.max(32).pattern(/^[a-zA-Z0-9-]+$/);
 
     submissionFiles = Joi.array().items(
         this.string.max(256).pattern(/^[^,]+$/),

@@ -18,33 +18,33 @@ export default class Bomb extends BaseEntity {
     @Column()
     longId!: string;
 
-    @ManyToOne(() => Lab, lab => lab.bombs)
+    @ManyToOne(() => Lab, lab => lab.bombs, { onDelete: 'CASCADE' })
     lab!: Lab;
 
-    @ManyToOne(() => User, user => user.bombs)
+    @ManyToOne(() => User, user => user.bombs, { onDelete: 'CASCADE' })
     author!: User;
 
     @Column()
-    phase1_answer!: string;
+    phase1Answer!: string;
 
     @Column()
-    phase2_answer!: string;
+    phase2Answer!: string;
 
     @Column()
-    phase3_answer!: string;
+    phase3Answer!: string;
 
     @Column()
-    phase4_answer!: string;
+    phase4Answer!: string;
 
     @Column()
-    phase5_answer!: string;
+    phase5Answer!: string;
 
     @Column()
-    phase6_answer!: string;
+    phase6Answer!: string;
 
     @Column({ type: 'bigint', name: 'created_at' })
     createdAt!: number;
 
-    @OneToMany(() => Defuse, defuse => defuse.bomb)
+    @OneToMany(() => Defuse, defuse => defuse.bomb, { cascade: true })
     defuses!: Defuse[];
 }

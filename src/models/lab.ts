@@ -33,7 +33,7 @@ export default class Lab extends BaseEntity {
     @Column({ type: 'simple-array', name: 'submission_filenames' })
     submissionFiles!: string[];
 
-    @ManyToOne(() => User, user => user.labs)
+    @ManyToOne(() => User, user => user.labs, { onDelete: 'CASCADE' })
     author!: User;
 
     @Column({ type: 'bigint', name: 'created_at' })
@@ -45,13 +45,17 @@ export default class Lab extends BaseEntity {
     @Column({ type: 'bigint', name: 'deleted_at', default: 0 })
     deletedAt!: number;
 
-    @OneToMany(() => SkeletonFile, file => file.lab)
+    @OneToMany(() => SkeletonFile, file => file.lab, {
+        cascade: true,
+    })
     skeletonFiles!: SkeletonFile[];
 
-    @OneToMany(() => Submission, submission => submission.lab)
+    @OneToMany(() => Submission, submission => submission.lab, {
+        cascade: true,
+    })
     submissions!: Submission[];
 
-    @OneToMany(() => Bomb, bomb => bomb.lab)
+    @OneToMany(() => Bomb, bomb => bomb.lab, { cascade: true })
     bombs!: Bomb[];
 
     get isOpen() {
@@ -60,5 +64,9 @@ export default class Lab extends BaseEntity {
 
     get isClosed() {
         return Date.now() >= this.closeAt;
+    }
+
+    get isDeleted() {
+        return this.deletedAt !== 0;
     }
 }

@@ -5,7 +5,10 @@
 
 ## users
 * `id`: number; primary key
-* `username`: string; unique, maxlength 16
+* `username`: string
+    - unique
+    - maxlength: 16
+    - Small alphabets, numbers, hyphes only
 * `secretKey`: string; maxlength 64
 * `role`: enum UserRole
     - Admin
@@ -20,6 +23,7 @@
 * `name`: string
     - unique
     - maxlength: 32
+    - Small alphabets, numbers, hyphes only
 * `openAt`: timestamp
 * `dueDate`: timestamp
 * `closeAt`: timestamp
@@ -53,12 +57,12 @@
 * `longId`: string; unique
 * `lab`: number; labs.id
 * `author`: number; users.id
-* `phase1_answer`: string
-* `phase2_answer`: string
-* `phase3_answer`: string
-* `phase4_answer`: string
-* `phase5_answer`: string
-* `phase6_answer`: string
+* `phase1Answer`: string
+* `phase2Answer`: string
+* `phase3Answer`: string
+* `phase4Answer`: string
+* `phase5Answer`: string
+* `phase6Answer`: string
 * `createdAt`: timestamp
 
 ## defuses

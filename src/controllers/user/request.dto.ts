@@ -48,7 +48,7 @@ export class CreateUserListRequest {
     }
 }
 
-export class DeleteUserListRequest {
+export class DeleteUserRequest {
     userId!: number;
 
     constructor(req: Request) {

@@ -62,8 +62,6 @@
 ```
 * Response
     - 200
-    - 400
-        + Some secretKeys exceed the maxlength.
     - 403
         + Requester is not admin.
     - 409
@@ -83,6 +81,7 @@
     - 200
     - 403
         + Requester is not admin.
+        + User `userId` is admin.
     - 404
         + User `userId` does not exist.
         + User `userId` is already deleted.

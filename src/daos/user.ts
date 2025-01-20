@@ -6,6 +6,14 @@ import { UserRole } from '../lib/enums';
 
 const getRepo = () => dataSource.getRepository(User);
 
+export const getById = async (id: number): Promise<User | null> => {
+    const repo = getRepo();
+    const user = await repo.findOne({
+        where: { id },
+    });
+    return user;
+};
+
 export const getByUsername = async (username: string): Promise<User | null> => {
     const repo = getRepo();
     const user = await repo.findOne({
