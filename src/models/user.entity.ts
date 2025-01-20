@@ -7,9 +7,10 @@ import {
     Unique,
 } from 'typeorm';
 import { UserRole } from '../lib/enums';
-import Bomb from './bomb';
-import Lab from './lab';
-import Submission from './submission';
+import Bomb from './bomb.entity';
+import Lab from './lab.entity';
+import Submission from './submission.entity';
+import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'users' })
 @Unique(['username'])
@@ -26,13 +27,13 @@ export default class User extends BaseEntity {
     @Column({ type: 'enum', enum: UserRole })
     role!: UserRole;
 
-    @Column({ type: 'bigint', name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
 
-    @Column({ type: 'bigint', name: 'updated_at' })
+    @Column({ type: 'bigint', name: 'updated_at', transformer })
     updatedAt!: number;
 
-    @Column({ type: 'bigint', name: 'deleted_at', default: 0 })
+    @Column({ type: 'bigint', name: 'deleted_at', transformer, default: 0 })
     deletedAt!: number;
 
     @OneToMany(() => Lab, lab => lab.author, { cascade: true })

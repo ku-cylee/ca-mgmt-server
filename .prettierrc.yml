@@ -2,3 +2,7 @@ trailingComma: 'all'
 tabWidth: 4
 singleQuote: true
 arrowParens: 'avoid'
+overrides:
+  - files: 'test/**/tests.ts'
+    options:
+      printWidth: 100

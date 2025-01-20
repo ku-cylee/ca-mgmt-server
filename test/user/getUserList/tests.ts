@@ -1,12 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import {
-    deletedStudents,
-    deletedTAs,
-    undeletedStudents,
-    undeletedTAs,
-} from './mock';
+import { deletedStudents, deletedTAs, undeletedStudents, undeletedTAs } from './mock';
 import { Test } from '../../commons';
 
 const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
@@ -56,9 +51,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.an('array');
             expect(res.data).to.have.lengthOf(expected.length);
-            res.data.forEach((user: any, idx: number) =>
-                compareUsers(user, expected[idx]),
-            );
+            res.data.forEach((user: any, idx: number) => compareUsers(user, expected[idx]));
         },
     },
     {
@@ -81,9 +74,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.an('array');
             expect(res.data).to.have.lengthOf(expected.length);
-            res.data.forEach((user: any, idx: number) =>
-                compareUsers(user, expected[idx]),
-            );
+            res.data.forEach((user: any, idx: number) => compareUsers(user, expected[idx]));
         },
     },
     {
@@ -106,9 +97,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.an('array');
             expect(res.data).to.have.lengthOf(expected.length);
-            res.data.forEach((user: any, idx: number) =>
-                compareUsers(user, expected[idx]),
-            );
+            res.data.forEach((user: any, idx: number) => compareUsers(user, expected[idx]));
         },
     },
     {
@@ -151,9 +140,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.an('array');
             expect(res.data).to.have.lengthOf(expected.length);
-            res.data.forEach((user: any, idx: number) =>
-                compareUsers(user, expected[idx]),
-            );
+            res.data.forEach((user: any, idx: number) => compareUsers(user, expected[idx]));
         },
     },
     {
@@ -174,9 +161,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.an('array');
             expect(res.data).to.have.lengthOf(undeletedTAs.length);
-            res.data.forEach((user: any, idx: number) =>
-                compareUsers(user, undeletedTAs[idx]),
-            );
+            res.data.forEach((user: any, idx: number) => compareUsers(user, undeletedTAs[idx]));
         },
     },
     {
@@ -331,9 +316,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.an('array');
             expect(res.data).to.have.lengthOf(expected.length);
-            res.data.forEach((user: any, idx: number) =>
-                compareUsers(user, expected[idx]),
-            );
+            res.data.forEach((user: any, idx: number) => compareUsers(user, expected[idx]));
         },
     },
     {
@@ -354,9 +337,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.an('array');
             expect(res.data).to.have.lengthOf(undeletedTAs.length);
-            res.data.forEach((user: any, idx: number) =>
-                compareUsers(user, undeletedTAs[idx]),
-            );
+            res.data.forEach((user: any, idx: number) => compareUsers(user, undeletedTAs[idx]));
         },
     },
     {

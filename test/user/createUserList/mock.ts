@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { UserRole } from '../../../src/lib/enums';
-import User from '../../../src/models/user';
+import { User } from '../../../src/models';
 
 export const taUser = {
     username: 'CreateUserTA',

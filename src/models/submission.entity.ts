@@ -5,8 +5,9 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import Lab from './lab';
-import User from './user';
+import Lab from './lab.entity';
+import User from './user.entity';
+import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'submissions' })
 export default class Submission extends BaseEntity {
@@ -28,9 +29,9 @@ export default class Submission extends BaseEntity {
     @Column()
     checksum!: string;
 
-    @Column({ type: 'bigint', name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
 
-    @Column({ type: 'bigint', name: 'updated_at' })
+    @Column({ type: 'bigint', name: 'updated_at', transformer })
     updatedAt!: number;
 }

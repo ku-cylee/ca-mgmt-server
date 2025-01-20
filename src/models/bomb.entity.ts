@@ -6,9 +6,10 @@ import {
     OneToMany,
     PrimaryColumn,
 } from 'typeorm';
-import Lab from './lab';
-import User from './user';
-import Defuse from './defuse';
+import Lab from './lab.entity';
+import User from './user.entity';
+import Defuse from './defuse.entity';
+import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'bombs' })
 export default class Bomb extends BaseEntity {
@@ -42,7 +43,7 @@ export default class Bomb extends BaseEntity {
     @Column()
     phase6Answer!: string;
 
-    @Column({ type: 'bigint', name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
 
     @OneToMany(() => Defuse, defuse => defuse.bomb, { cascade: true })

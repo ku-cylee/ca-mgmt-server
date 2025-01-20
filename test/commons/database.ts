@@ -1,11 +1,13 @@
 import { DataSource, IsNull, Not } from 'typeorm';
-import User from '../../src/models/user';
 import { UserRole } from '../../src/lib/enums';
-import Defuse from '../../src/models/defuse';
-import Bomb from '../../src/models/bomb';
-import SkeletonFile from '../../src/models/skeleton-file';
-import Submission from '../../src/models/submission';
-import Lab from '../../src/models/lab';
+import {
+    Bomb,
+    Defuse,
+    Lab,
+    SkeletonFile,
+    Submission,
+    User,
+} from '../../src/models';
 
 const {
     DB_HOST,

@@ -1,7 +1,6 @@
 import { FindOptionsWhere, LessThanOrEqual } from 'typeorm';
 import { dataSource } from '../lib/database';
-import Lab from '../models/lab';
-import User from '../models/user';
+import { Lab, User } from '../models';
 
 const getRepo = () => dataSource.getRepository(Lab);
 

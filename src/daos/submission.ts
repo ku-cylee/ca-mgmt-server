@@ -1,9 +1,7 @@
 import { FindOptionsWhere } from 'typeorm';
 import { getChecksum } from '../lib/checksum';
 import { dataSource } from '../lib/database';
-import Lab from '../models/lab';
-import Submission from '../models/submission';
-import User from '../models/user';
+import { Lab, Submission, User } from '../models';
 
 const getRepo = () => dataSource.getRepository(Submission);
 

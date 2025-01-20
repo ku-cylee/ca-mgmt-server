@@ -2,10 +2,10 @@
 import axios from 'axios';
 import { expect } from 'chai';
 import { DataSource } from 'typeorm';
-import User from '../../../src/models/user';
 import { Test } from '../../commons';
 import { UserRole } from '../../../src/lib/enums';
 import { studentUser, taUser } from './mock';
+import { User } from '../../../src/models';
 
 const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
 
@@ -31,10 +31,7 @@ const createUser = async (
     return user;
 };
 
-const getUsersById = async (
-    dataSource: DataSource,
-    id: number,
-): Promise<User[]> => {
+const getUsersById = async (dataSource: DataSource, id: number): Promise<User[]> => {
     const repo = dataSource.getRepository(User);
     const users = await repo.findBy({ id });
     return users;
@@ -44,12 +41,7 @@ export const tests: Test[] = [
     {
         name: 'should respond 200 if requester is admin and the user exists',
         func: async (dataSource: DataSource) => {
-            const user = await createUser(
-                dataSource,
-                'DelUsr1',
-                'DelUsr1SecretKey',
-                UserRole.TA,
-            );
+            const user = await createUser(dataSource, 'DelUsr1', 'DelUsr1SecretKey', UserRole.TA);
 
             const res = await axios({
                 method: 'delete',
@@ -70,12 +62,7 @@ export const tests: Test[] = [
     {
         name: 'should respond 404 if requester is admin and the user does not exist',
         func: async (dataSource: DataSource) => {
-            const user = await createUser(
-                dataSource,
-                'DelUsr2',
-                'DelUsr2SecretKey',
-                UserRole.TA,
-            );
+            const user = await createUser(dataSource, 'DelUsr2', 'DelUsr2SecretKey', UserRole.TA);
             await dataSource.getRepository(User).delete({ id: user.id });
 
             const res = await axios({
@@ -138,7 +125,7 @@ export const tests: Test[] = [
             expect(res.data).to.be.empty;
 
             const delUser = await getUsersById(dataSource, admin.id);
-            expect(delUser[0]).to.be('object');
+            expect(delUser[0]).to.be.an('object');
             expect(delUser[0].isDeleted).to.be.false;
         },
     },

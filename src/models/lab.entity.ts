@@ -7,10 +7,11 @@ import {
     PrimaryGeneratedColumn,
     Unique,
 } from 'typeorm';
-import Bomb from './bomb';
-import SkeletonFile from './skeleton-file';
-import Submission from './submission';
-import User from './user';
+import Bomb from './bomb.entity';
+import SkeletonFile from './skeleton-file.entity';
+import Submission from './submission.entity';
+import User from './user.entity';
+import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'labs' })
 @Unique(['name'])
@@ -21,13 +22,13 @@ export default class Lab extends BaseEntity {
     @Column()
     name!: string;
 
-    @Column({ type: 'bigint', name: 'open_at' })
+    @Column({ type: 'bigint', name: 'open_at', transformer })
     openAt!: number;
 
-    @Column({ type: 'bigint', name: 'due_date' })
+    @Column({ type: 'bigint', name: 'due_date', transformer })
     dueDate!: number;
 
-    @Column({ type: 'bigint', name: 'close_at' })
+    @Column({ type: 'bigint', name: 'close_at', transformer })
     closeAt!: number;
 
     @Column({ type: 'simple-array', name: 'submission_filenames' })
@@ -36,13 +37,13 @@ export default class Lab extends BaseEntity {
     @ManyToOne(() => User, user => user.labs, { onDelete: 'CASCADE' })
     author!: User;
 
-    @Column({ type: 'bigint', name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
 
-    @Column({ type: 'bigint', name: 'updated_at' })
+    @Column({ type: 'bigint', name: 'updated_at', transformer })
     updatedAt!: number;
 
-    @Column({ type: 'bigint', name: 'deleted_at', default: 0 })
+    @Column({ type: 'bigint', name: 'deleted_at', transformer, default: 0 })
     deletedAt!: number;
 
     @OneToMany(() => SkeletonFile, file => file.lab, {

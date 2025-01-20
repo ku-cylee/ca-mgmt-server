@@ -1,8 +1,8 @@
 import { FindOptionsWhere, In, Not } from 'typeorm';
 
 import { dataSource } from '../lib/database';
-import User from '../models/user';
 import { UserRole } from '../lib/enums';
+import { User } from '../models';
 
 const getRepo = () => dataSource.getRepository(User);
 

@@ -5,7 +5,8 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import Lab from './lab';
+import Lab from './lab.entity';
+import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'skeleton_files' })
 export default class SkeletonFile extends BaseEntity {
@@ -27,6 +28,6 @@ export default class SkeletonFile extends BaseEntity {
     @Column({ name: 'is_executable' })
     isExecutable!: boolean;
 
-    @Column({ type: 'bigint', name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
 }

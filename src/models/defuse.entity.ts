@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import Bomb from './bomb';
+import Bomb from './bomb.entity';
+import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'defuses' })
 export default class Defuse extends BaseEntity {
@@ -18,6 +19,6 @@ export default class Defuse extends BaseEntity {
     @Column()
     exploded!: boolean;
 
-    @Column({ type: 'bigint', name: 'created_at' })
+    @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
 }

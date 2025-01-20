@@ -5,16 +5,13 @@ import { DataSource, In } from 'typeorm';
 import { Test } from '../../commons';
 import { duplicateUser, studentUser, taUser } from './mock';
 import { UserRole } from '../../../src/lib/enums';
-import User from '../../../src/models/user';
+import { User } from '../../../src/models';
 
 const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
 
 const ADMIN_COOKIE = `username=${ADMIN_USERNAME};secretKey=${ADMIN_SECRETKEY}`;
 
-const getUsersByUsername = async (
-    dataSource: DataSource,
-    usernames: string[],
-): Promise<User[]> => {
+const getUsersByUsername = async (dataSource: DataSource, usernames: string[]): Promise<User[]> => {
     const repo = dataSource.getRepository(User);
     const users = await repo.findBy({
         username: In(usernames),
@@ -63,12 +60,8 @@ export const tests: Test[] = [
 
             expect(users).to.have.lengthOf(3);
             Array(3).forEach((idx: number) => {
-                expect(users[idx].username).to.equal(
-                    rawData[idx].username.trim(),
-                );
-                expect(users[idx].secretKey).to.equal(
-                    rawData[idx].secretKey.trim(),
-                );
+                expect(users[idx].username).to.equal(rawData[idx].username.trim());
+                expect(users[idx].secretKey).to.equal(rawData[idx].secretKey.trim());
                 expect(users[idx].role).to.equal(UserRole.TA);
             });
         },
@@ -107,21 +100,13 @@ export const tests: Test[] = [
 
             const repo = dataSource.getRepository(User);
             const users = await repo.findBy({
-                username: In([
-                    'CrUsrExStdnt0',
-                    'CrUsrExStdnt1',
-                    'CrUsrExStdnt2',
-                ]),
+                username: In(['CrUsrExStdnt0', 'CrUsrExStdnt1', 'CrUsrExStdnt2']),
             });
 
             expect(users).to.have.lengthOf(3);
             Array(3).forEach((idx: number) => {
-                expect(users[idx].username).to.equal(
-                    rawData[idx].username.trim(),
-                );
-                expect(users[idx].secretKey).to.equal(
-                    rawData[idx].secretKey.trim(),
-                );
+                expect(users[idx].username).to.equal(rawData[idx].username.trim());
+                expect(users[idx].secretKey).to.equal(rawData[idx].secretKey.trim());
                 expect(users[idx].role).to.equal(UserRole.TA);
             });
         },
@@ -243,10 +228,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(400);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, [
-                'CrUsrUn11',
-                'CrUsrUn13',
-            ]);
+            const users = await getUsersByUsername(dataSource, ['CrUsrUn11', 'CrUsrUn13']);
 
             expect(users).to.be.empty;
         },
@@ -395,10 +377,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(409);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, [
-                'CrUsrDp1',
-                username,
-            ]);
+            const users = await getUsersByUsername(dataSource, ['CrUsrDp1', username]);
 
             expect(users).to.be.lengthOf(1);
             expect(users[0].secretKey).to.not.equal(secretKey + secretKey);

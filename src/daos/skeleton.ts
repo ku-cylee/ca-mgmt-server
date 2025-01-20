@@ -1,7 +1,6 @@
 import { getChecksum } from '../lib/checksum';
 import { dataSource } from '../lib/database';
-import Lab from '../models/lab';
-import SkeletonFile from '../models/skeleton-file';
+import { Lab, SkeletonFile } from '../models';
 
 const getRepo = () => dataSource.getRepository(SkeletonFile);
 
