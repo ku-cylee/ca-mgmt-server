@@ -18,8 +18,8 @@ export class BaseTests {
 
     protected tests!: Test[];
 
-    constructor(route: string, dbManager: DatabaseManager) {
-        axios.defaults.baseURL = path.join(`http://localhost:${PORT}`, route);
+    constructor(dbManager: DatabaseManager) {
+        axios.defaults.baseURL = path.join(`http://localhost:${PORT}`);
         axios.defaults.validateStatus = _status => true;
 
         this.dataSource = dbManager.dataSource;

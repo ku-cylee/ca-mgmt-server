@@ -40,6 +40,7 @@ export const tests: Test[] = [
 
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -86,6 +87,7 @@ export const tests: Test[] = [
 
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -116,6 +118,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: `username=${taUser.username};secretKey=${taUser.secretKey}`,
                 },
@@ -134,6 +137,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: `username=${studentUser.username};secretKey=${studentUser.secretKey}`,
                 },
@@ -152,6 +156,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -169,6 +174,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -187,6 +193,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -204,6 +211,7 @@ export const tests: Test[] = [
         func: async (dataSource: DataSource) => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -238,6 +246,7 @@ export const tests: Test[] = [
         func: async (dataSource: DataSource) => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -277,6 +286,7 @@ export const tests: Test[] = [
         func: async (dataSource: DataSource) => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -315,6 +325,7 @@ export const tests: Test[] = [
         func: async (dataSource: DataSource) => {
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -356,6 +367,7 @@ export const tests: Test[] = [
             const { username, secretKey } = duplicateUser;
             const res = await axios({
                 method: 'post',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },

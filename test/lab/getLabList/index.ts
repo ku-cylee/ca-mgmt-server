@@ -2,7 +2,7 @@ import { BaseTests, DatabaseManager } from '../../commons';
 import { createMock } from './mock';
 import { tests } from './tests';
 
-export class CreateUserListTests extends BaseTests {
+export class GetLabListTests extends BaseTests {
     constructor(dbManager: DatabaseManager) {
         super(dbManager);
 

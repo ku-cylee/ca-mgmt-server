@@ -31,6 +31,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -59,6 +60,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -82,6 +84,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -105,6 +108,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -125,6 +129,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -148,6 +153,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -169,6 +175,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -192,6 +199,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -212,6 +220,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -229,6 +238,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -247,6 +257,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -264,6 +275,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -282,6 +294,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -301,6 +314,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -324,6 +338,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -345,6 +360,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -368,6 +384,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -388,6 +405,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -405,6 +423,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -423,6 +442,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -440,6 +460,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: TA_COOKIE,
                 },
@@ -458,6 +479,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'get',
+                url: '/user',
                 headers: {
                     Cookie: STDNT_COOKIE,
                 },

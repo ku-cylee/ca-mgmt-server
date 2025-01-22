@@ -4,7 +4,7 @@ import { tests } from './tests';
 
 export class GetUserListTests extends BaseTests {
     constructor(dbManager: DatabaseManager) {
-        super('/user', dbManager);
+        super(dbManager);
 
         this.createMock = createMock;
         this.tests = tests;

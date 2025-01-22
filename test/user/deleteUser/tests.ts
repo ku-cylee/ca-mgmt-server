@@ -45,7 +45,7 @@ export const tests: Test[] = [
 
             const res = await axios({
                 method: 'delete',
-                url: `/${user.id}`,
+                url: `/user/${user.id}`,
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -67,7 +67,7 @@ export const tests: Test[] = [
 
             const res = await axios({
                 method: 'delete',
-                url: `/${user.id}`,
+                url: `/user/${user.id}`,
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -90,7 +90,7 @@ export const tests: Test[] = [
 
             const res = await axios({
                 method: 'delete',
-                url: `/${user.id}`,
+                url: `/user/${user.id}`,
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -115,7 +115,7 @@ export const tests: Test[] = [
 
             const res = await axios({
                 method: 'delete',
-                url: `/${admin.id}`,
+                url: `/user/${admin.id}`,
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -134,7 +134,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'delete',
-                url: `/1`,
+                url: '/user/1',
                 headers: {
                     Cookie: `username=${taUser.username};secretKey=${taUser.secretKey}`,
                 },
@@ -149,7 +149,7 @@ export const tests: Test[] = [
         func: async () => {
             const res = await axios({
                 method: 'delete',
-                url: `/1`,
+                url: '/user/1',
                 headers: {
                     Cookie: `username=${studentUser.username};secretKey=${studentUser.secretKey}`,
                 },

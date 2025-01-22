@@ -110,7 +110,7 @@
     }]
     ```
     + Student requester receives undeleted, open labs.
-    + TA requesters receive undeleted labs.
+    + TA requester receives undeleted labs.
     + Admin requesters receive all labs.
 
 ### GET /lab/:labName
