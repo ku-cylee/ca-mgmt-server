@@ -21,6 +21,12 @@ const compareUsers = (actual: any, expected: any) => {
         'deletedAt',
     );
     expect(actual.id).to.be.a('number');
+    expect(actual.username).to.be.a('string');
+    expect(actual.role).to.be.a('string');
+    expect(actual.createdAt).to.be.a('number');
+    expect(actual.updatedAt).to.be.a('number');
+    expect(actual.deletedAt).to.be.a('number');
+
     expect(actual.username).to.equal(expected.username);
     expect(actual.role).to.equal(expected.role);
 };

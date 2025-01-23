@@ -31,7 +31,7 @@ describe('User', () => {
         createUserListTests.executeTests();
     });
 
-    describe('DELETE /user', () => {
+    describe('DELETE /user/:userId', () => {
         before(async () => {
             await deleteUserTests.createMocks();
         });
