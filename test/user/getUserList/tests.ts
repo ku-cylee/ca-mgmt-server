@@ -3,12 +3,12 @@ import axios from 'axios';
 import { expect } from 'chai';
 import { deletedStudents, deletedTAs, undeletedStudents, undeletedTAs } from './mock';
 import { Test } from '../../commons';
+import { getCookie } from '../../commons/cookie';
+import { admin } from '../admin';
 
-const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
-
-const ADMIN_COOKIE = `username=${ADMIN_USERNAME};secretKey=${ADMIN_SECRETKEY}`;
-const TA_COOKIE = `username=${undeletedTAs[0].username};secretKey=${undeletedTAs[0].secretKey}`;
-const STDNT_COOKIE = `username=${undeletedStudents[0].username};secretKey=${undeletedStudents[0].secretKey}`;
+const ADMIN_COOKIE = getCookie(admin);
+const TA_COOKIE = getCookie(undeletedTAs[0]);
+const STDNT_COOKIE = getCookie(undeletedStudents[0]);
 
 const compareUsers = (actual: any, expected: any) => {
     expect(actual).to.be.an('object');

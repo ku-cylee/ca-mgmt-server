@@ -18,14 +18,19 @@ const {
     DB_SYNC,
     DB_LOGGING,
     DB_ENTITIES,
-    ADMIN_USERNAME,
-    ADMIN_SECRETKEY,
 } = process.env;
+
+export interface AuthData {
+    username: string;
+    secretKey: string;
+}
 
 export class DatabaseManager {
     dataSource!: DataSource;
 
-    constructor(name: string) {
+    admin!: AuthData;
+
+    constructor(name: string, admin: AuthData) {
         this.dataSource = new DataSource({
             name,
             type: 'mariadb',
@@ -38,6 +43,8 @@ export class DatabaseManager {
             logging: DB_LOGGING === 'true',
             entities: DB_ENTITIES?.split(',') ?? [],
         });
+
+        this.admin = admin;
     }
 
     async init() {
@@ -46,24 +53,22 @@ export class DatabaseManager {
 
     async createAdmin() {
         const repo = this.dataSource.getRepository(User);
-        await repo.upsert(
-            {
-                username: ADMIN_USERNAME,
-                secretKey: ADMIN_SECRETKEY,
-                role: UserRole.ADMIN,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-            },
-            ['role'],
-        );
+        const user = repo.create({
+            ...this.admin,
+            role: UserRole.ADMIN,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+        });
+        await repo.save(user);
     }
 
     async clean() {
-        [Defuse, Bomb, SkeletonFile, Submission, Lab, User].forEach(
-            async Entity => {
-                const repo = this.dataSource.getRepository(Entity);
-                await repo.delete({ id: Not(IsNull()) });
-            },
-        );
+        [Defuse, Bomb, SkeletonFile, Submission, Lab].forEach(async Entity => {
+            const repo = this.dataSource.getRepository(Entity);
+            await repo.delete({ id: Not(IsNull()) });
+        });
+        const userRepo = this.dataSource.getRepository(User);
+        await userRepo.delete({ role: Not(UserRole.ADMIN) });
+        await userRepo.delete({ username: this.admin.username });
     }
 }

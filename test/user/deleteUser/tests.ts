@@ -6,10 +6,10 @@ import { Test } from '../../commons';
 import { UserRole } from '../../../src/lib/enums';
 import { studentUser, taUser } from './mock';
 import { User } from '../../../src/models';
+import { getCookie } from '../../commons/cookie';
+import { admin } from '../admin';
 
-const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
-
-const ADMIN_COOKIE = `username=${ADMIN_USERNAME};secretKey=${ADMIN_SECRETKEY}`;
+const ADMIN_COOKIE = getCookie(admin);
 
 const createUser = async (
     dataSource: DataSource,
@@ -107,15 +107,15 @@ export const tests: Test[] = [
     {
         name: 'should respond 403 if requester is admin and the user is admin',
         func: async (dataSource: DataSource) => {
-            const admin = await dataSource
+            const adminUser = await dataSource
                 .getRepository(User)
-                .findOneBy({ username: ADMIN_USERNAME });
+                .findOneBy({ username: admin.username });
 
-            if (!admin) throw new Error();
+            if (!adminUser) throw new Error();
 
             const res = await axios({
                 method: 'delete',
-                url: `/user/${admin.id}`,
+                url: `/user/${adminUser.id}`,
                 headers: {
                     Cookie: ADMIN_COOKIE,
                 },
@@ -124,7 +124,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const delUser = await getUsersById(dataSource, admin.id);
+            const delUser = await getUsersById(dataSource, adminUser.id);
             expect(delUser[0]).to.be.an('object');
             expect(delUser[0].isDeleted).to.be.false;
         },

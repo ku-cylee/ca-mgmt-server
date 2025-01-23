@@ -3,9 +3,10 @@ import { after, before, describe } from 'mocha';
 import { DatabaseManager } from '../commons';
 import { GetLabListTests } from './getLabList';
 import { GetLabTests } from './getLab';
+import { admin } from './admin';
 
 describe('Lab', () => {
-    const dbManager = new DatabaseManager('test:lab');
+    const dbManager = new DatabaseManager('test:lab', admin);
 
     const getLabListTests = new GetLabListTests(dbManager);
     const getLabTests = new GetLabTests(dbManager);

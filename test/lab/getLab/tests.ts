@@ -12,12 +12,12 @@ import {
     undeletedOpenLab,
     undeletedUnopenLab,
 } from './mock';
+import { getCookie } from '../../commons/cookie';
+import { admin } from '../admin';
 
-const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
-
-const ADMIN_COOKIE = `username=${ADMIN_USERNAME};secretKey=${ADMIN_SECRETKEY}`;
-const TA_COOKIE = `username=${taUser.username};secretKey=${taUser.secretKey}`;
-const STUDENT_COOKIE = `username=${studentUser.username};secretKey=${studentUser.secretKey}`;
+const ADMIN_COOKIE = getCookie(admin);
+const TA_COOKIE = getCookie(taUser);
+const STUDENT_COOKIE = getCookie(studentUser);
 
 const getLabByName = async (dataSource: DataSource, name: string) => {
     const repo = dataSource.getRepository(Lab);

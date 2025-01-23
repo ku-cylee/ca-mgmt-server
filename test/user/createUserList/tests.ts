@@ -6,10 +6,10 @@ import { Test } from '../../commons';
 import { duplicateUser, studentUser, taUser } from './mock';
 import { UserRole } from '../../../src/lib/enums';
 import { User } from '../../../src/models';
+import { getCookie } from '../../commons/cookie';
+import { admin } from '../admin';
 
-const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
-
-const ADMIN_COOKIE = `username=${ADMIN_USERNAME};secretKey=${ADMIN_SECRETKEY}`;
+const ADMIN_COOKIE = getCookie(admin);
 
 const getUsersByUsername = async (dataSource: DataSource, usernames: string[]): Promise<User[]> => {
     const repo = dataSource.getRepository(User);

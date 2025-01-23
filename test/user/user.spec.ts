@@ -4,9 +4,10 @@ import { DatabaseManager } from '../commons';
 import { GetUserListTests } from './getUserList';
 import { CreateUserListTests } from './createUserList';
 import { DeleteUserTests } from './deleteUser';
+import { admin } from './admin';
 
 describe('User', () => {
-    const dbManager = new DatabaseManager('test:user');
+    const dbManager = new DatabaseManager('test:user', admin);
     const getUserListTests = new GetUserListTests(dbManager);
     const createUserListTests = new CreateUserListTests(dbManager);
     const deleteUserTests = new DeleteUserTests(dbManager);

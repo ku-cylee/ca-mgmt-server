@@ -9,8 +9,8 @@ import {
     undeletedOpenLabs,
     undeletedUnopenLabs,
 } from './mock';
-
-const { ADMIN_USERNAME, ADMIN_SECRETKEY } = process.env;
+import { getCookie } from '../../commons/cookie';
+import { admin } from '../admin';
 
 const compareLabs = (actual: any, expected: any) => {
     expect(actual).to.be.an('object');
@@ -55,7 +55,7 @@ export const tests: Test[] = [
                 method: 'get',
                 url: '/lab',
                 headers: {
-                    Cookie: `username=${ADMIN_USERNAME};secretKey=${ADMIN_SECRETKEY}`,
+                    Cookie: getCookie(admin),
                 },
             });
 
