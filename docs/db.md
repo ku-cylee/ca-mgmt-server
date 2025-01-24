@@ -8,7 +8,7 @@
 * `username`: string
     - unique
     - maxlength: 16
-    - Small alphabets, numbers, hyphes only
+    - Small alphabets, numbers, hyphens only
 * `secretKey`: string; maxlength 64
 * `role`: enum UserRole
     - Admin
@@ -23,11 +23,10 @@
 * `name`: string
     - unique
     - maxlength: 32
-    - Small alphabets, numbers, hyphes only
+    - Small alphabets, numbers, hyphens only
 * `openAt`: timestamp
 * `dueDate`: timestamp
 * `closeAt`: timestamp
-* `submissionFiles`: [string]
 * `author`: number; users.id
 * `createdAt`: timestamp
 * `updatedAt`: timestamp
@@ -36,33 +35,39 @@
 ## skeleton_files
 * `id`: number; primary key
 * `lab`: number; labs.id
-* `path`: string
+* `path`: string; maxlength: 128
 * `content`: string (text)
 * `checksum`: string; maxlength: 16
 * `isExecutable`: boolean
 * `createdAt`: timestamp
+* `deletedAt`: timestamp
+
+## submission_files
+* `id`: number; primary key
+* `name`: string; maxlength: 32
+* `lab`: number; labs.id
+* `createdAt`: timestamp
+* `deletedAt`: timestamp
 
 ## submissions
 * `id`: number; primary key
-* `lab`: number; labs.id
 * `author`: number; users.id
-* `filename`: string; maxlength: 256
+* `file`: number; submission_files.id
 * `content`: string (text)
 * `checksum`: string; maxlength: 16
 * `createdAt`: timestamp
-* `updatedAt`: timestamp
 
 ## bombs
 * `id`: string; primary key
 * `longId`: string; unique
 * `lab`: number; labs.id
 * `author`: number; users.id
-* `phase1Answer`: string
-* `phase2Answer`: string
-* `phase3Answer`: string
-* `phase4Answer`: string
-* `phase5Answer`: string
-* `phase6Answer`: string
+* `answerPhase1`: string
+* `answerPhase2`: string
+* `answerPhase3`: string
+* `answerPhase4`: string
+* `answerPhase5`: string
+* `answerPhase6`: string
 * `createdAt`: timestamp
 
 ## defuses

@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import Bomb from './bomb.entity';
 import SkeletonFile from './skeleton-file.entity';
-import Submission from './submission.entity';
+import SubmissionFiles from './submission-files.entity';
 import User from './user.entity';
 import { transformer } from './commons/timestamp-trasnformer';
 
@@ -31,9 +31,6 @@ export default class Lab extends BaseEntity {
     @Column({ type: 'bigint', name: 'close_at', transformer })
     closeAt!: number;
 
-    @Column({ type: 'simple-array', name: 'submission_filenames' })
-    submissionFiles!: string[];
-
     @ManyToOne(() => User, user => user.labs, { onDelete: 'CASCADE' })
     author!: User;
 
@@ -51,10 +48,10 @@ export default class Lab extends BaseEntity {
     })
     skeletonFiles!: SkeletonFile[];
 
-    @OneToMany(() => Submission, submission => submission.lab, {
+    @OneToMany(() => SubmissionFiles, sf => sf.lab, {
         cascade: true,
     })
-    submissions!: Submission[];
+    submissionFiles!: SubmissionFiles[];
 
     @OneToMany(() => Bomb, bomb => bomb.lab, { cascade: true })
     bombs!: Bomb[];

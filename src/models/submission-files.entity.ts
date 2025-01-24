@@ -3,30 +3,28 @@ import {
     Column,
     Entity,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import Lab from './lab.entity';
+import Submission from './submission.entity';
 import { transformer } from './commons/timestamp-trasnformer';
 
-@Entity({ name: 'skeleton_files' })
-export default class SkeletonFile extends BaseEntity {
+@Entity({ name: 'submission_files' })
+export default class SubmissionFile extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne(() => Lab, lab => lab.skeletonFiles, { onDelete: 'CASCADE' })
+    @Column()
+    name!: string;
+
+    @ManyToOne(() => Lab, lab => lab.submissionFiles, { onDelete: 'CASCADE' })
     lab!: Lab;
 
-    @Column()
-    path!: string;
-
-    @Column({ type: 'text' })
-    content!: string;
-
-    @Column()
-    checksum!: string;
-
-    @Column({ name: 'is_executable' })
-    isExecutable!: boolean;
+    @OneToMany(() => Submission, submission => submission.file, {
+        cascade: true,
+    })
+    submissions!: Submission[];
 
     @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
