@@ -8,8 +8,10 @@
     "start:prod": "cross-env NODE_ENV=prod yarn start",
     "start:dev": "cross-env NODE_ENV=dev ts-node-dev --rs --watch src --notify src/index.ts",
     "start:test": "cross-env NODE_ENV=test ts-node-dev --rs --watch src --notify src/index.ts",
-    "eslint": "eslint src/**/*.ts",
-    "format": "prettier src/",
+    "lint:src": "eslint src/**/*.ts --fix",
+    "lint:test": "eslint test/**/*.ts --fix",
+    "format:src": "prettier src/ --write",
+    "format:test": "prettier test/ --write",
     "test": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --exit -r ts-node/register test/**/*.spec.ts --timeout 100000",
     "precoverage": "yarn eslint",
     "coverage": "cross-env NODE_ENV=test nyc mocha --exit -r ts-node/register test/**/*.spec.ts --timeout 100000"
