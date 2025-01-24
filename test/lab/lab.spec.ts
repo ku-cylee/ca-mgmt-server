@@ -4,12 +4,22 @@ import { DatabaseManager } from '../commons';
 import { GetLabListTests } from './getLabList';
 import { GetLabTests } from './getLab';
 import { admin } from './admin';
+import { CreateLabTests } from './createLab';
+import { UpdateLabTests } from './updateLab';
+import { UpdateSubmissionFilesTests } from './updateSubmissionFiles';
+import { DeleteLabTests } from './deleteLab';
 
 describe('Lab', () => {
     const dbManager = new DatabaseManager('test:lab', admin);
 
     const getLabListTests = new GetLabListTests(dbManager);
     const getLabTests = new GetLabTests(dbManager);
+    const createLabTests = new CreateLabTests(dbManager);
+    const updateLabTests = new UpdateLabTests(dbManager);
+    const updateSubmissionFilesTests = new UpdateSubmissionFilesTests(
+        dbManager,
+    );
+    const deleteLabTests = new DeleteLabTests(dbManager);
 
     before(async () => {
         await dbManager.init();
@@ -29,6 +39,34 @@ describe('Lab', () => {
             await getLabTests.createMocks();
         });
         getLabTests.executeTests();
+    });
+
+    describe('POST /lab', () => {
+        before(async () => {
+            await createLabTests.createMocks();
+        });
+        createLabTests.executeTests();
+    });
+
+    describe('PUT /lab/:labId', () => {
+        before(async () => {
+            await updateLabTests.createMocks();
+        });
+        updateLabTests.executeTests();
+    });
+
+    describe('PATCH /lab/:labId', () => {
+        before(async () => {
+            await updateSubmissionFilesTests.createMocks();
+        });
+        updateSubmissionFilesTests.executeTests();
+    });
+
+    describe('DELETE /lab/:labId', () => {
+        before(async () => {
+            await deleteLabTests.createMocks();
+        });
+        deleteLabTests.executeTests();
     });
 
     after(async () => {
