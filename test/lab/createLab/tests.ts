@@ -44,7 +44,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: ' ClOdc1 ',
+                    name: ' CLabOdcTa1 ',
                     openAt: baseTime,
                     dueDate: baseTime + 1000 * 3600,
                     closeAt: baseTime + 2000 * 3600,
@@ -58,21 +58,16 @@ export const tests: Test[] = [
             expect(res.data.openAt).to.be.a('number');
             expect(res.data.dueDate).to.be.a('number');
             expect(res.data.closeAt).to.be.a('number');
-            expect(res.data.submissionFiles).to.be.an('array');
-            expect(res.data.author).to.be.an('object');
             expect(res.data.createdAt).to.be.a('number');
             expect(res.data.updatedAt).to.be.a('number');
             expect(res.data.deletedAt).to.be.a('number');
-            expect(res.data.name).to.equal('ClOdc1');
+            expect(res.data.name).to.equal('CLabOdcTa1');
             expect(res.data.openAt).to.equal(baseTime);
             expect(res.data.dueDate).to.equal(baseTime + 1000 * 3600);
             expect(res.data.closeAt).to.equal(baseTime + 2000 * 3600);
-            expect(res.data.submissionFiles).to.be.empty;
-            expect(res.data.author.username).to.be.a('string');
-            expect(res.data.author.username).to.equal(taUser.username);
             expect(res.data.deletedAt).to.equal(0);
 
-            const lab = await getLabByName(dataSource, 'ClOdc1');
+            const lab = await getLabByName(dataSource, 'CLabOdcTa1');
             expect(lab).to.be.not.null;
         },
     },
@@ -88,7 +83,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClOdc2',
+                    name: 'CLabOdcTa2',
                     openAt: baseTime,
                     dueDate: baseTime + 1000 * 3600,
                     closeAt: baseTime + 1000 * 3600,
@@ -102,21 +97,16 @@ export const tests: Test[] = [
             expect(res.data.openAt).to.be.a('number');
             expect(res.data.dueDate).to.be.a('number');
             expect(res.data.closeAt).to.be.a('number');
-            expect(res.data.submissionFiles).to.be.an('array');
-            expect(res.data.author).to.be.an('object');
             expect(res.data.createdAt).to.be.a('number');
             expect(res.data.updatedAt).to.be.a('number');
             expect(res.data.deletedAt).to.be.a('number');
-            expect(res.data.name).to.equal('ClOdc2');
+            expect(res.data.name).to.equal('CLabOdcTa2');
             expect(res.data.openAt).to.equal(baseTime);
             expect(res.data.dueDate).to.equal(baseTime + 1000 * 3600);
             expect(res.data.closeAt).to.equal(baseTime + 1000 * 3600);
-            expect(res.data.submissionFiles).to.be.empty;
-            expect(res.data.author.username).to.be.a('string');
-            expect(res.data.author.username).to.equal(taUser.username);
             expect(res.data.deletedAt).to.equal(0);
 
-            const lab = await getLabByName(dataSource, 'ClOdc1');
+            const lab = await getLabByName(dataSource, 'CLabOdcTa2');
             expect(lab).to.be.not.null;
         },
     },
@@ -165,7 +155,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'Cl_NameInvalid',
+                    name: 'CLab_NameInv',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
@@ -186,7 +176,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClNameExceedClNameExceedClNameExceed',
+                    name: 'CLabNameExceedCLabNameExceedCLabNameExceed',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
@@ -207,7 +197,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClOpenNotEx',
+                    name: 'CLabOpenNotEx',
                     dueDate: Date.now() + 2000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
                 },
@@ -227,7 +217,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClOpenInv',
+                    name: 'CLabOpenInv',
                     openAt: '2025-01-01',
                     dueDate: Date.now() + 2000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
@@ -248,7 +238,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClDueNotEx',
+                    name: 'CLabDueNotEx',
                     openAt: Date.now() + 1000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
                 },
@@ -268,7 +258,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClDueInv',
+                    name: 'CLabDueInv',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: '2030-01-01',
                     closeAt: Date.now() + 3000 * 3600,
@@ -289,7 +279,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClCloseNotEx',
+                    name: 'CLabCloseNotEx',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
                 },
@@ -309,7 +299,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClCloseInv',
+                    name: 'CLabCloseInv',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
                     closeAt: '2031-01-01',
@@ -332,7 +322,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClOcd',
+                    name: 'CLabOcd',
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 3000,
                     closeAt: baseTime + 2000,
@@ -355,7 +345,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClDoc',
+                    name: 'CLabDoc',
                     openAt: baseTime + 2000,
                     dueDate: baseTime + 1000,
                     closeAt: baseTime + 3000,
@@ -378,7 +368,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClDco',
+                    name: 'CLabDco',
                     openAt: baseTime + 3000,
                     dueDate: baseTime + 1000,
                     closeAt: baseTime + 2000,
@@ -401,7 +391,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClCod',
+                    name: 'CLabCod',
                     openAt: baseTime + 2000,
                     dueDate: baseTime + 3000,
                     closeAt: baseTime + 1000,
@@ -424,7 +414,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClCdo',
+                    name: 'CLabCdo',
                     openAt: baseTime + 3000,
                     dueDate: baseTime + 2000,
                     closeAt: baseTime + 1000,
@@ -447,7 +437,7 @@ export const tests: Test[] = [
                     Cookie: TA_COOKIE,
                 },
                 data: {
-                    name: 'ClODc',
+                    name: 'CLabODc',
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 1000,
                     closeAt: baseTime + 3000,

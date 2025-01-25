@@ -66,7 +66,6 @@ export const createMock = async (dataSource: DataSource) => {
                 openAt: Date.now() - 3000,
                 dueDate: Date.now() - 2000,
                 closeAt: Date.now() - 1000,
-                submissionFiles: [`${name}_1.v`, `${name}_2.v`],
                 author: users[0],
                 createdAt: Date.now(),
                 updatedAt: Date.now(),

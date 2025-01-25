@@ -20,31 +20,39 @@ const compareLabs = (actual: any, expected: any) => {
         'openAt',
         'dueDate',
         'closeAt',
-        'submissionFiles',
         'author',
         'createdAt',
         'updatedAt',
         'deletedAt',
+        'submissionFiles',
     );
     expect(actual.id).to.be.a('number');
     expect(actual.name).to.be.a('string');
     expect(actual.openAt).to.be.a('number');
     expect(actual.dueDate).to.be.a('number');
     expect(actual.closeAt).to.be.a('number');
-    expect(actual.submissionFiles).to.be.an('array');
     expect(actual.author).to.be.an('object');
     expect(actual.createdAt).to.be.a('number');
     expect(actual.updatedAt).to.be.a('number');
     expect(actual.deletedAt).to.be.a('number');
+    expect(actual.submissionFiles).to.be.an('array');
 
     expect(actual.name).to.equal(expected.name);
     expect(actual.openAt).to.equal(expected.openAt);
     expect(actual.dueDate).to.equal(expected.dueDate);
     expect(actual.closeAt).to.equal(expected.closeAt);
-    expect(actual.submissionFiles).to.deep.equal(expected.submissionFiles);
     expect(actual.author).to.have.key('username');
     expect(actual.author.username).to.equal(expected.authorUsername);
     expect(actual.deletedAt).to.equal(expected.deletedAt);
+
+    expect(actual.submissionFiles).to.have.lengthOf(expected.submissionFilenames.length);
+    actual.submissionFiles.forEach((a: any, i: number) => {
+        expect(a).to.have.all.keys('id', 'name', 'createdAt');
+        expect(a.id).to.be.a('number');
+        expect(a.name).to.be.a('string');
+        expect(a.createdAt).to.be.a('number');
+        expect(a.name).to.equal(expected.submissionFilenames[i]);
+    });
 };
 
 export const tests: Test[] = [

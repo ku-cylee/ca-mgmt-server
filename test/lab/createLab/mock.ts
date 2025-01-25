@@ -3,27 +3,26 @@ import { UserRole } from '../../../src/lib/enums';
 import { Lab, User } from '../../../src/models';
 
 export const taUser = {
-    username: 'ClTa',
-    secretKey: 'ClTaSecretKey',
+    username: 'CLabTa',
+    secretKey: 'CLabTaSecretKey',
     role: UserRole.TA,
     createdAt: Date.now(),
     updatedAt: Date.now(),
 };
 
 export const studentUser = {
-    username: 'ClStdnt',
-    secretKey: 'ClStdntSecretKey',
+    username: 'CLabStdnt',
+    secretKey: 'CLabStdntSecretKey',
     role: UserRole.STUDENT,
     createdAt: Date.now(),
     updatedAt: Date.now(),
 };
 
 export const duplicateLab = {
-    name: 'ClDuplicate',
+    name: 'CLabDuplicate',
     openAt: Date.now() - 1000 * 3600,
     dueDate: Date.now(),
     closeAt: Date.now() + 1000 * 3600,
-    submissionFiles: [],
     createdAt: Date.now(),
     updatedAt: Date.now(),
 };

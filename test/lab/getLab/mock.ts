@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { UserRole } from '../../../src/lib/enums';
-import { Lab, SkeletonFile, User } from '../../../src/models';
+import { Lab, SkeletonFile, SubmissionFile, User } from '../../../src/models';
 
 export const taUser = {
     username: 'GlTa',
@@ -23,10 +23,10 @@ export const undeletedOpenLab = {
     openAt: Date.now() - 1000 * 3600,
     dueDate: Date.now() + 1000 * 3600,
     closeAt: Date.now() + 1000 * 3600 * 2,
-    submissionFiles: ['gl_lab_udo1.v', 'gl_lab_udo2.v'],
+    submissionFilenames: ['gl_lab_udo1.v', 'gl_lab_udo2.v'],
     authorUsername: 'GlTa',
     deletedAt: 0,
-    skeletonFiles: [
+    skeletonFileData: [
         {
             path: '/src/gl_skel_udo1.v',
             content: 'gl_skel_udo1_content',
@@ -47,10 +47,10 @@ export const undeletedUnopenLab = {
     openAt: Date.now() + 1000 * 3600,
     dueDate: Date.now() + 1000 * 3600,
     closeAt: Date.now() + 1000 * 3600 * 2,
-    submissionFiles: ['gl_lab_uduo1.v', 'gl_lab_uduo2.v'],
+    submissionFilenames: ['gl_lab_uduo1.v', 'gl_lab_uduo2.v'],
     authorUsername: 'GlTa',
     deletedAt: 0,
-    skeletonFiles: [
+    skeletonFileData: [
         {
             path: '/src/gl_skel_uduo1.v',
             content: 'gl_skel_uduo1_content',
@@ -71,10 +71,10 @@ export const deletedOpenLab = {
     openAt: Date.now() - 1000 * 3600,
     dueDate: Date.now() + 1000 * 3600,
     closeAt: Date.now() + 1000 * 3600 * 2,
-    submissionFiles: ['gl_lab_do1.v', 'gl_lab_do2.v'],
+    submissionFilenames: ['gl_lab_do1.v', 'gl_lab_do2.v'],
     authorUsername: 'GlTa',
     deletedAt: Date.now(),
-    skeletonFiles: [
+    skeletonFileData: [
         {
             path: '/src/gl_skel_do1.v',
             content: 'gl_skel_do1_content',
@@ -95,10 +95,10 @@ export const deletedUnopenLab = {
     openAt: Date.now() + 1000 * 3600,
     dueDate: Date.now() + 1000 * 3600,
     closeAt: Date.now() + 1000 * 3600 * 2,
-    submissionFiles: ['gl_lab_duo1.v', 'gl_lab_duo2.v'],
+    submissionFilenames: ['gl_lab_duo1.v', 'gl_lab_duo2.v'],
     authorUsername: 'GlTa',
     deletedAt: Date.now(),
-    skeletonFiles: [
+    skeletonFileData: [
         {
             path: '/src/gl_skel_duo1.v',
             content: 'gl_skel_duo1_content',
@@ -119,7 +119,7 @@ export const createMock = async (dataSource: DataSource) => {
     const users = userRepo.create([taUser, studentUser]);
     await userRepo.save(users);
 
-    const labMock = [
+    const labMocks = [
         undeletedOpenLab,
         undeletedUnopenLab,
         deletedUnopenLab,
@@ -128,27 +128,15 @@ export const createMock = async (dataSource: DataSource) => {
 
     const labRepo = dataSource.getRepository(Lab);
     const labs = labRepo.create(
-        labMock.map(lab => {
-            const {
-                name,
-                openAt,
-                dueDate,
-                closeAt,
-                submissionFiles,
-                authorUsername,
-                deletedAt,
-            } = lab;
-            const author = users.find(user => user.username === authorUsername);
+        labMocks.map(lab => {
+            const author = users.find(
+                user => user.username === lab.authorUsername,
+            );
             return {
-                name,
-                openAt,
-                dueDate,
-                closeAt,
-                submissionFiles,
+                ...lab,
                 author,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
-                deletedAt,
             };
         }),
     );
@@ -156,12 +144,12 @@ export const createMock = async (dataSource: DataSource) => {
 
     const skeletonRepo = dataSource.getRepository(SkeletonFile);
     const skeletons = skeletonRepo.create(
-        labMock
-            .map((lab, idx) =>
-                lab.skeletonFiles.map(skeleton => {
+        labMocks
+            .map((labMock, labIdx) =>
+                labMock.skeletonFileData.map(skeleton => {
                     return {
-                        lab: labs[idx],
                         ...skeleton,
+                        lab: labs[labIdx],
                         createdAt: Date.now(),
                     };
                 }),
@@ -169,4 +157,20 @@ export const createMock = async (dataSource: DataSource) => {
             .reduce((prev, next) => prev.concat(next), []),
     );
     await skeletonRepo.save(skeletons);
+
+    const sbfRepo = dataSource.getRepository(SubmissionFile);
+    const submissionFiles = sbfRepo.create(
+        labMocks
+            .map((labMock, labIdx) =>
+                labMock.submissionFilenames.map((name: string) => {
+                    return {
+                        name,
+                        lab: labs[labIdx],
+                        createdAt: Date.now(),
+                    };
+                }),
+            )
+            .reduce((prev, next) => prev.concat(next), []),
+    );
+    await sbfRepo.save(submissionFiles);
 };

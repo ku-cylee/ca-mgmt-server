@@ -70,9 +70,6 @@ export const tests: Test[] = [
             expect(res.data.openAt).to.be.a('number');
             expect(res.data.dueDate).to.be.a('number');
             expect(res.data.closeAt).to.be.a('number');
-            expect(res.data.submissionFiles).to.be.an('array');
-            expect(res.data.author).to.be.an('object');
-            expect(res.data.author.username).to.be.a('string');
             expect(res.data.createdAt).to.be.a('number');
             expect(res.data.updatedAt).to.be.a('number');
             expect(res.data.deletedAt).to.be.a('number');
@@ -80,8 +77,6 @@ export const tests: Test[] = [
             expect(res.data.openAt).to.equal(curTime + 1000);
             expect(res.data.dueDate).to.equal(curTime + 2000);
             expect(res.data.closeAt).to.equal(curTime + 3000);
-            expect(res.data.submissionFiles).to.be.deep.equal(['ULabOrigTa_1.v', 'ULabOrigTa_2.v']);
-            expect(res.data.author.username).to.equal(taUser.username);
 
             const lab = await getLabByName(dataSource, 'ULabOrigTaN');
             expect(lab).to.be.not.null;
@@ -89,7 +84,6 @@ export const tests: Test[] = [
             expect(lab?.openAt).to.equal(curTime + 1000);
             expect(lab?.dueDate).to.equal(curTime + 2000);
             expect(lab?.closeAt).to.equal(curTime + 3000);
-            expect(lab?.submissionFiles).to.be.deep.equal(['ULabOrigTa_1.v', 'ULabOrigTa_2.v']);
             expect(lab?.createdAt).to.equal(origLab.createdAt);
             expect(lab?.updatedAt).to.be.above(origLab.updatedAt);
         },

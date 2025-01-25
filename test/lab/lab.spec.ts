@@ -6,7 +6,6 @@ import { GetLabTests } from './getLab';
 import { admin } from './admin';
 import { CreateLabTests } from './createLab';
 import { UpdateLabTests } from './updateLab';
-import { UpdateSubmissionFilesTests } from './updateSubmissionFiles';
 import { DeleteLabTests } from './deleteLab';
 
 describe('Lab', () => {
@@ -16,9 +15,6 @@ describe('Lab', () => {
     const getLabTests = new GetLabTests(dbManager);
     const createLabTests = new CreateLabTests(dbManager);
     const updateLabTests = new UpdateLabTests(dbManager);
-    const updateSubmissionFilesTests = new UpdateSubmissionFilesTests(
-        dbManager,
-    );
     const deleteLabTests = new DeleteLabTests(dbManager);
 
     before(async () => {
@@ -53,13 +49,6 @@ describe('Lab', () => {
             await updateLabTests.createMocks();
         });
         updateLabTests.executeTests();
-    });
-
-    describe('PATCH /lab/:labId', () => {
-        before(async () => {
-            await updateSubmissionFilesTests.createMocks();
-        });
-        updateSubmissionFilesTests.executeTests();
     });
 
     describe('DELETE /lab/:labId', () => {

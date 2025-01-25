@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { UserRole } from '../../../src/lib/enums';
-import { Lab, User } from '../../../src/models';
+import { Lab, SubmissionFile, User } from '../../../src/models';
 
 export const taUsers = [
     {
@@ -33,7 +33,7 @@ export const undeletedOpenLabs = [
         openAt: Date.now() - 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFiles: [],
+        submissionFilenames: [],
         authorUsername: 'GllTa1',
         deletedAt: 0,
     },
@@ -42,7 +42,7 @@ export const undeletedOpenLabs = [
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFiles: ['gll_lab_121.v'],
+        submissionFilenames: ['gll_lab_121.v'],
         authorUsername: 'GllTa2',
         deletedAt: 0,
     },
@@ -51,7 +51,7 @@ export const undeletedOpenLabs = [
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFiles: ['gll_lab_131.v', 'gll_lab_132.v'],
+        submissionFilenames: ['gll_lab_131.v', 'gll_lab_132.v'],
         authorUsername: 'GllTa2',
         deletedAt: 0,
     },
@@ -63,7 +63,7 @@ export const undeletedUnopenLabs = [
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFiles: [],
+        submissionFilenames: [],
         authorUsername: 'GllTa1',
         deletedAt: 0,
     },
@@ -72,7 +72,7 @@ export const undeletedUnopenLabs = [
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600 * 2,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFiles: ['gll_lab_221.v', 'gll_lab_222.v'],
+        submissionFilenames: ['gll_lab_221.v', 'gll_lab_222.v'],
         authorUsername: 'GllTa2',
         deletedAt: 0,
     },
@@ -84,7 +84,7 @@ export const deletedOpenLabs = [
         openAt: Date.now() - 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFiles: [],
+        submissionFilenames: [],
         authorUsername: 'GllTa1',
         deletedAt: Date.now(),
     },
@@ -93,7 +93,7 @@ export const deletedOpenLabs = [
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFiles: ['gll_lab_121.v'],
+        submissionFilenames: ['gll_lab_321.v'],
         authorUsername: 'GllTa1',
         deletedAt: Date.now(),
     },
@@ -102,7 +102,7 @@ export const deletedOpenLabs = [
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFiles: ['gll_lab_131.v', 'gll_lab_132.v'],
+        submissionFilenames: ['gll_lab_331.v', 'gll_lab_332.v'],
         authorUsername: 'GllTa2',
         deletedAt: Date.now(),
     },
@@ -114,7 +114,7 @@ export const deletedUnopenLabs = [
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFiles: [],
+        submissionFilenames: [],
         authorUsername: 'GllTa1',
         deletedAt: Date.now(),
     },
@@ -123,7 +123,7 @@ export const deletedUnopenLabs = [
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600 * 2,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFiles: ['gll_lab_221.v', 'gll_lab_222.v'],
+        submissionFilenames: ['gll_lab_421.v', 'gll_lab_422.v'],
         authorUsername: 'GllTa2',
         deletedAt: Date.now(),
     },
@@ -144,31 +144,34 @@ export const createMock = async (dataSource: DataSource) => {
     const labRepo = dataSource.getRepository(Lab);
     const labs = labRepo.create(
         labMocks.map(lab => {
-            const {
-                name,
-                openAt,
-                dueDate,
-                closeAt,
-                submissionFiles,
-                authorUsername,
-                deletedAt,
-            } = lab;
-
-            const author = users.find(user => user.username === authorUsername);
+            const author = users.find(
+                user => user.username === lab.authorUsername,
+            );
             if (!author) throw new Error();
 
             return {
-                name,
-                openAt,
-                dueDate,
-                closeAt,
-                submissionFiles,
+                ...lab,
                 author,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
-                deletedAt,
             };
         }),
     );
     await labRepo.save(labs);
+
+    const sbfRepo = dataSource.getRepository(SubmissionFile);
+    const submissionFiles = sbfRepo.create(
+        labMocks
+            .map((labMock, labIdx) =>
+                labMock.submissionFilenames.map((name: string) => {
+                    return {
+                        name,
+                        lab: labs[labIdx],
+                        createdAt: Date.now(),
+                    };
+                }),
+            )
+            .reduce((prev, next) => prev.concat(next), []),
+    );
+    await sbfRepo.save(submissionFiles);
 };
