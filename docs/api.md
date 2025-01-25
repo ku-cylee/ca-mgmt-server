@@ -100,13 +100,17 @@
         openAt: timestamp,
         dueDate: timestamp,
         closeAt: timestamp,
-        submissionFiles: [string],
         author: {
             username: string,
         },
         createdAt: timestamp,
         updatedAt: timestamp,
         deletedAt: timestamp,
+        submissionFiles: [{
+            id: number,
+            name: string,
+            createdAt: timestamp,
+        }],
     }]
     ```
     + Student requester receives undeleted, open labs.
@@ -132,7 +136,6 @@
         openAt: timestamp,
         dueDate: timestamp,
         closeAt: timestamp,
-        submissionFiles: [string],
         author: {
             username: string,
         },
@@ -144,12 +147,18 @@
             path: string,
             createdAt: timestamp,
         }],
+        submissionFiles: [{
+            id: number,
+            name: string,
+            createdAt: timestamp,
+        }],
     }
     ```
+    - 403
+        + Requester is student and the lab `labName` is not yet open.
     - 404
         + Lab `labName` does not exist.
         + Requester is not admin and the lab `labName` is deleted.
-        + Requester is student and the lab `labName` is not yet open.
 
 ### POST /lab
 * Creates a lab from the request.
@@ -173,10 +182,6 @@
         openAt: number,
         dueDate: number,
         closeAt: number,
-        submissionFiles: [string],
-        author: {
-            username: string,
-        },
         createdAt: number,
         updatedAt: number,
         deletedAt: number,
@@ -215,10 +220,6 @@
         openAt: number,
         dueDate: number,
         closeAt: number,
-        submissionFiles: [string],
-        author: {
-            username: string,
-        },
         createdAt: number,
         updatedAt: number,
         deletedAt: number,
@@ -235,46 +236,6 @@
         + Lab `labName` is deleted.
     - 409
         + Lab named `body.name` already exists.
-
-### PATCH /lab/:labName
-* Updates submission filenames list of lab `labName` from the request.
-* Request
-```
-{
-    params: {
-        labName: string,
-    },
-    body: {
-        submissionFiles: [string],
-    },
-}
-```
-* Response
-    - 200
-    ```
-    {
-        id: number,
-        name: string,
-        openAt: number,
-        dueDate: number,
-        closeAt: number,
-        submissionFiles: [string],
-        author: {
-            username: string,
-        },
-        createdAt: number,
-        updatedAt: number,
-        deletedAt: number,
-    }
-    ```
-    - 400
-        + Items of `submissionFiles` contain comma.
-    - 403
-        + Requester is not TA.
-        + Requester is not the author of the lab `labName`.
-    - 404
-        + Lab `labName` does not exist.
-        + Lab `labName` is deleted.
 
 ### DELETE /lab/:labName
 * Deletes the lab `labName`.
@@ -312,7 +273,6 @@
     ```
     [{
         id: number,
-        labId: number,
         path: string,
         content: string,
         checksum: string,
@@ -337,6 +297,7 @@
     body: {
         path: string,
         content: string,
+        checksum: string,
         isExecutable: boolean,
     },
 }
@@ -346,8 +307,9 @@
     ```
     {
         id: number,
+        path: string,
         checksum: string,
-        createdAt: timestamp,
+        isExecutable: boolean,
     }
     ```
     - 400
@@ -359,7 +321,7 @@
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
     - 409
-        + Skeleton files of `labName` already exist.
+        + Checksum mismatch.
 
 ### DELETE /skeleton
 * Deletes the skeleton files of lab `labName`.
@@ -380,10 +342,41 @@
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
 
+## Submission Files
+
+### POST /submission_file
+* Deletes the submission files of `labName`, then creates the submission files of `labName`.
+* Request
+```
+{
+    query: {
+        labName: string,
+    },
+    body: {
+        filenames: [string],
+    },
+}
+```
+* Response
+    - 200
+    ```
+    [{
+        id: number,
+        name: string,
+        createdAt: timestamp,
+    }]
+    ```
+    - 403
+        + Requester is not TA.
+        + Requester is not an author of lab `labName`.
+    - 404
+        + Lab `labName` does not exist.
+        + Lab `labName` is deleted.
+
 ## Submission
 
 ### GET /submission
-* Gets the list of submission files.
+* Gets the list of submissions.
 * Request
 ```
 {
@@ -400,28 +393,36 @@
         ```
         [{
             id: number,
-            labId: number,
             author: {
                 username: string,
             },
-            filename: string,
+            file: {
+                name: string,
+                lab: {
+                    id: number,
+                    name: string,
+                },
+            },
             content: string,
             checksum: string,
             createdAt: string,
-            updatedAt: string,
         }]
         ```
         + `content` is `false`
         ```
         [{
             id: number,
-            labId: number,
             author: {
                 username: string,
             },
-            filename: string,
+            file: {
+                name: string,
+                lab: {
+                    id: number,
+                    name: string,
+                },
+            },
             createdAt: string,
-            updatedAt: string,
         }]
         ```
         + If `author` or `labName` is invalid, the respond is an empty array.
@@ -437,23 +438,23 @@
 {
     query: {
         labName: string,
+        fileName: string,
     },
     body: {
-        filename: string,
         content: string,
+        checksum: string,
+        createdAt: timestamp,
     },
 }
 ```
 * Response
     - 200
-        ```
-        {
-            id: string,
-            checksum: string,
-        }
-        ```
-    - 400
-        + Some `content` exceeds maxlength.
+    ```
+    {
+        id: string,
+        checksum: string,
+    }
+    ```
     - 403
         + Requester is admin.
         + Requester is student and lab `labName` is not yet open.
@@ -461,6 +462,10 @@
     - 404
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
+        + Submission file `fileName` on the lab `labName` does not exist.
+        + Submission file `fileName` on the lab `labName` is deleted.
+    - 409
+        + Checksum mismatch.
 
 ## Bomb
 
@@ -481,7 +486,6 @@
         ```
         [{
             id: number,
-            labId: number,
             createdAt: timestamp,
             defuses: {
                 phase: number,
@@ -493,7 +497,6 @@
         ```
         [{
             id: number,
-            labId: number,
             author: {
                 username: string,
             },
@@ -507,17 +510,23 @@
         + If requester is student and `author` is not requester, response is an empty array.
 
 ### POST /bomb
-* Creates a bomb for the requester, and responds its download URL.
+* Creates a bomb for the requester, and responds its `longId` for download.
 * Request
+```
+{
+    query: {
+        labName: string,
+    },
+}
+```
+* Response
+    - 200
     ```
     {
-        query: {
-            labName: string,
-        },
+        longId: string,
+        createdAt: string,
     }
     ```
-* Response
-    - 200: `{ url: string }`
     - 403
         + Requester is admin.
         + Lab `labName` is not yet open.
