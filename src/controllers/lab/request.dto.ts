@@ -60,23 +60,6 @@ export class UpdateLabRequest {
     }
 }
 
-export class UpdateSubmissionFilesRequest {
-    labName!: string;
-
-    submissionFiles!: string[];
-
-    constructor(req: Request) {
-        const { labName } = req.params;
-        const { submissionFiles } = req.body;
-
-        this.labName = validate(labName, schemes.labName.required());
-        this.submissionFiles = validate(
-            submissionFiles,
-            schemes.submissionFiles.required(),
-        );
-    }
-}
-
 export class DeleteLabRequest {
     labName!: string;
 

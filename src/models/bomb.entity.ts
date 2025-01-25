@@ -47,5 +47,5 @@ export default class Bomb extends BaseEntity {
     createdAt!: number;
 
     @OneToMany(() => Defuse, defuse => defuse.bomb, { cascade: true })
-    defuses!: Defuse[];
+    defuseTrials!: Defuse[];
 }

@@ -3,6 +3,7 @@ import Defuse from './defuse.entity';
 import Lab from './lab.entity';
 import SkeletonFile from './skeleton-file.entity';
 import Submission from './submission.entity';
+import SubmissionFile from './submission-file.entity';
 import User from './user.entity';
 
-export { Bomb, Defuse, Lab, SkeletonFile, Submission, User };
+export { Bomb, Defuse, Lab, SkeletonFile, Submission, SubmissionFile, User };

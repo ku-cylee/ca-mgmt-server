@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import Bomb from './bomb.entity';
 import SkeletonFile from './skeleton-file.entity';
-import SubmissionFiles from './submission-files.entity';
+import SubmissionFiles from './submission-file.entity';
 import User from './user.entity';
 import { transformer } from './commons/timestamp-trasnformer';
 

@@ -6,7 +6,6 @@ import {
     DeleteLabRequest,
     GetLabRequest,
     UpdateLabRequest,
-    UpdateSubmissionFilesRequest,
 } from './request.dto';
 import { NotFoundError, ForbiddenError } from '../../lib/http-errors';
 import {
@@ -14,7 +13,6 @@ import {
     GetLabListResponse,
     GetLabResponse,
     UpdateLabResponse,
-    UpdateSubmissionFilesResponse,
 } from './response.dto';
 
 export const getLabList: RequestHandler = async (req, res) => {
@@ -29,13 +27,10 @@ export const getLab: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
     const { labName } = new GetLabRequest(req);
 
-    const lab = await LabDAO.getByName(
-        labName,
-        !requester.isStudent,
-        requester.isAdmin,
-    );
+    const lab = await LabDAO.getByName(labName, requester.isAdmin);
 
     if (!lab) throw NotFoundError;
+    if (requester.isStudent && !lab.isOpen) throw ForbiddenError;
 
     return res.send(toResponse(GetLabResponse, lab));
 };
@@ -59,7 +54,7 @@ export const updateLab: RequestHandler = async (req, res) => {
         req,
     );
 
-    const lab = await LabDAO.getByName(labName, true);
+    const lab = await LabDAO.getByName(labName);
     if (!lab) throw NotFoundError;
     if (!lab.author.is(requester)) throw ForbiddenError;
 
@@ -71,31 +66,13 @@ export const updateLab: RequestHandler = async (req, res) => {
     return res.send(toResponse(UpdateLabResponse, updatedLab));
 };
 
-export const updateSubmissionFiles: RequestHandler = async (req, res) => {
-    const { requester } = res.locals;
-    if (!requester.isTA) throw ForbiddenError;
-
-    const { labName, submissionFiles } = new UpdateSubmissionFilesRequest(req);
-
-    const lab = await LabDAO.getByName(labName, true);
-    if (!lab) throw NotFoundError;
-    if (!lab.author.is(requester)) throw ForbiddenError;
-
-    await LabDAO.updateSubmissionFilesById(lab.id, submissionFiles);
-
-    const updatedLab = await LabDAO.getById(lab.id);
-    if (!updatedLab) throw NotFoundError;
-
-    return res.send(toResponse(UpdateSubmissionFilesResponse, updatedLab));
-};
-
 export const deleteLab: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
     if (requester.isStudent) throw ForbiddenError;
 
     const { labName } = new DeleteLabRequest(req);
 
-    const lab = await LabDAO.getByName(labName, true);
+    const lab = await LabDAO.getByName(labName);
 
     if (!lab) throw NotFoundError;
 

@@ -12,6 +12,17 @@ class SkeletonFileDTO {
     createdAt!: number;
 }
 
+class SubmissionFileDTO {
+    @Expose()
+    id!: number;
+
+    @Expose()
+    name!: string;
+
+    @Expose()
+    createdAt!: number;
+}
+
 export class GetLabListResponse {
     @Expose()
     id!: number;
@@ -29,9 +40,6 @@ export class GetLabListResponse {
     closeAt!: number;
 
     @Expose()
-    submissionFiles!: string[];
-
-    @Expose()
     @Type(() => AuthorDTO)
     author!: AuthorDTO;
 
@@ -43,6 +51,10 @@ export class GetLabListResponse {
 
     @Expose()
     deletedAt!: number;
+
+    @Expose()
+    @Type(() => SubmissionFileDTO)
+    submissionFiles!: SubmissionFileDTO[];
 }
 
 export class GetLabResponse {
@@ -62,9 +74,6 @@ export class GetLabResponse {
     closeAt!: number;
 
     @Expose()
-    submissionFiles!: string[];
-
-    @Expose()
     @Type(() => AuthorDTO)
     author!: AuthorDTO;
 
@@ -80,6 +89,10 @@ export class GetLabResponse {
     @Expose()
     @Type(() => SkeletonFileDTO)
     skeletonFiles!: SkeletonFileDTO[];
+
+    @Expose()
+    @Type(() => SubmissionFileDTO)
+    submissionFiles!: SubmissionFileDTO[];
 }
 
 export class CreateLabResponse {
@@ -97,13 +110,6 @@ export class CreateLabResponse {
 
     @Expose()
     closeAt!: number;
-
-    @Expose()
-    submissionFiles!: string[];
-
-    @Expose()
-    @Type(() => AuthorDTO)
-    author!: AuthorDTO;
 
     @Expose()
     createdAt!: number;
@@ -130,46 +136,6 @@ export class UpdateLabResponse {
 
     @Expose()
     closeAt!: number;
-
-    @Expose()
-    submissionFiles!: string[];
-
-    @Expose()
-    @Type(() => AuthorDTO)
-    author!: AuthorDTO;
-
-    @Expose()
-    createdAt!: number;
-
-    @Expose()
-    updatedAt!: number;
-
-    @Expose()
-    deletedAt!: number;
-}
-
-export class UpdateSubmissionFilesResponse {
-    @Expose()
-    id!: number;
-
-    @Expose()
-    name!: string;
-
-    @Expose()
-    openAt!: number;
-
-    @Expose()
-    dueDate!: number;
-
-    @Expose()
-    closeAt!: number;
-
-    @Expose()
-    submissionFiles!: string[];
-
-    @Expose()
-    @Type(() => AuthorDTO)
-    author!: AuthorDTO;
 
     @Expose()
     createdAt!: number;

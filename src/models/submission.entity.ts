@@ -5,7 +5,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import SubmissionFile from './submission-files.entity';
+import SubmissionFile from './submission-file.entity';
 import User from './user.entity';
 import { transformer } from './commons/timestamp-trasnformer';
 

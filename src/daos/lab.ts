@@ -17,19 +17,20 @@ export const getById = async (id: number): Promise<Lab | null> => {
 
 export const getByName = async (
     name: string,
-    includeUnopen = false,
     includeDeleted = false,
 ): Promise<Lab | null> => {
-    const currentTimestamp = Date.now();
     const repo = getRepo();
 
     const where: FindOptionsWhere<Lab> = { name };
-    if (!includeUnopen) where.openAt = LessThanOrEqual(currentTimestamp);
     if (!includeDeleted) where.deletedAt = 0;
 
     const lab = await repo.findOne({
         where,
-        relations: { author: true, skeletonFiles: true },
+        relations: {
+            author: true,
+            skeletonFiles: true,
+            submissionFiles: true,
+        },
     });
 
     return lab;
@@ -48,7 +49,7 @@ export const getList = async (
 
     const labs = await repo.find({
         where: options,
-        relations: { author: true },
+        relations: { author: true, submissionFiles: true },
     });
 
     return labs;
@@ -69,7 +70,6 @@ export const create = async (
         openAt,
         dueDate,
         closeAt,
-        submissionFiles: [],
         author,
         createdAt: currentTimestamp,
         updatedAt: currentTimestamp,
@@ -92,21 +92,6 @@ export const updateById = async (
     const result = await repo.update(
         { id },
         { name, openAt, dueDate, closeAt, updatedAt: currentTimestamp },
-    );
-
-    return result.affected ?? 0;
-};
-
-export const updateSubmissionFilesById = async (
-    id: number,
-    submissionFiles: string[],
-): Promise<number> => {
-    const currentTimestamp = Date.now();
-    const repo = getRepo();
-
-    const result = await repo.update(
-        { id },
-        { submissionFiles, updatedAt: currentTimestamp },
     );
 
     return result.affected ?? 0;

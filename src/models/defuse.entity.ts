@@ -7,7 +7,7 @@ export default class Defuse extends BaseEntity {
     @PrimaryColumn()
     id!: number;
 
-    @ManyToOne(() => Bomb, bomb => bomb.defuses, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Bomb, bomb => bomb.defuseTrials, { onDelete: 'CASCADE' })
     bomb!: Bomb;
 
     @Column()

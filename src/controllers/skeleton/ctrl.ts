@@ -21,7 +21,7 @@ export const getSkeletonList: RequestHandler = async (req, res) => {
 
     const { labName } = new GetSkeletonListRequest(req);
 
-    const lab = await LabDAO.getByName(labName, true);
+    const lab = await LabDAO.getByName(labName);
 
     if (!lab) throw NotFoundError;
     if (requester.isStudent && lab.isOpen) throw ForbiddenError;
@@ -39,7 +39,7 @@ export const createSkeleton: RequestHandler = async (req, res) => {
         req,
     );
 
-    const lab = await LabDAO.getByName(labName, true);
+    const lab = await LabDAO.getByName(labName);
 
     if (!lab) throw NotFoundError;
     if (!lab.author.is(requester)) throw ForbiddenError;
@@ -56,7 +56,7 @@ export const deleteSkeleton: RequestHandler = async (req, res) => {
 
     const { labName } = new DeleteSkeletonRequest(req);
 
-    const lab = await LabDAO.getByName(labName, true);
+    const lab = await LabDAO.getByName(labName);
     if (!lab) throw NotFoundError;
     if (!requester.isAdmin && !lab.author.is(requester)) throw ForbiddenError;
 
