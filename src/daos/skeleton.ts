@@ -1,21 +1,24 @@
+import { FindOptionsWhere } from 'typeorm';
 import { getChecksum } from '../lib/checksum';
 import { dataSource } from '../lib/database';
 import { Lab, SkeletonFile } from '../models';
 
 const getRepo = () => dataSource.getRepository(SkeletonFile);
 
-export const getListByLab = async (labId: number): Promise<SkeletonFile[]> => {
+export const getListByLab = async (
+    labId: number,
+    includeDeleted = false,
+): Promise<SkeletonFile[]> => {
     const repo = getRepo();
 
+    const where: FindOptionsWhere<SkeletonFile> = {
+        lab: { id: labId },
+    };
+    if (!includeDeleted) where.deletedAt = 0;
+
     const skeletonFiles = await repo.find({
-        where: {
-            lab: {
-                id: labId,
-            },
-        },
-        relations: {
-            lab: true,
-        },
+        where,
+        order: { id: 'ASC' },
     });
 
     return skeletonFiles;

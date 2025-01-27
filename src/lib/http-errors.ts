@@ -15,4 +15,6 @@ export const NotFoundError: HttpError = { name, code: 404 };
 
 export const ConflictError: HttpError = { name, code: 409 };
 
+export const UnprocessableError: HttpError = { name, code: 422 };
+
 export const InternalServerError: HttpError = { name, code: 500 };

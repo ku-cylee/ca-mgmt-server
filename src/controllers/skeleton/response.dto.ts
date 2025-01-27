@@ -5,9 +5,6 @@ export class GetSkeletonListResponse {
     id!: number;
 
     @Expose()
-    labId!: number;
-
-    @Expose()
     path!: string;
 
     @Expose()
@@ -21,6 +18,9 @@ export class GetSkeletonListResponse {
 
     @Expose()
     createdAt!: number;
+
+    @Expose()
+    deletedAt!: number;
 }
 
 export class CreateSkeletonResponse {
@@ -28,8 +28,17 @@ export class CreateSkeletonResponse {
     id!: number;
 
     @Expose()
+    path!: string;
+
+    @Expose()
     checksum!: string;
 
     @Expose()
+    isExecutable!: boolean;
+
+    @Expose()
     createdAt!: number;
+
+    @Expose()
+    deletedAt!: number;
 }

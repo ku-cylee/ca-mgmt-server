@@ -4,11 +4,13 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
+    Unique,
 } from 'typeorm';
 import Lab from './lab.entity';
 import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'skeleton_files' })
+@Unique(['lab', 'path', 'deletedAt'])
 export default class SkeletonFile extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;

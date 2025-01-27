@@ -19,20 +19,23 @@ export class CreateSkeletonRequest {
 
     content!: string;
 
+    checksum!: string;
+
     isExecutable!: boolean;
 
     constructor(req: Request) {
         const { labName } = req.query;
-        const { path, content, isExecutable } = req.body;
+        const { path, content, checksum, isExecutable } = req.body;
 
         this.labName = validate(labName, schemes.labName.required());
-        this.path = validate(path, schemes.string.max(256).required());
+        this.path = validate(path, schemes.string.max(128).required());
         this.content = validate(content, Joi.string().max(65536).required());
+        this.checksum = validate(checksum, schemes.string.max(16).required());
         this.isExecutable = validate(isExecutable, schemes.bool.required());
     }
 }
 
-export class DeleteSkeletonRequest {
+export class DeleteSkeletonListRequest {
     labName!: string;
 
     constructor(req: Request) {

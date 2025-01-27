@@ -278,6 +278,7 @@
         checksum: string,
         isExecutable: boolean,
         createdAt: timestamp,
+        deletedAt: timestamp,
     }]
     ```
     - 403
@@ -310,10 +311,10 @@
         path: string,
         checksum: string,
         isExecutable: boolean,
+        createdAt: timestamp,
+        deletedAt: timestamp,
     }
     ```
-    - 400
-        + `content` exceeds maxlength.
     - 403
         + Requester is not TA.
         + Requester is not an author of lab `labName`.
@@ -321,6 +322,8 @@
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
     - 409
+        + Undeleted skeleton file of path `path` on lab `labName` already exists.
+    - 422
         + Checksum mismatch.
 
 ### DELETE /skeleton
@@ -336,11 +339,11 @@
 * Response
     - 200
     - 403
-        + Requester is not TA.
+        + Requester is student.
         + Requester is neither admin nor the author of the lab `labName`.
     - 404
         + Lab `labName` does not exist.
-        + Lab `labName` is deleted.
+        + Lab `labName` is deleted and the requester is ta.
 
 ## Submission Files
 
@@ -464,7 +467,7 @@
         + Lab `labName` is deleted.
         + Submission file `fileName` on the lab `labName` does not exist.
         + Submission file `fileName` on the lab `labName` is deleted.
-    - 409
+    - 422
         + Checksum mismatch.
 
 ## Bomb
