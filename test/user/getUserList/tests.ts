@@ -1,13 +1,8 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
 import { deletedStudents, deletedTAs, undeletedStudents, undeletedTAs } from './mock';
-import { admin, getCookie } from '../../commons/auth';
-import { Test } from '../../commons/tests';
-
-const ADMIN_COOKIE = getCookie(admin);
-const TA_COOKIE = getCookie(undeletedTAs[0]);
-const STDNT_COOKIE = getCookie(undeletedStudents[0]);
+import { admin, Test } from '../../commons';
+import { request } from './request';
 
 const compareUsers = (actual: any, expected: any) => {
     expect(actual).to.be.an('object');
@@ -34,13 +29,9 @@ export const tests: Test[] = [
     {
         name: 'should respond all users if ta=true, student=true, deleted=true, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: true,
                     student: true,
                     deleted: true,
@@ -63,13 +54,9 @@ export const tests: Test[] = [
     {
         name: 'should respond all ta users if ta=true, student=false, deleted=true, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: true,
                     student: false,
                     deleted: true,
@@ -87,13 +74,9 @@ export const tests: Test[] = [
     {
         name: 'should respond all student users if ta=false, student=true, deleted=true, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: false,
                     student: true,
                     deleted: true,
@@ -111,13 +94,9 @@ export const tests: Test[] = [
     {
         name: 'should respond no users if ta=false, student=false, deleted=true, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: false,
                     student: false,
                     deleted: true,
@@ -132,13 +111,9 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted users if ta=true, student=true, deleted=false, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: true,
                     student: true,
                     deleted: false,
@@ -156,13 +131,9 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted ta users if ta=true, student=false, deleted=false, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: true,
                     student: false,
                     deleted: false,
@@ -178,13 +149,9 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted student users if ta=false, student=true, deleted=false, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: false,
                     student: true,
                     deleted: false,
@@ -202,13 +169,9 @@ export const tests: Test[] = [
     {
         name: 'should respond no users if ta=false, student=false, deleted=false, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: false,
                     student: false,
                     deleted: false,
@@ -223,13 +186,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.ta does not exist and requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     student: true,
                 },
             });
@@ -241,14 +200,10 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.ta is invalid and requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
-                    ta: 'ta',
+            const res = await request({
+                requester: admin,
+                query: {
+                    ta: 'yes',
                     student: true,
                 },
             });
@@ -260,13 +215,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.student does not exist and requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: true,
                 },
             });
@@ -278,13 +229,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.student is invalid and requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     ta: true,
                     student: 'student',
                 },
@@ -297,13 +244,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if requester is ta and deleted=true',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     ta: true,
                     student: true,
                     deleted: true,
@@ -317,13 +260,9 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted users if ta=true, student=true, deleted=false, requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     ta: true,
                     student: true,
                     deleted: false,
@@ -341,13 +280,9 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted ta users if ta=true, student=false, deleted=false, requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     ta: true,
                     student: false,
                     deleted: false,
@@ -363,13 +298,9 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted student users if ta=false, student=true, deleted=false, requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     ta: false,
                     student: true,
                     deleted: false,
@@ -387,13 +318,9 @@ export const tests: Test[] = [
     {
         name: 'should respond no users if ta=false, student=false, deleted=false, requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     ta: false,
                     student: false,
                     deleted: false,
@@ -408,13 +335,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.ta does not exist and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     student: true,
                 },
             });
@@ -426,14 +349,10 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.ta is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
-                    ta: 'ta',
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
+                    ta: 'yes',
                     student: true,
                 },
             });
@@ -445,13 +364,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.student does not exist and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     ta: true,
                 },
             });
@@ -463,13 +378,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if query.student is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedTAs[0],
+                query: {
                     ta: true,
                     student: 'student',
                 },
@@ -482,13 +393,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 requester is student, regardless of input',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/user',
-                headers: {
-                    Cookie: STDNT_COOKIE,
-                },
-                params: {
+            const res = await request({
+                requester: undeletedStudents[0],
+                query: {
                     ta: true,
                     student: true,
                     deleted: true,

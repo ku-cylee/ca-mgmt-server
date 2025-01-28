@@ -1,13 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
 import { otherTaUser, studentUser, taUser } from './mock';
-import { admin, getCookie } from '../../commons/auth';
+import { admin, Test } from '../../commons';
 import { Lab } from '../../../src/models';
 import { dataSource } from '../database';
-import { Test } from '../../commons/tests';
-
-const TA_COOKIE = getCookie(taUser);
+import { request } from './request';
 
 const getLabByName = async (name: string): Promise<Lab | null> => {
     const repo = dataSource.getRepository(Lab);
@@ -19,13 +16,12 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: `/lab/ULabOrigAdmin`,
-                headers: {
-                    Cookie: getCookie(admin),
+            const res = await request({
+                requester: admin,
+                params: {
+                    labName: 'ULabOrigAdmin',
                 },
-                data: {
+                body: {
                     name: 'ULabOrigAdminN',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -48,13 +44,12 @@ export const tests: Test[] = [
             const origLab = await getLabByName('ULabOrigTa');
             if (!origLab) throw new Error();
 
-            const res = await axios({
-                method: 'put',
-                url: `/lab/ULabOrigTa`,
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabOrigTa',
                 },
-                data: {
+                body: {
                     name: ' ULabOrigTaN ',
                     openAt: curTime + 1000,
                     dueDate: curTime + 2000,
@@ -90,13 +85,12 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if requester is student',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: `/lab/ULabOrigStudent`,
-                headers: {
-                    Cookie: getCookie(studentUser),
+            const res = await request({
+                requester: studentUser,
+                params: {
+                    labName: 'ULabOrigStudent',
                 },
-                data: {
+                body: {
                     name: 'ULabOrigStudentN',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -114,13 +108,12 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if the lab does not exist and the requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: `/lab/ULabNotExist`,
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabNotExist',
                 },
-                data: {
+                body: {
                     name: 'ULabNotExistN',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -139,13 +132,12 @@ export const tests: Test[] = [
                 .getRepository(Lab)
                 .update({ name: 'ULabDeleted' }, { deletedAt: Date.now() });
 
-            const res = await axios({
-                method: 'put',
-                url: `/lab/ULabDeleted`,
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabDeleted',
                 },
-                data: {
+                body: {
                     name: 'ULabDeletedN',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -160,13 +152,12 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if the author of the lab is not requester and the requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: `/lab/ULabOther`,
-                headers: {
-                    Cookie: getCookie(otherTaUser),
+            const res = await request({
+                requester: otherTaUser,
+                params: {
+                    labName: 'ULabOther',
                 },
-                data: {
+                body: {
                     name: 'ULabOtherN',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -184,13 +175,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if name is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabNameNotEx',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabNameNotEx',
                 },
-                data: {
+                body: {
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
                     closeAt: Date.now() + 3000,
@@ -204,13 +194,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if name is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabNameInv',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabNameInv',
                 },
-                data: {
+                body: {
                     name: 'ULab_NameInv',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -225,13 +214,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if name exceeds maxlength and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabNameExceed',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabNameExceed',
                 },
-                data: {
+                body: {
                     name: 'ULabNameExceedULabNameExceedULabNameExceed',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -246,13 +234,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if openAt is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabOpenNotEx',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabOpenNotEx',
                 },
-                data: {
+                body: {
                     name: 'ULabOpenNotEx',
                     dueDate: Date.now() + 2000,
                     closeAt: Date.now() + 3000,
@@ -266,13 +253,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if openAt is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabOpenInv',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabOpenInv',
                 },
-                data: {
+                body: {
                     name: 'ULabOpenInv',
                     openAt: '2025-01-01',
                     dueDate: Date.now() + 2000 * 3600,
@@ -287,13 +273,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if dueDate is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabDueNotEx',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabDueNotEx',
                 },
-                data: {
+                body: {
                     name: 'ULabDueNotEx',
                     openAt: Date.now() + 1000,
                     closeAt: Date.now() + 3000,
@@ -307,13 +292,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if dueDate is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabDueInv',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabDueInv',
                 },
-                data: {
+                body: {
                     name: 'ULabDueInv',
                     openAt: Date.now() + 1000,
                     dueDate: '2030-01-01',
@@ -328,13 +312,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if closeAt is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabCloseNotEx',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabCloseNotEx',
                 },
-                data: {
+                body: {
                     name: 'ULabCloseNotEx',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -348,13 +331,12 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if closeAt is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabCloseInv',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabCloseInv',
                 },
-                data: {
+                body: {
                     name: 'ULabCloseInv',
                     openAt: Date.now() + 1000,
                     dueDate: Date.now() + 2000,
@@ -371,13 +353,12 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabOcd',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabOcd',
                 },
-                data: {
+                body: {
                     name: 'ULabOcd',
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 3000,
@@ -394,13 +375,12 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabDoc',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabDoc',
                 },
-                data: {
+                body: {
                     name: 'ULabDoc',
                     openAt: baseTime + 2000,
                     dueDate: baseTime + 1000,
@@ -417,13 +397,12 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabDco',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabDco',
                 },
-                data: {
+                body: {
                     name: 'ULabDco',
                     openAt: baseTime + 3000,
                     dueDate: baseTime + 1000,
@@ -440,13 +419,12 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabCod',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabCod',
                 },
-                data: {
+                body: {
                     name: 'ULabCod',
                     openAt: baseTime + 2000,
                     dueDate: baseTime + 3000,
@@ -463,13 +441,12 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabCdo',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabCdo',
                 },
-                data: {
+                body: {
                     name: 'ULabCdo',
                     openAt: baseTime + 3000,
                     dueDate: baseTime + 2000,
@@ -486,13 +463,12 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabODc',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabODc',
                 },
-                data: {
+                body: {
                     name: 'ULabODc',
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 1000,
@@ -509,13 +485,12 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'put',
-                url: '/lab/ULabDupOrig',
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                requester: taUser,
+                params: {
+                    labName: 'ULabDupOrig',
                 },
-                data: {
+                body: {
                     name: 'ULabDupNew',
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 2000,

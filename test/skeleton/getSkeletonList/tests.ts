@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
-import { admin, getCookie } from '../../commons/auth';
-import { Test } from '../../commons/tests';
+import { admin, Test } from '../../commons';
 import { getChecksum } from '../../../src/lib/checksum';
 import {
     deletedLabSkeletonMocks,
@@ -11,8 +9,7 @@ import {
     taUser,
     unopenLabSkeletonMocks,
 } from './mock';
-
-const ADMIN_COOKIE = getCookie(admin);
+import { request } from './request';
 
 const compare = (actual: any, expected: any) => {
     expect(actual.id).to.be.a('number');
@@ -35,14 +32,11 @@ export const tests: Test[] = [
     {
         name: 'should respond skeleton file list if requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
-                    labName: 'GlSkOpen',
+            const labName = 'GlSkOpen';
+            const res = await request({
+                requester: admin,
+                query: {
+                    labName,
                 },
             });
 
@@ -58,14 +52,11 @@ export const tests: Test[] = [
     {
         name: 'should respond skeleton file list if requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
-                    labName: 'GlSkOpen',
+            const labName = 'GlSkOpen';
+            const res = await request({
+                requester: taUser,
+                query: {
+                    labName,
                 },
             });
 
@@ -81,14 +72,11 @@ export const tests: Test[] = [
     {
         name: 'should respond skeleton file list if requester is student',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(studentUser),
-                },
-                params: {
-                    labName: 'GlSkOpen',
+            const labName = 'GlSkOpen';
+            const res = await request({
+                requester: studentUser,
+                query: {
+                    labName,
                 },
             });
 
@@ -104,14 +92,11 @@ export const tests: Test[] = [
     {
         name: 'should respond skeleton file list if the lab is unopen, undeleted and requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
-                    labName: 'GlSkUnopen',
+            const labName = 'GlSkUnopen';
+            const res = await request({
+                requester: admin,
+                query: {
+                    labName,
                 },
             });
 
@@ -127,14 +112,11 @@ export const tests: Test[] = [
     {
         name: 'should respond skeleton file list if the lab is unopen, undeleted and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
-                    labName: 'GlSkUnopen',
+            const labName = 'GlSkUnopen';
+            const res = await request({
+                requester: taUser,
+                query: {
+                    labName,
                 },
             });
 
@@ -150,14 +132,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if the lab is unopen, undeleted and requester is student',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(studentUser),
-                },
-                params: {
-                    labName: 'GlSkUnopen',
+            const labName = 'GlSkUnopen';
+            const res = await request({
+                requester: studentUser,
+                query: {
+                    labName,
                 },
             });
 
@@ -168,14 +147,11 @@ export const tests: Test[] = [
     {
         name: 'should respond an empty list if the lab does not have any skeleton files and requester is not admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
-                    labName: 'GlSkEmpty',
+            const labName = 'GlSkEmpty';
+            const res = await request({
+                requester: taUser,
+                query: {
+                    labName,
                 },
             });
 
@@ -187,14 +163,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if the lab does not exist',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
-                    labName: 'GlSkNotExist',
+            const labName = 'GlSkNotExist';
+            const res = await request({
+                requester: admin,
+                query: {
+                    labName,
                 },
             });
 
@@ -205,14 +178,11 @@ export const tests: Test[] = [
     {
         name: 'should respond skeleton file list if the lab is deleted and requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                params: {
-                    labName: 'GlSkDeleted',
+            const labName = 'GlSkDeleted';
+            const res = await request({
+                requester: admin,
+                query: {
+                    labName,
                 },
             });
 
@@ -228,14 +198,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if the lab is deleted and requester is not admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
-                    labName: 'GlSkDeleted',
+            const labName = 'GlSkDeleted';
+            const res = await request({
+                requester: taUser,
+                query: {
+                    labName,
                 },
             });
 

@@ -1,8 +1,7 @@
 import '../../src/env';
 import { after, before, describe } from 'mocha';
-import { executeTests, initAxios } from '../commons/tests';
 import { dataSource } from './database';
-import { cleanDatabase, createAdmin } from '../commons/database';
+import { executeTests, clearDatabase, createAdmin } from '../commons';
 import * as GetLabListTests from './getLabList';
 import * as GetLabTests from './getLab';
 import * as CreateLabTests from './createLab';
@@ -10,11 +9,9 @@ import * as UpdateLabTests from './updateLab';
 import * as DeleteLabTests from './deleteLab';
 
 describe('Lab', () => {
-    initAxios();
-
     before(async () => {
         await dataSource.initialize();
-        await cleanDatabase(dataSource);
+        await clearDatabase(dataSource);
         await createAdmin(dataSource);
     });
 
@@ -39,14 +36,14 @@ describe('Lab', () => {
         executeTests(CreateLabTests.tests);
     });
 
-    describe('PUT /lab/:labId', () => {
+    describe('PUT /lab/:labName', () => {
         before(async () => {
             await UpdateLabTests.createMocks();
         });
         executeTests(UpdateLabTests.tests);
     });
 
-    describe('DELETE /lab/:labId', () => {
+    describe('DELETE /lab/:labName', () => {
         before(async () => {
             await DeleteLabTests.createMocks();
         });
@@ -54,6 +51,6 @@ describe('Lab', () => {
     });
 
     after(async () => {
-        await cleanDatabase(dataSource);
+        await clearDatabase(dataSource);
     });
 });

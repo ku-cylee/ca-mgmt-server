@@ -1,13 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
-import { Test } from '../../commons/tests';
-import { admin, getCookie } from '../../commons/auth';
+import { admin, Test } from '../../commons';
 import { duplicateLab, studentUser, taUser } from './mock';
 import { Lab } from '../../../src/models';
 import { dataSource } from '../database';
-
-const TA_COOKIE = getCookie(taUser);
+import { request } from './request';
 
 const getLabByName = async (name: string): Promise<Lab | null> => {
     const repo = dataSource.getRepository(Lab);
@@ -19,12 +16,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 403 if requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: getCookie(admin),
-                },
+            const res = await request({
+                requester: admin,
+                body: {},
             });
 
             expect(res.status).to.equal(403);
@@ -36,13 +30,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: ' CLabOdcTa1 ',
                     openAt: baseTime,
                     dueDate: baseTime + 1000 * 3600,
@@ -75,13 +65,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabOdcTa2',
                     openAt: baseTime,
                     dueDate: baseTime + 1000 * 3600,
@@ -112,12 +98,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 403 if requester is student',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: getCookie(studentUser),
-                },
+            const res = await request({
+                requester: studentUser,
+                body: {},
             });
 
             expect(res.status).to.equal(403);
@@ -127,13 +110,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if name is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
@@ -147,13 +126,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if name is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLab_NameInv',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
@@ -168,13 +143,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if name exceeds maxlength and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabNameExceedCLabNameExceedCLabNameExceed',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
@@ -189,13 +160,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if openAt is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabOpenNotEx',
                     dueDate: Date.now() + 2000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
@@ -209,13 +176,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if openAt is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabOpenInv',
                     openAt: '2025-01-01',
                     dueDate: Date.now() + 2000 * 3600,
@@ -230,13 +193,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if dueDate is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabDueNotEx',
                     openAt: Date.now() + 1000 * 3600,
                     closeAt: Date.now() + 3000 * 3600,
@@ -250,13 +209,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if dueDate is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabDueInv',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: '2030-01-01',
@@ -271,13 +226,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if closeAt is not given and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabCloseNotEx',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
@@ -291,13 +242,9 @@ export const tests: Test[] = [
     {
         name: 'should respond 400 if closeAt is invalid and requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabCloseInv',
                     openAt: Date.now() + 1000 * 3600,
                     dueDate: Date.now() + 2000 * 3600,
@@ -314,13 +261,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabOcd',
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 3000,
@@ -337,13 +280,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabDoc',
                     openAt: baseTime + 2000,
                     dueDate: baseTime + 1000,
@@ -360,13 +299,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabDco',
                     openAt: baseTime + 3000,
                     dueDate: baseTime + 1000,
@@ -383,13 +318,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabCod',
                     openAt: baseTime + 2000,
                     dueDate: baseTime + 3000,
@@ -406,13 +337,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabCdo',
                     openAt: baseTime + 3000,
                     dueDate: baseTime + 2000,
@@ -429,13 +356,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: 'CLabODc',
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 1000,
@@ -452,13 +375,9 @@ export const tests: Test[] = [
         func: async () => {
             const baseTime = Date.now();
 
-            const res = await axios({
-                method: 'post',
-                url: '/lab',
-                headers: {
-                    Cookie: TA_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     name: duplicateLab.name,
                     openAt: baseTime + 1000,
                     dueDate: baseTime + 2000,

@@ -47,7 +47,7 @@ export const createAdmin = async (dataSource: DataSource) => {
     await repo.save(user);
 };
 
-export const cleanDatabase = async (dataSource: DataSource) => {
+export const clearDatabase = async (dataSource: DataSource) => {
     [Defuse, Bomb, SkeletonFile, Submission, SubmissionFile, Lab, User].forEach(
         async Entity => {
             const repo = dataSource.getRepository(Entity);

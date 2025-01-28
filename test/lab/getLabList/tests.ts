@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { expect } from 'chai';
 import {
     deletedOpenLabs,
@@ -8,8 +7,8 @@ import {
     undeletedOpenLabs,
     undeletedUnopenLabs,
 } from './mock';
-import { admin, getCookie } from '../../commons/auth';
-import { Test } from '../../commons/tests';
+import { admin, Test } from '../../commons';
+import { request } from './request';
 
 const compareLabs = (actual: any, expected: any) => {
     expect(actual).to.be.an('object');
@@ -58,12 +57,8 @@ export const tests: Test[] = [
     {
         name: 'should respond all labs if the requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/lab',
-                headers: {
-                    Cookie: getCookie(admin),
-                },
+            const res = await request({
+                requester: admin,
             });
 
             const expected = [
@@ -82,12 +77,8 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted labs if the requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/lab',
-                headers: {
-                    Cookie: `username=${taUsers[0].username};secretKey=${taUsers[0].secretKey}`,
-                },
+            const res = await request({
+                requester: taUsers[0],
             });
 
             const expected = [...undeletedOpenLabs, ...undeletedUnopenLabs];
@@ -101,12 +92,8 @@ export const tests: Test[] = [
     {
         name: 'should respond undeleted, open labs if the requester is student',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: '/lab',
-                headers: {
-                    Cookie: `username=${studentUser.username};secretKey=${studentUser.secretKey}`,
-                },
+            const res = await request({
+                requester: studentUser,
             });
 
             expect(res.status).equal(200);

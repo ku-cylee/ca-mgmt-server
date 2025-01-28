@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
-import { admin, getCookie } from '../../commons/auth';
-import { Test } from '../../commons/tests';
+import { admin, Test } from '../../commons';
 import { SkeletonFile } from '../../../src/models';
 import { otherTaUser, studentUser, taUser } from './mock';
 import { dataSource } from '../database';
+import { request } from './request';
 
 const getSkeletonsByLab = async (labName: string): Promise<SkeletonFile[]> => {
     const repo = dataSource.getRepository(SkeletonFile);
@@ -24,13 +23,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelUndAdmin';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(admin),
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     labName,
                 },
             });
@@ -47,13 +42,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelUndTa';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
             });
@@ -70,13 +61,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelUndOther';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(otherTaUser),
-                },
-                params: {
+            const res = await request({
+                requester: otherTaUser,
+                query: {
                     labName,
                 },
             });
@@ -93,13 +80,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelDelAdmin';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(admin),
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     labName,
                 },
             });
@@ -116,13 +99,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelDelTa';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
             });
@@ -139,13 +118,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelDelOther';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(otherTaUser),
-                },
-                params: {
+            const res = await request({
+                requester: otherTaUser,
+                query: {
                     labName,
                 },
             });
@@ -162,13 +137,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelNotExistAdmin';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(admin),
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     labName,
                 },
             });
@@ -182,13 +153,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelNotExistTa';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
             });
@@ -202,13 +169,9 @@ export const tests: Test[] = [
         func: async () => {
             const labName = 'DlSkelUndStdnt';
 
-            const res = await axios({
-                method: 'delete',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(studentUser),
-                },
-                params: {
+            const res = await request({
+                requester: studentUser,
+                query: {
                     labName,
                 },
             });

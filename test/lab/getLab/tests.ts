@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
 import { Lab } from '../../../src/models';
 import {
@@ -10,13 +9,9 @@ import {
     undeletedOpenLab,
     undeletedUnopenLab,
 } from './mock';
-import { admin, getCookie } from '../../commons/auth';
+import { admin, Test } from '../../commons';
 import { dataSource } from '../database';
-import { Test } from '../../commons/tests';
-
-const ADMIN_COOKIE = getCookie(admin);
-const TA_COOKIE = getCookie(taUser);
-const STUDENT_COOKIE = getCookie(studentUser);
+import { request } from './request';
 
 const getLabByName = async (name: string) => {
     const repo = dataSource.getRepository(Lab);
@@ -83,14 +78,11 @@ export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is undeleted and open, requester is admin',
         func: async () => {
-            const lab = await getLabByName('GlLabUdO');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabUdO',
                 },
+                requester: admin,
             });
 
             expect(res.status).equal(200);
@@ -101,14 +93,11 @@ export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is undeleted and unopen, requester is admin',
         func: async () => {
-            const lab = await getLabByName('GlLabUdUo');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabUdUo',
                 },
+                requester: admin,
             });
 
             expect(res.status).equal(200);
@@ -119,14 +108,11 @@ export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is deleted and open, requester is admin',
         func: async () => {
-            const lab = await getLabByName('GlLabDO');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabDO',
                 },
+                requester: admin,
             });
 
             expect(res.status).equal(200);
@@ -137,14 +123,11 @@ export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is deleted and unopen, requester is admin',
         func: async () => {
-            const lab = await getLabByName('GlLabDUo');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabDUo',
                 },
+                requester: admin,
             });
 
             expect(res.status).equal(200);
@@ -156,14 +139,11 @@ export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is undeleted and open, requester is ta',
         func: async () => {
-            const lab = await getLabByName('GlLabUdO');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabUdO',
                 },
+                requester: taUser,
             });
 
             expect(res.status).equal(200);
@@ -174,14 +154,11 @@ export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is undeleted and unopen, requester is ta',
         func: async () => {
-            const lab = await getLabByName('GlLabUdUo');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabUdUo',
                 },
+                requester: taUser,
             });
 
             expect(res.status).equal(200);
@@ -192,14 +169,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if lab is deleted and open, requester is ta',
         func: async () => {
-            const lab = await getLabByName('GlLabDO');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabDO',
                 },
+                requester: taUser,
             });
 
             expect(res.status).equal(404);
@@ -209,14 +183,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if lab is deleted and unopen, requester is ta',
         func: async () => {
-            const lab = await getLabByName('GlLabDUo');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: TA_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabDUo',
                 },
+                requester: taUser,
             });
 
             expect(res.status).equal(404);
@@ -227,14 +198,11 @@ export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is undeleted and open, requester is student',
         func: async () => {
-            const lab = await getLabByName('GlLabUdO');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: STUDENT_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabUdO',
                 },
+                requester: studentUser,
             });
 
             expect(res.status).equal(200);
@@ -245,14 +213,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if lab is undeleted and unopen, requester is student',
         func: async () => {
-            const lab = await getLabByName('GlLabUdUo');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: STUDENT_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabUdUo',
                 },
+                requester: studentUser,
             });
 
             expect(res.status).equal(403);
@@ -262,14 +227,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if lab is deleted and open, requester is student',
         func: async () => {
-            const lab = await getLabByName('GlLabDO');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: STUDENT_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabDO',
                 },
+                requester: studentUser,
             });
 
             expect(res.status).equal(404);
@@ -279,14 +241,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if lab is deleted and unopen, requester is student',
         func: async () => {
-            const lab = await getLabByName('GlLabDUo');
-
-            const res = await axios({
-                method: 'get',
-                url: `/lab/${lab.name}`,
-                headers: {
-                    Cookie: STUDENT_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabDUo',
                 },
+                requester: studentUser,
             });
 
             expect(res.status).equal(404);
@@ -297,12 +256,11 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if the lab does not exist, requester is admin',
         func: async () => {
-            const res = await axios({
-                method: 'get',
-                url: `/lab/GlLabNotExist`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                params: {
+                    labName: 'GlLabNotExist',
                 },
+                requester: admin,
             });
 
             expect(res.status).equal(404);

@@ -1,20 +1,22 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
 import { In } from 'typeorm';
 import { duplicateUser, studentUser, taUser } from './mock';
 import { UserRole } from '../../../src/lib/enums';
 import { User } from '../../../src/models';
-import { admin, getCookie } from '../../commons/auth';
+import { admin, Test } from '../../commons';
 import { dataSource } from '../database';
-import { Test } from '../../commons/tests';
-
-const ADMIN_COOKIE = getCookie(admin);
+import { request } from './request';
 
 const getUsersByUsername = async (usernames: string[]): Promise<User[]> => {
     const repo = dataSource.getRepository(User);
-    const users = await repo.findBy({
-        username: In(usernames),
+    const users = await repo.find({
+        where: {
+            username: In(usernames),
+        },
+        order: {
+            id: 'ASC',
+        },
     });
     return users;
 };
@@ -23,7 +25,8 @@ export const tests: Test[] = [
     {
         name: 'should respond 200 if requester is admin and role is TA',
         func: async () => {
-            const rawData = [
+            const role = UserRole.TA;
+            const usersData = [
                 {
                     username: 'CrUsrExTa0',
                     secretKey: 'CrUsrExTa0SecretKey',
@@ -38,35 +41,32 @@ export const tests: Test[] = [
                 },
             ];
 
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
-                    role: UserRole.TA,
-                    usersData: rawData,
+            const res = await request({
+                requester: admin,
+                body: {
+                    role,
+                    usersData,
                 },
             });
 
             expect(res.status).to.equal(200);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(['CrUsrExTa0', 'CrUsrExTa1', 'CrUsrEx-Ta2']);
+            const users = await getUsersByUsername(usersData.map(ud => ud.username.trim()));
 
-            expect(users).to.have.lengthOf(3);
-            Array(3).forEach((idx: number) => {
-                expect(users[idx].username).to.equal(rawData[idx].username.trim());
-                expect(users[idx].secretKey).to.equal(rawData[idx].secretKey.trim());
-                expect(users[idx].role).to.equal(UserRole.TA);
+            expect(users).to.have.lengthOf(usersData.length);
+            usersData.forEach((userData, idx: number) => {
+                expect(users[idx].username).to.equal(userData.username.trim());
+                expect(users[idx].secretKey).to.equal(userData.secretKey.trim());
+                expect(users[idx].role).to.equal(role);
             });
         },
     },
     {
         name: 'should respond 200 if requester is admin and role is student',
         func: async () => {
-            const rawData = [
+            const role = UserRole.TA;
+            const usersData = [
                 {
                     username: 'CrUsrExStdnt0',
                     secretKey: 'CrUsrExStdnt0SecretKey',
@@ -81,15 +81,11 @@ export const tests: Test[] = [
                 },
             ];
 
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
-                    role: UserRole.TA,
-                    usersData: rawData,
+            const res = await request({
+                requester: admin,
+                body: {
+                    role,
+                    usersData,
                 },
             });
 
@@ -98,13 +94,13 @@ export const tests: Test[] = [
 
             const repo = dataSource.getRepository(User);
             const users = await repo.findBy({
-                username: In(['CrUsrExStdnt0', 'CrUsrExStdnt1', 'CrUsrExStdnt2']),
+                username: In(usersData.map(ud => ud.username.trim())),
             });
 
-            expect(users).to.have.lengthOf(3);
-            Array(3).forEach((idx: number) => {
-                expect(users[idx].username).to.equal(rawData[idx].username.trim());
-                expect(users[idx].secretKey).to.equal(rawData[idx].secretKey.trim());
+            expect(users).to.have.lengthOf(usersData.length);
+            usersData.forEach((userData, idx: number) => {
+                expect(users[idx].username).to.equal(userData.username.trim());
+                expect(users[idx].secretKey).to.equal(userData.secretKey.trim());
                 expect(users[idx].role).to.equal(UserRole.TA);
             });
         },
@@ -112,13 +108,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                data: {
+            const res = await request({
+                requester: taUser,
+                body: {
                     role: UserRole.STUDENT,
                     usersData: [],
                 },
@@ -131,13 +123,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 403 if requester is student',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: getCookie(studentUser),
-                },
-                data: {
+            const res = await request({
+                requester: studentUser,
+                body: {
                     role: UserRole.STUDENT,
                     usersData: [],
                 },
@@ -150,13 +138,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if role is not given',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: admin,
+                body: {
                     usersData: [],
                 },
             });
@@ -168,13 +152,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if role is invalid',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: admin,
+                body: {
                     role: UserRole.ADMIN,
                     usersData: [],
                 },
@@ -187,13 +167,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if usersData is not given',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: admin,
+                body: {
                     role: UserRole.STUDENT,
                 },
             });
@@ -205,13 +181,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 some usernames of usersData is not given',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: admin,
+                body: {
                     role: UserRole.TA,
                     usersData: [
                         {
@@ -240,13 +212,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if some usernames not consist of alphanum or hyphen',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: admin,
+                body: {
                     role: UserRole.TA,
                     usersData: [
                         {
@@ -276,13 +244,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 some usernames of usersData is not given',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: admin,
+                body: {
                     role: UserRole.TA,
                     usersData: [
                         {
@@ -311,13 +275,9 @@ export const tests: Test[] = [
     {
         name: 'should throw 400 if some secretKeys exceed maxlength of 64',
         func: async () => {
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+            const res = await request({
+                requester: admin,
+                body: {
                     role: UserRole.TA,
                     usersData: [
                         {
@@ -348,13 +308,10 @@ export const tests: Test[] = [
         name: 'should throw 409 if some usernames already exist',
         func: async () => {
             const { username, secretKey } = duplicateUser;
-            const res = await axios({
-                method: 'post',
-                url: '/user',
-                headers: {
-                    Cookie: ADMIN_COOKIE,
-                },
-                data: {
+
+            const res = await request({
+                requester: admin,
+                body: {
                     role: UserRole.TA,
                     usersData: [
                         {
@@ -363,7 +320,7 @@ export const tests: Test[] = [
                         },
                         {
                             username,
-                            secretKey: secretKey + secretKey,
+                            secretKey: secretKey.repeat(2),
                         },
                     ],
                 },
@@ -375,7 +332,8 @@ export const tests: Test[] = [
             const users = await getUsersByUsername(['CrUsrDp1', username]);
 
             expect(users).to.be.lengthOf(1);
-            expect(users[0].secretKey).to.not.equal(secretKey + secretKey);
+            expect(users[0].username).to.equal(username);
+            expect(users[0].secretKey).to.not.equal(secretKey.repeat(2));
         },
     },
 ];

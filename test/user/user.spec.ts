@@ -1,18 +1,15 @@
 import '../../src/env';
 import { after, before, describe } from 'mocha';
 import { dataSource } from './database';
-import { executeTests, initAxios } from '../commons/tests';
-import { cleanDatabase, createAdmin } from '../commons/database';
+import { executeTests, clearDatabase, createAdmin } from '../commons';
 import * as GetUserListTests from './getUserList';
 import * as CreateUserListTests from './createUserList';
 import * as DeleteUserTests from './deleteUser';
 
 describe('User', () => {
-    initAxios();
-
     before(async () => {
         await dataSource.initialize();
-        await cleanDatabase(dataSource);
+        await clearDatabase(dataSource);
         await createAdmin(dataSource);
     });
 
@@ -38,6 +35,6 @@ describe('User', () => {
     });
 
     after(async () => {
-        await cleanDatabase(dataSource);
+        await clearDatabase(dataSource);
     });
 });

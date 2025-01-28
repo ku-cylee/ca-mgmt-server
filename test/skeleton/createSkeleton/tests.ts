@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
-import { admin, getCookie } from '../../commons/auth';
-import { Test } from '../../commons/tests';
+import { admin, Test } from '../../commons';
 import { getChecksum } from '../../../src/lib/checksum';
 import { SkeletonFile } from '../../../src/models';
 import { otherTaUser, taUser } from './mock';
 import { dataSource } from '../database';
+import { request } from './request';
 
 const getSkeletonByLabAndPath = async (
     labName: string,
@@ -46,21 +45,18 @@ export const tests: Test[] = [
             const path = '/src/cskel_admin.v';
             const content = 'CSkel\nAdmin\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(admin),
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -78,21 +74,18 @@ export const tests: Test[] = [
             const path = '  /src/cskel_ta.v ';
             const content = 'CSkel\nTa\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -103,7 +96,7 @@ export const tests: Test[] = [
                 path: path.trim(),
                 content,
                 checksum,
-                isExecutable: false,
+                isExecutable,
             });
 
             const skeleton = await getSkeletonByLabAndPath(labName, path.trim());
@@ -117,21 +110,18 @@ export const tests: Test[] = [
             const path = '/src/cskel_student.v';
             const content = 'CSkel\nStudent\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(admin),
-                },
-                params: {
+            const res = await request({
+                requester: admin,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -149,21 +139,18 @@ export const tests: Test[] = [
             const path = '/src/cskel_other.v';
             const content = 'CSkel\nOther\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(otherTaUser),
-                },
-                params: {
+            const res = await request({
+                requester: otherTaUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -181,21 +168,18 @@ export const tests: Test[] = [
             const path = '/src/cskel_not_exist.v';
             const content = 'CSkel\nNot exist\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -213,21 +197,18 @@ export const tests: Test[] = [
             const path = '/src/cskel_deleted.v';
             const content = 'CSkel\nNot exist\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -241,20 +222,17 @@ export const tests: Test[] = [
             const labName = 'CSkelBadRequest';
             const content = 'CSkel\nBad Request\nPath not given\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -270,21 +248,18 @@ export const tests: Test[] = [
                 '/src/cskel_path_exceed_cskel_path_exceed_cskel_path_exceed_cskel_path_exceed_cskel_path_exceed_cskel_path_exceed_cskel_path_exceed.v';
             const content = 'CSkel\nBad Request\nPath exceed maxlength\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -299,20 +274,17 @@ export const tests: Test[] = [
             const path = '/src/cskel_content_not_given.v';
             const content = 'CSkel\nBad Request\nContent not given\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -327,21 +299,18 @@ export const tests: Test[] = [
             const path = `src/cskel_content_exceed.v`;
             const content = 'CSkel\nBad Request\nContent exceed maxlength\nContent\n'.repeat(1286);
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -355,20 +324,17 @@ export const tests: Test[] = [
             const labName = 'CSkelBadRequest';
             const path = `src/cskel_checksum_not_given.v`;
             const content = 'CSkel\nBad Request\nChecksum not given\nContent\n';
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -383,21 +349,18 @@ export const tests: Test[] = [
             const path = `src/cskel_checksum_exceed.v`;
             const content = 'CSkel\nBad Request\nChecksum exceed maxlength\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum: `${checksum}0`,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -413,16 +376,12 @@ export const tests: Test[] = [
             const content = 'CSkel\nBad Request\nIsExectable not given\nContent\n';
             const checksum = getChecksum(content);
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
@@ -440,21 +399,18 @@ export const tests: Test[] = [
             const path = `src/cskel_isExecutable_invalid.v`;
             const content = 'CSkel\nBad Request\nIsExectable invalid\nContent\n';
             const checksum = getChecksum(content);
+            const isExecutable = 'yes';
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: 'yes',
+                    isExecutable,
                 },
             });
 
@@ -469,21 +425,18 @@ export const tests: Test[] = [
             const path = '/src/cskel_duplicate.v';
             const content = 'CSkelDuplicate.v New Content';
             const checksum = getChecksum(content);
+            const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
-                    isExecutable: false,
+                    isExecutable,
                 },
             });
 
@@ -503,16 +456,12 @@ export const tests: Test[] = [
             const checksum = getChecksum(content);
             const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
@@ -539,16 +488,12 @@ export const tests: Test[] = [
             const checksum = getChecksum(content);
             const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,
@@ -575,16 +520,12 @@ export const tests: Test[] = [
             const checksum = getChecksum(content.slice(0, -2));
             const isExecutable = false;
 
-            const res = await axios({
-                method: 'post',
-                url: '/skeleton',
-                headers: {
-                    Cookie: getCookie(taUser),
-                },
-                params: {
+            const res = await request({
+                requester: taUser,
+                query: {
                     labName,
                 },
-                data: {
+                body: {
                     path,
                     content,
                     checksum,

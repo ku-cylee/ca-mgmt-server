@@ -1,3 +1,3 @@
-import { generateDataSource } from '../commons/database';
+import { generateDataSource } from '../commons';
 
 export const dataSource = generateDataSource('test:skeleton');

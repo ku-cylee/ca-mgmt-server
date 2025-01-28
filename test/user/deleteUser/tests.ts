@@ -1,14 +1,11 @@
 /* eslint-disable no-unused-expressions */
-import axios from 'axios';
 import { expect } from 'chai';
 import { UserRole } from '../../../src/lib/enums';
 import { studentUser, taUser } from './mock';
 import { User } from '../../../src/models';
-import { admin, getCookie } from '../../commons/auth';
+import { admin, Test } from '../../commons';
 import { dataSource } from '../database';
-import { Test } from '../../commons/tests';
-
-const ADMIN_COOKIE = getCookie(admin);
+import { request } from './request';
 
 const createUser = async (
     username: string,
@@ -41,11 +38,10 @@ export const tests: Test[] = [
         func: async () => {
             const user = await createUser('DelUsr1', 'DelUsr1SecretKey', UserRole.TA);
 
-            const res = await axios({
-                method: 'delete',
-                url: `/user/${user.id}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                requester: admin,
+                params: {
+                    userId: user.id,
                 },
             });
 
@@ -63,11 +59,10 @@ export const tests: Test[] = [
             const user = await createUser('DelUsr2', 'DelUsr2SecretKey', UserRole.TA);
             await dataSource.getRepository(User).delete({ id: user.id });
 
-            const res = await axios({
-                method: 'delete',
-                url: `/user/${user.id}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                requester: admin,
+                params: {
+                    userId: user.id,
                 },
             });
 
@@ -80,11 +75,10 @@ export const tests: Test[] = [
         func: async () => {
             const user = await createUser('DelUsr3', 'DelUsr3SecretKey', UserRole.TA, true);
 
-            const res = await axios({
-                method: 'delete',
-                url: `/user/${user.id}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                requester: admin,
+                params: {
+                    userId: user.id,
                 },
             });
 
@@ -99,24 +93,22 @@ export const tests: Test[] = [
     {
         name: 'should respond 403 if requester is admin and the user is admin',
         func: async () => {
-            const adminUser = await dataSource
+            const user = await dataSource
                 .getRepository(User)
                 .findOneBy({ username: admin.username });
+            if (!user) throw new Error();
 
-            if (!adminUser) throw new Error();
-
-            const res = await axios({
-                method: 'delete',
-                url: `/user/${adminUser.id}`,
-                headers: {
-                    Cookie: ADMIN_COOKIE,
+            const res = await request({
+                requester: admin,
+                params: {
+                    userId: user.id,
                 },
             });
 
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const delUser = await getUsersById(adminUser.id);
+            const delUser = await getUsersById(user.id);
             expect(delUser[0]).to.be.an('object');
             expect(delUser[0].isDeleted).to.be.false;
         },
@@ -124,11 +116,10 @@ export const tests: Test[] = [
     {
         name: 'should respond 403 if requester is ta',
         func: async () => {
-            const res = await axios({
-                method: 'delete',
-                url: '/user/1',
-                headers: {
-                    Cookie: getCookie(taUser),
+            const res = await request({
+                requester: taUser,
+                params: {
+                    userId: 1,
                 },
             });
 
@@ -139,11 +130,10 @@ export const tests: Test[] = [
     {
         name: 'should respond 403 if requester is student',
         func: async () => {
-            const res = await axios({
-                method: 'delete',
-                url: '/user/1',
-                headers: {
-                    Cookie: getCookie(studentUser),
+            const res = await request({
+                requester: studentUser,
+                params: {
+                    userId: 1,
                 },
             });
 
