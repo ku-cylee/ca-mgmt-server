@@ -7,6 +7,6 @@ router.get('/', getUserList);
 
 router.post('/', createUserList);
 
-router.delete('/:userId(\\d+)', deleteUser);
+router.delete('/:username', deleteUser);
 
 export default router;

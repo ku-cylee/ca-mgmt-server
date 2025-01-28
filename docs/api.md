@@ -67,13 +67,13 @@
     - 409
         + Some usernames already exist.
 
-### DELETE /user/:userId
-* Deletes users `userId`.
+### DELETE /user/:username
+* Deletes user `username`.
 * Request
 ```
 {
     params: {
-        userId: string,
+        username: string,
     },
 }
 ```
@@ -81,10 +81,10 @@
     - 200
     - 403
         + Requester is not admin.
-        + User `userId` is admin.
+        + User `username` is admin.
     - 404
-        + User `userId` does not exist.
-        + User `userId` is already deleted.
+        + User `username` does not exist.
+        + User `username` is already deleted.
 
 ## Lab
 

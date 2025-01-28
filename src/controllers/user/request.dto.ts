@@ -49,11 +49,11 @@ export class CreateUserListRequest {
 }
 
 export class DeleteUserRequest {
-    userId!: number;
+    username!: string;
 
     constructor(req: Request) {
-        const { userId } = req.params;
+        const { username } = req.params;
 
-        this.userId = validate(userId, schemes.id.required());
+        this.username = validate(username, schemes.username.required());
     }
 }

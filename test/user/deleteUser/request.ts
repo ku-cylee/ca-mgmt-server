@@ -3,12 +3,12 @@ import { AuthData, baseRequest } from '../../commons';
 export const request = async (config: {
     requester: AuthData;
     params: {
-        userId: number;
+        username: string;
     };
 }) => {
     const response = await baseRequest({
         method: 'delete',
-        url: `/user/${config.params.userId}`,
+        url: `/user/${config.params.username}`,
         requester: config.requester,
         query: {},
         body: {},

@@ -34,15 +34,15 @@ export const createUserList: RequestHandler = async (req, res) => {
 
 export const deleteUser: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    const { userId } = new DeleteUserRequest(req);
+    const { username } = new DeleteUserRequest(req);
 
     if (!requester.isAdmin) throw ForbiddenError;
 
-    const user = await UserDAO.getById(userId);
-    if (!user || user.isDeleted) throw NotFoundError;
+    const user = await UserDAO.getByUsername(username);
+    if (!user) throw NotFoundError;
     if (user.isAdmin) throw ForbiddenError;
 
-    await UserDAO.deleteById(userId);
+    await UserDAO.deleteById(user.id);
 
     return res.send();
 };
