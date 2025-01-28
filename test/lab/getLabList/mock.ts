@@ -132,13 +132,15 @@ const labMocks = [
 const createUserMocks = async (): Promise<User[]> => {
     const mocks = [taUser, otherTaUser, studentUser];
     const repo = dataSource.getRepository(User);
-    const users = repo.create(mocks.map(user => {
-        return {
-            ...user,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-        }
-    }));
+    const users = repo.create(
+        mocks.map(user => {
+            return {
+                ...user,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+            };
+        }),
+    );
     await repo.save(users);
     return users;
 };
@@ -148,9 +150,7 @@ const createLabMocks = async (users: User[]): Promise<Lab[]> => {
     const labs = repo.create(
         labMocks.map(lab => {
             const { authorUsername, isDeleted } = lab;
-            const author = users.find(
-                user => user.username === authorUsername,
-            );
+            const author = users.find(user => user.username === authorUsername);
 
             return {
                 ...lab,

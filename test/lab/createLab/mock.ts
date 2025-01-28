@@ -26,13 +26,15 @@ export const duplicateLab = {
 const createUserMocks = async (): Promise<User[]> => {
     const mocks = [taUser, studentUser];
     const repo = dataSource.getRepository(User);
-    const users = repo.create(mocks.map(user => {
-        return {
-            ...user,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-        };
-    }));
+    const users = repo.create(
+        mocks.map(user => {
+            return {
+                ...user,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+            };
+        }),
+    );
     await repo.save(users);
 
     return users;
