@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { Lab } from '../../../src/models';
 import {
     deletedOpenLab,
     deletedUnopenLab,
@@ -10,15 +9,7 @@ import {
     undeletedUnopenLab,
 } from './mock';
 import { admin, Test } from '../../commons';
-import { dataSource } from '../database';
 import { request } from './request';
-
-const getLabByName = async (name: string) => {
-    const repo = dataSource.getRepository(Lab);
-    const lab = await repo.findOneBy({ name });
-    if (!lab) throw new Error();
-    return lab;
-};
 
 const compareLabs = (actual: any, expected: any) => {
     expect(actual).to.be.an('object');
@@ -53,7 +44,8 @@ const compareLabs = (actual: any, expected: any) => {
     expect(actual.closeAt).to.equal(expected.closeAt);
     expect(actual.author).to.have.key('username');
     expect(actual.author.username).to.equal(expected.authorUsername);
-    expect(actual.deletedAt).to.equal(expected.deletedAt);
+    if (expected.isDeleted) expect(actual.deletedAt).to.not.equal(0);
+    else expect(actual.deletedAt).to.equal(0);
 
     expect(actual.skeletonFiles).to.have.lengthOf(expected.skeletonFileData.length);
     actual.skeletonFiles.forEach((a: any, i: number) => {

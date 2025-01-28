@@ -128,10 +128,6 @@ export const tests: Test[] = [
     {
         name: 'should throw 404 if the lab is deleted and the requester is ta',
         func: async () => {
-            await dataSource
-                .getRepository(Lab)
-                .update({ name: 'ULabDeleted' }, { deletedAt: Date.now() });
-
             const res = await request({
                 requester: taUser,
                 params: {

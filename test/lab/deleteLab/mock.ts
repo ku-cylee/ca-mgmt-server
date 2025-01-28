@@ -20,12 +20,27 @@ export const studentUser = {
     role: UserRole.STUDENT,
 };
 
-const labNames = [
-    'DLabOrigAdmin',
-    'DLabOrigTa',
-    'DLabOrigStudent',
-    'DLabDeleted',
-    'DLabOther',
+const labMocks = [
+    {
+        name: 'DLabOrigAdmin',
+        isDeleted: false,
+    },
+    {
+        name: 'DLabOrigTa',
+        isDeleted: false,
+    },
+    {
+        name: 'DLabOrigStudent',
+        isDeleted: false,
+    },
+    {
+        name: 'DLabDeleted',
+        isDeleted: true,
+    },
+    {
+        name: 'DLabOther',
+        isDeleted: false,
+    },
 ];
 
 const createUserMocks = async (): Promise<User[]> => {
@@ -47,7 +62,8 @@ const createUserMocks = async (): Promise<User[]> => {
 const createLabMocks = async (users: User[]): Promise<Lab[]> => {
     const repo = dataSource.getRepository(Lab);
     const labs = repo.create(
-        labNames.map(name => {
+        labMocks.map(lab => {
+            const { name, isDeleted } = lab;
             return {
                 name,
                 openAt: Date.now() - 3000,
@@ -56,6 +72,7 @@ const createLabMocks = async (users: User[]): Promise<Lab[]> => {
                 author: users[0],
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
+                deletedAt: isDeleted ? Date.now() : 0,
             };
         }),
     );

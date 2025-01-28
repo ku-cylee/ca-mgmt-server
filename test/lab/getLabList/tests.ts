@@ -3,7 +3,7 @@ import {
     deletedOpenLabs,
     deletedUnopenLabs,
     studentUser,
-    taUsers,
+    taUser,
     undeletedOpenLabs,
     undeletedUnopenLabs,
 } from './mock';
@@ -41,7 +41,8 @@ const compareLabs = (actual: any, expected: any) => {
     expect(actual.closeAt).to.equal(expected.closeAt);
     expect(actual.author).to.have.key('username');
     expect(actual.author.username).to.equal(expected.authorUsername);
-    expect(actual.deletedAt).to.equal(expected.deletedAt);
+    if (expected.isDeleted) expect(actual.deletedAt).to.not.equal(0);
+    else expect(actual.deletedAt).to.equal(0);
 
     expect(actual.submissionFiles).to.have.lengthOf(expected.submissionFilenames.length);
     actual.submissionFiles.forEach((a: any, i: number) => {
@@ -78,7 +79,7 @@ export const tests: Test[] = [
         name: 'should respond undeleted labs if the requester is ta',
         func: async () => {
             const res = await request({
-                requester: taUsers[0],
+                requester: taUser,
             });
 
             const expected = [...undeletedOpenLabs, ...undeletedUnopenLabs];

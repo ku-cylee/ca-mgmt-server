@@ -20,29 +20,95 @@ export const studentUser = {
     role: UserRole.STUDENT,
 };
 
-const labNames = [
-    'ULabOrigAdmin',
-    'ULabOrigTa',
-    'ULabOrigStudent',
-    'ULabDeleted',
-    'ULabOther',
-    'ULabNameNotEx',
-    'ULabNameInv',
-    'ULabNameExceed',
-    'ULabOpenNotEx',
-    'ULabOpenInv',
-    'ULabDueNotEx',
-    'ULabDueInv',
-    'ULabCloseNotEx',
-    'ULabCloseInv',
-    'ULabOcd',
-    'ULabDoc',
-    'ULabDco',
-    'ULabCod',
-    'ULabCdo',
-    'ULabODc',
-    'ULabDupOrig',
-    'ULabDupNew',
+const labMocks = [
+    {
+        name: 'ULabOrigAdmin',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabOrigTa',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabOrigStudent',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabDeleted',
+        isDeleted: true,
+    },
+    {
+        name: 'ULabOther',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabNameNotEx',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabNameInv',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabNameExceed',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabOpenNotEx',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabOpenInv',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabDueNotEx',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabDueInv',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabCloseNotEx',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabCloseInv',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabOcd',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabDoc',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabDco',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabCod',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabCdo',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabODc',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabDupOrig',
+        isDeleted: false,
+    },
+    {
+        name: 'ULabDupNew',
+        isDeleted: false,
+    },
 ];
 
 const createUserMocks = async (): Promise<User[]> => {
@@ -63,7 +129,8 @@ const createUserMocks = async (): Promise<User[]> => {
 const createLabMocks = async (users: User[]): Promise<Lab[]> => {
     const repo = dataSource.getRepository(Lab);
     const labs = repo.create(
-        labNames.map(name => {
+        labMocks.map(lab => {
+            const { name, isDeleted } = lab;
             return {
                 name,
                 openAt: Date.now() - 3000,
@@ -72,6 +139,7 @@ const createLabMocks = async (users: User[]): Promise<Lab[]> => {
                 author: users[0],
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
+                deletedAt: isDeleted ? Date.now() : 0,
             };
         }),
     );

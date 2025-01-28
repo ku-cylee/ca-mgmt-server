@@ -6,16 +6,12 @@ export const taUser = {
     username: 'GlTa',
     secretKey: 'GlTaSecretKey',
     role: UserRole.TA,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
 };
 
 export const studentUser = {
     username: 'GlStdnt',
     secretKey: 'GlStdntSecretKey',
     role: UserRole.STUDENT,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
 };
 
 export const undeletedOpenLab = {
@@ -25,7 +21,7 @@ export const undeletedOpenLab = {
     closeAt: Date.now() + 1000 * 3600 * 2,
     submissionFilenames: ['gl_lab_udo1.v', 'gl_lab_udo2.v'],
     authorUsername: 'GlTa',
-    deletedAt: 0,
+    isDeleted: false,
     skeletonFileData: [
         {
             path: '/src/gl_skel_udo1.v',
@@ -49,7 +45,7 @@ export const undeletedUnopenLab = {
     closeAt: Date.now() + 1000 * 3600 * 2,
     submissionFilenames: ['gl_lab_uduo1.v', 'gl_lab_uduo2.v'],
     authorUsername: 'GlTa',
-    deletedAt: 0,
+    isDeleted: false,
     skeletonFileData: [
         {
             path: '/src/gl_skel_uduo1.v',
@@ -73,7 +69,7 @@ export const deletedOpenLab = {
     closeAt: Date.now() + 1000 * 3600 * 2,
     submissionFilenames: ['gl_lab_do1.v', 'gl_lab_do2.v'],
     authorUsername: 'GlTa',
-    deletedAt: Date.now(),
+    isDeleted: true,
     skeletonFileData: [
         {
             path: '/src/gl_skel_do1.v',
@@ -97,7 +93,7 @@ export const deletedUnopenLab = {
     closeAt: Date.now() + 1000 * 3600 * 2,
     submissionFilenames: ['gl_lab_duo1.v', 'gl_lab_duo2.v'],
     authorUsername: 'GlTa',
-    deletedAt: Date.now(),
+    isDeleted: true,
     skeletonFileData: [
         {
             path: '/src/gl_skel_duo1.v',
@@ -122,8 +118,15 @@ const labMocks = [
 ];
 
 const createUserMocks = async (): Promise<User[]> => {
+    const mocks = [taUser, studentUser];
     const repo = dataSource.getRepository(User);
-    const users = repo.create([taUser, studentUser]);
+    const users = repo.create(mocks.map(user => {
+        return {
+            ...user,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+        }
+    }));
     await repo.save(users);
 
     return users;
@@ -133,14 +136,16 @@ const createLabMocks = async (users: User[]): Promise<Lab[]> => {
     const repo = dataSource.getRepository(Lab);
     const labs = repo.create(
         labMocks.map(lab => {
+            const { authorUsername, isDeleted } = lab;
             const author = users.find(
-                user => user.username === lab.authorUsername,
+                user => user.username === authorUsername,
             );
             return {
                 ...lab,
                 author,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
+                deletedAt: isDeleted ? Date.now() : 0,
             };
         }),
     );

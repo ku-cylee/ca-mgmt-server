@@ -2,130 +2,123 @@ import { UserRole } from '../../../src/lib/enums';
 import { Lab, SubmissionFile, User } from '../../../src/models';
 import { dataSource } from '../database';
 
-export const taUsers = [
-    {
-        username: 'GllTa1',
-        secretKey: 'GllTa1SecretKey',
-        role: UserRole.TA,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-    },
-    {
-        username: 'GllTa2',
-        secretKey: 'GllTa2SecretKey',
-        role: UserRole.TA,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-    },
-];
+export const taUser = {
+    username: 'GlLabTa1',
+    secretKey: 'GlLabTa1SecretKey',
+    role: UserRole.TA,
+};
+
+export const otherTaUser = {
+    username: 'GlLabTa2',
+    secretKey: 'GlLabTa2SecretKey',
+    role: UserRole.TA,
+};
 
 export const studentUser = {
-    username: 'GllStdnt',
-    secretKey: 'GllStdntSecretKey',
+    username: 'GlLabStdnt',
+    secretKey: 'GlLabStdntSecretKey',
     role: UserRole.STUDENT,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
 };
 
 export const undeletedOpenLabs = [
     {
-        name: 'GllLab11',
+        name: 'GlLabUnO1',
         openAt: Date.now() - 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
         submissionFilenames: [],
-        authorUsername: 'GllTa1',
-        deletedAt: 0,
+        authorUsername: 'GlLabTa1',
+        isDeleted: false,
     },
     {
-        name: 'GllLab12',
+        name: 'GlLabUnO2',
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFilenames: ['gll_lab_121.v'],
-        authorUsername: 'GllTa2',
-        deletedAt: 0,
+        submissionFilenames: ['gllab_uno2_1.v'],
+        authorUsername: 'GlLabTa2',
+        isDeleted: false,
     },
     {
-        name: 'GllLab13',
+        name: 'GlLabUnO3',
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFilenames: ['gll_lab_131.v', 'gll_lab_132.v'],
-        authorUsername: 'GllTa2',
-        deletedAt: 0,
+        submissionFilenames: ['gllab_uno3_1.v', 'gllab_uno3_2.v'],
+        authorUsername: 'GlLabTa2',
+        isDeleted: false,
     },
 ];
 
 export const undeletedUnopenLabs = [
     {
-        name: 'GllLab21',
+        name: 'GlLabUnUo1',
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
         submissionFilenames: [],
-        authorUsername: 'GllTa1',
-        deletedAt: 0,
+        authorUsername: 'GlLabTa1',
+        isDeleted: false,
     },
     {
-        name: 'GllLab22',
+        name: 'GlLabUnUo2',
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600 * 2,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFilenames: ['gll_lab_221.v', 'gll_lab_222.v'],
-        authorUsername: 'GllTa2',
-        deletedAt: 0,
+        submissionFilenames: ['gllab_unuo2_1.v', 'gllab_unuo2_2.v'],
+        authorUsername: 'GlLabTa2',
+        isDeleted: false,
     },
 ];
 
 export const deletedOpenLabs = [
     {
-        name: 'GllLab31',
+        name: 'GlLabDO1',
         openAt: Date.now() - 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
         submissionFilenames: [],
-        authorUsername: 'GllTa1',
-        deletedAt: Date.now(),
+        authorUsername: 'GlLabTa1',
+        isDeleted: true,
     },
     {
-        name: 'GllLab32',
+        name: 'GlLabDO2',
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFilenames: ['gll_lab_321.v'],
-        authorUsername: 'GllTa1',
-        deletedAt: Date.now(),
+        submissionFilenames: ['gllab_do2_1.v'],
+        authorUsername: 'GlLabTa1',
+        isDeleted: true,
     },
     {
-        name: 'GllLab33',
+        name: 'GlLabDO3',
         openAt: Date.now() - 1000 * 3600 * 2,
         dueDate: Date.now() - 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600,
-        submissionFilenames: ['gll_lab_331.v', 'gll_lab_332.v'],
-        authorUsername: 'GllTa2',
-        deletedAt: Date.now(),
+        submissionFilenames: ['gllab_do3_1.v', 'gllab_do3_2.v'],
+        authorUsername: 'GlLabTa2',
+        isDeleted: true,
     },
 ];
 
 export const deletedUnopenLabs = [
     {
-        name: 'GllLab41',
+        name: 'GlLabDUo1',
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600,
         closeAt: Date.now() + 1000 * 3600 * 2,
         submissionFilenames: [],
-        authorUsername: 'GllTa1',
-        deletedAt: Date.now(),
+        authorUsername: 'GlLabTa1',
+        isDeleted: true,
     },
     {
-        name: 'GllLab42',
+        name: 'GlLabDUo2',
         openAt: Date.now() + 1000 * 3600,
         dueDate: Date.now() + 1000 * 3600 * 2,
         closeAt: Date.now() + 1000 * 3600 * 2,
-        submissionFilenames: ['gll_lab_421.v', 'gll_lab_422.v'],
-        authorUsername: 'GllTa2',
-        deletedAt: Date.now(),
+        submissionFilenames: ['gllab_duo4_1.v', 'gllab_duo4_2.v'],
+        authorUsername: 'GlLabTa2',
+        isDeleted: true,
     },
 ];
 
@@ -137,10 +130,16 @@ const labMocks = [
 ];
 
 const createUserMocks = async (): Promise<User[]> => {
+    const mocks = [taUser, otherTaUser, studentUser];
     const repo = dataSource.getRepository(User);
-    const users = repo.create([...taUsers, studentUser]);
+    const users = repo.create(mocks.map(user => {
+        return {
+            ...user,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+        }
+    }));
     await repo.save(users);
-
     return users;
 };
 
@@ -148,16 +147,17 @@ const createLabMocks = async (users: User[]): Promise<Lab[]> => {
     const repo = dataSource.getRepository(Lab);
     const labs = repo.create(
         labMocks.map(lab => {
+            const { authorUsername, isDeleted } = lab;
             const author = users.find(
-                user => user.username === lab.authorUsername,
+                user => user.username === authorUsername,
             );
-            if (!author) throw new Error();
 
             return {
                 ...lab,
                 author,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
+                deletedAt: isDeleted ? Date.now() : 0,
             };
         }),
     );

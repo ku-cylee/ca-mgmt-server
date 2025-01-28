@@ -4,14 +4,14 @@ import { dataSource } from '../database';
 
 export const undeletedTAs = [
     {
-        username: 'GetUserTA1',
-        secretKey: 'GetUserTA1SecretKey',
+        username: 'GlUserTaUnd1',
+        secretKey: 'GlUserTaUnd1SecretKey',
         role: UserRole.TA,
         isDeleted: false,
     },
     {
-        username: 'GetUserTA2',
-        secretKey: 'GetUserTA2SecretKey',
+        username: 'GlUserTaUnd2',
+        secretKey: 'GlUserTaUnd2SecretKey',
         role: UserRole.TA,
         isDeleted: false,
     },
@@ -19,14 +19,14 @@ export const undeletedTAs = [
 
 export const deletedTAs = [
     {
-        username: 'GetUserTA3',
-        secretKey: 'GetUserTA3SecretKey',
+        username: 'GlUserTaDel1',
+        secretKey: 'GlUserTaDel1SecretKey',
         role: UserRole.TA,
         isDeleted: true,
     },
     {
-        username: 'GetUserTA4',
-        secretKey: 'GetUserTA4SecretKey',
+        username: 'GlUserTaDel2',
+        secretKey: 'GlUserTaDel2SecretKey',
         role: UserRole.TA,
         isDeleted: true,
     },
@@ -34,14 +34,14 @@ export const deletedTAs = [
 
 export const undeletedStudents = [
     {
-        username: 'GetUserStdnt1',
-        secretKey: 'GetUserStdnt1SecretKey',
+        username: 'GlUserStdntUnd1',
+        secretKey: 'GlUserStdntUnd1SecretKey',
         role: UserRole.STUDENT,
         isDeleted: false,
     },
     {
-        username: 'GetUserStdnt2',
-        secretKey: 'GetUserStdnt2SecretKey',
+        username: 'GlUserStdntUnd2',
+        secretKey: 'GlUserStdntUnd2SecretKey',
         role: UserRole.STUDENT,
         isDeleted: false,
     },
@@ -49,14 +49,14 @@ export const undeletedStudents = [
 
 export const deletedStudents = [
     {
-        username: 'GetUserStdnt3',
-        secretKey: 'GetUserStdnt3SecretKey',
+        username: 'GlUserStdntDel1',
+        secretKey: 'GlUserStdntDel1SecretKey',
         role: UserRole.STUDENT,
         isDeleted: true,
     },
     {
-        username: 'GetUserStdnt4',
-        secretKey: 'GetUserStdnt4SecretKey',
+        username: 'GlUserStdntDel2',
+        secretKey: 'GlUserStdntDel2SecretKey',
         role: UserRole.STUDENT,
         isDeleted: true,
     },

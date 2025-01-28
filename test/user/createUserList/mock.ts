@@ -3,20 +3,20 @@ import { User } from '../../../src/models';
 import { dataSource } from '../database';
 
 export const taUser = {
-    username: 'CreateUserTA',
-    secretKey: 'CreateUserTASecretKey',
+    username: 'CUserTA',
+    secretKey: 'CUserTASecretKey',
     role: UserRole.TA,
 };
 
 export const studentUser = {
-    username: 'CreateUserStdnt',
-    secretKey: 'CreateUserStdntSecretKey',
+    username: 'CUserStdnt',
+    secretKey: 'CUserStdntSecretKey',
     role: UserRole.STUDENT,
 };
 
 export const duplicateUser = {
-    username: 'CreateUserDup',
-    secretKey: 'CreateUserDupSecretKey',
+    username: 'CUserDup',
+    secretKey: 'CUserDupSecretKey',
     role: UserRole.TA,
 };
 
