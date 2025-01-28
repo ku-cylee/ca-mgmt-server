@@ -35,4 +35,8 @@ export default class SkeletonFile extends BaseEntity {
 
     @Column({ type: 'bigint', name: 'deleted_at', transformer, default: 0 })
     deletedAt!: number;
+
+    get isDeleted() {
+        return this.deletedAt !== 0;
+    }
 }

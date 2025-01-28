@@ -49,7 +49,13 @@ export const getList = async (
 
     const labs = await repo.find({
         where: options,
-        relations: { author: true, submissionFiles: true },
+        relations: {
+            author: true,
+            submissionFiles: true,
+        },
+        order: {
+            id: 'ASC',
+        },
     });
 
     return labs;

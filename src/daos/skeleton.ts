@@ -18,7 +18,9 @@ export const getListByLab = async (
 
     const skeletonFiles = await repo.find({
         where,
-        order: { id: 'ASC' },
+        order: {
+            id: 'ASC',
+        },
     });
 
     return skeletonFiles;

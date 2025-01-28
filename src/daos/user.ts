@@ -44,16 +44,21 @@ export const getList = async (
 ): Promise<User[]> => {
     const repo = getRepo();
 
-    const options: FindOptionsWhere<User> = {};
+    const where: FindOptionsWhere<User> = {};
 
     const excludeRoles = [UserRole.ADMIN];
     if (!includeTA) excludeRoles.push(UserRole.TA);
     if (!includeStudent) excludeRoles.push(UserRole.STUDENT);
-    options.role = Not(In(excludeRoles));
+    where.role = Not(In(excludeRoles));
 
-    if (!includeDeleted) options.deletedAt = 0;
+    if (!includeDeleted) where.deletedAt = 0;
 
-    const users = await repo.find({ where: options });
+    const users = await repo.find({
+        where,
+        order: {
+            id: 'ASC',
+        },
+    });
     return users;
 };
 
