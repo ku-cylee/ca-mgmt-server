@@ -1,6 +1,6 @@
-import { DataSource } from 'typeorm';
 import { UserRole } from '../../../src/lib/enums';
 import { Lab, User } from '../../../src/models';
+import { dataSource } from '../database';
 
 export const taUser = {
     username: 'CLabTa',
@@ -27,11 +27,23 @@ export const duplicateLab = {
     updatedAt: Date.now(),
 };
 
-export const createMock = async (dataSource: DataSource) => {
-    const userRepo = dataSource.getRepository(User);
-    const users = userRepo.create([taUser, studentUser]);
-    await userRepo.save(users);
+const createUserMocks = async (): Promise<User[]> => {
+    const repo = dataSource.getRepository(User);
+    const users = repo.create([taUser, studentUser]);
+    await repo.save(users);
 
-    const labRepo = dataSource.getRepository(Lab);
-    await labRepo.save(labRepo.create({ ...duplicateLab, author: users[0] }));
+    return users;
+};
+
+const createLabMocks = async (users: User[]): Promise<Lab[]> => {
+    const repo = dataSource.getRepository(Lab);
+    const labs = repo.create([{ ...duplicateLab, author: users[0] }]);
+    await repo.save(labs);
+
+    return labs;
+};
+
+export const createMocks = async () => {
+    const users = await createUserMocks();
+    await createLabMocks(users);
 };

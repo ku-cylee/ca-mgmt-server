@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { DataSource } from 'typeorm';
-import { Test } from '../../commons';
 import { getCookie } from '../../commons/cookie';
 import { otherTaUser, studentUser, taUser } from './mock';
 import { admin } from '../admin';
 import { Lab } from '../../../src/models';
+import { Test } from '../../commons/tests';
+import { dataSource } from '../database';
 
 const TA_COOKIE = getCookie(taUser);
 
-const getLabByName = async (dataSource: DataSource, name: string): Promise<Lab | null> => {
+const getLabByName = async (name: string): Promise<Lab | null> => {
     const repo = dataSource.getRepository(Lab);
     const lab = await repo.findOneBy({ name });
     return lab;
@@ -19,7 +19,7 @@ const getLabByName = async (dataSource: DataSource, name: string): Promise<Lab |
 export const tests: Test[] = [
     {
         name: 'should respond 200 if the requester is admin',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'delete',
                 url: `/lab/DLabOrigAdmin`,
@@ -31,13 +31,13 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.empty;
 
-            const lab = await getLabByName(dataSource, 'DLabOrigAdmin');
+            const lab = await getLabByName('DLabOrigAdmin');
             expect(lab?.deletedAt).to.be.not.equal(0);
         },
     },
     {
         name: 'should respond 200 if the requester is ta and the requester is the author of the lab',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'delete',
                 url: `/lab/DLabOrigTa`,
@@ -49,13 +49,13 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.empty;
 
-            const lab = await getLabByName(dataSource, 'DLabOrigTa');
+            const lab = await getLabByName('DLabOrigTa');
             expect(lab?.deletedAt).to.be.not.equal(0);
         },
     },
     {
         name: 'should throw 403 if the requester is student',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'delete',
                 url: `/lab/DLabOrigStudent`,
@@ -67,7 +67,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const lab = await getLabByName(dataSource, 'DLabOrigStudent');
+            const lab = await getLabByName('DLabOrigStudent');
             expect(lab?.deletedAt).to.be.equal(0);
         },
     },
@@ -88,7 +88,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 404 if the lab is deleted',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             await dataSource
                 .getRepository(Lab)
                 .update({ name: 'DLabDeleted' }, { deletedAt: Date.now() });
@@ -104,13 +104,13 @@ export const tests: Test[] = [
             expect(res.status).to.equal(404);
             expect(res.data).to.be.empty;
 
-            const lab = await getLabByName(dataSource, 'DLabDeleted');
+            const lab = await getLabByName('DLabDeleted');
             expect(lab?.deletedAt).to.be.not.equal(0);
         },
     },
     {
         name: 'should throw 403 if the requester is ta and the requester is not the author of the lab',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'delete',
                 url: `/lab/DLabOther`,
@@ -122,7 +122,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const lab = await getLabByName(dataSource, 'DLabOther');
+            const lab = await getLabByName('DLabOther');
             expect(lab?.deletedAt).to.be.equal(0);
         },
     },

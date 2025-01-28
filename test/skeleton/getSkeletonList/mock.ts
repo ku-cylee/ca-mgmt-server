@@ -1,7 +1,7 @@
-import { DataSource } from 'typeorm';
 import { Lab, SkeletonFile, User } from '../../../src/models';
 import { UserRole } from '../../../src/lib/enums';
 import { getChecksum } from '../../../src/lib/checksum';
+import { dataSource } from '../database';
 
 export const taUser = {
     username: 'GlSkTa',
@@ -152,9 +152,7 @@ export const deletedLabSkeletonMocks = [
     },
 ];
 
-export const createUserMocks = async (
-    dataSource: DataSource,
-): Promise<User[]> => {
+const createUserMocks = async (): Promise<User[]> => {
     const mocks = [taUser, studentUser, authorTaUser];
     const repo = dataSource.getRepository(User);
     const users = repo.create(
@@ -170,10 +168,7 @@ export const createUserMocks = async (
     return users;
 };
 
-export const createLabMocks = async (
-    dataSource: DataSource,
-    users: User[],
-): Promise<Lab[]> => {
+const createLabMocks = async (users: User[]): Promise<Lab[]> => {
     const repo = dataSource.getRepository(Lab);
     const labs = repo.create(
         labMocks.map(lab => {
@@ -194,10 +189,7 @@ export const createLabMocks = async (
     return labs;
 };
 
-export const createSkeletonMocks = async (
-    dataSource: DataSource,
-    labs: Lab[],
-): Promise<SkeletonFile[]> => {
+const createSkeletonMocks = async (labs: Lab[]): Promise<SkeletonFile[]> => {
     const mocks = [
         ...openLabSkeletonMocks,
         ...unopenLabSkeletonMocks,
@@ -220,4 +212,10 @@ export const createSkeletonMocks = async (
     );
     await repo.save(skeletons);
     return skeletons;
+};
+
+export const createMocks = async (): Promise<void> => {
+    const users = await createUserMocks();
+    const labs = await createLabMocks(users);
+    await createSkeletonMocks(labs);
 };

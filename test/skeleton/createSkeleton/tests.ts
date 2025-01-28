@@ -1,16 +1,15 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { DataSource } from 'typeorm';
-import { Test } from '../../commons';
 import { getCookie } from '../../commons/cookie';
+import { Test } from '../../commons/tests';
 import { admin } from '../admin';
 import { getChecksum } from '../../../src/lib/checksum';
 import { SkeletonFile } from '../../../src/models';
 import { otherTaUser, taUser } from './mock';
+import { dataSource } from '../database';
 
 const getSkeletonByLabAndPath = async (
-    dataSource: DataSource,
     labName: string,
     path: string,
 ): Promise<SkeletonFile | null> => {
@@ -43,7 +42,7 @@ const compare = (actual: any, expected: any) => {
 export const tests: Test[] = [
     {
         name: 'should throw 403 if requester is admin',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelUndeleted';
             const path = '/src/cskel_admin.v';
             const content = 'CSkel\nAdmin\nContent\n';
@@ -69,13 +68,13 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton).to.be.null;
         },
     },
     {
         name: 'should respond created skeleton if requester is ta and the author of the lab and the duplicate skeleton file does not exist',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelUndeleted';
             const path = '  /src/cskel_ta.v ';
             const content = 'CSkel\nTa\nContent\n';
@@ -108,13 +107,13 @@ export const tests: Test[] = [
                 isExecutable: false,
             });
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path.trim());
+            const skeleton = await getSkeletonByLabAndPath(labName, path.trim());
             expect(skeleton).to.be.not.null;
         },
     },
     {
         name: 'should throw 403 if requester is student',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelUndeleted';
             const path = '/src/cskel_student.v';
             const content = 'CSkel\nStudent\nContent\n';
@@ -140,13 +139,13 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton).to.be.null;
         },
     },
     {
         name: 'should throw 403 if requester is not the author of the lab',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelUndeleted';
             const path = '/src/cskel_other.v';
             const content = 'CSkel\nOther\nContent\n';
@@ -172,13 +171,13 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton).to.be.null;
         },
     },
     {
         name: 'should throw 404 if lab does not exist and the requester is ta',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelNotExist';
             const path = '/src/cskel_not_exist.v';
             const content = 'CSkel\nNot exist\nContent\n';
@@ -204,7 +203,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(404);
             expect(res.data).to.be.empty;
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton).to.be.null;
         },
     },
@@ -466,7 +465,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 409 if undeleted, duplicate skeleton file exists and requester is the author of the lab',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelDuplicate';
             const path = '/src/cskel_duplicate.v';
             const content = 'CSkelDuplicate.v New Content';
@@ -492,13 +491,13 @@ export const tests: Test[] = [
             expect(res.status).to.equal(409);
             expect(res.data).to.be.empty;
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton?.content).to.not.equal(content);
         },
     },
     {
         name: 'should respond created skeleton if deleted, duplicate skeleton file exists and requester is the author of the lab',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelDuplicate';
             const path = '/src/cskel_duplicate_deleted.v';
             const content = 'CSkelDuplicate.v Deleted New Content';
@@ -527,14 +526,14 @@ export const tests: Test[] = [
 
             compare(res.data, { path, content, checksum, isExecutable });
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton).to.be.not.null;
             expect(skeleton?.checksum).to.equal(checksum);
         },
     },
     {
         name: 'should respond created skeleton and the author of the lab and the duplicate skeleton file exists on another lab',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelOne';
             const path = '/src/cskel_another.v';
             const content = 'CSkelOne.v Content';
@@ -563,14 +562,14 @@ export const tests: Test[] = [
 
             compare(res.data, { path, content, checksum, isExecutable });
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton).to.be.not.null;
             expect(skeleton?.checksum).to.equal(checksum);
         },
     },
     {
         name: 'should throw 422 if checksum does not match',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const labName = 'CSkelChecksum';
             const path = '/src/cskel_checksum_mismatch.v';
             const content = 'CSkelChecksum.v\nMismatch\nContent\n';
@@ -597,7 +596,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(422);
             expect(res.data).to.be.empty;
 
-            const skeleton = await getSkeletonByLabAndPath(dataSource, labName, path);
+            const skeleton = await getSkeletonByLabAndPath(labName, path);
             expect(skeleton).to.be.null;
         },
     },

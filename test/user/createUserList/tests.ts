@@ -1,17 +1,18 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { DataSource, In } from 'typeorm';
-import { Test } from '../../commons';
+import { In } from 'typeorm';
 import { duplicateUser, studentUser, taUser } from './mock';
 import { UserRole } from '../../../src/lib/enums';
 import { User } from '../../../src/models';
 import { getCookie } from '../../commons/cookie';
 import { admin } from '../admin';
+import { dataSource } from '../database';
+import { Test } from '../../commons/tests';
 
 const ADMIN_COOKIE = getCookie(admin);
 
-const getUsersByUsername = async (dataSource: DataSource, usernames: string[]): Promise<User[]> => {
+const getUsersByUsername = async (usernames: string[]): Promise<User[]> => {
     const repo = dataSource.getRepository(User);
     const users = await repo.findBy({
         username: In(usernames),
@@ -22,7 +23,7 @@ const getUsersByUsername = async (dataSource: DataSource, usernames: string[]): 
 export const tests: Test[] = [
     {
         name: 'should respond 200 if requester is admin and role is TA',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const rawData = [
                 {
                     username: 'CrUsrExTa0',
@@ -53,11 +54,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, [
-                'CrUsrExTa0',
-                'CrUsrExTa1',
-                'CrUsrEx-Ta2',
-            ]);
+            const users = await getUsersByUsername(['CrUsrExTa0', 'CrUsrExTa1', 'CrUsrEx-Ta2']);
 
             expect(users).to.have.lengthOf(3);
             Array(3).forEach((idx: number) => {
@@ -69,7 +66,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond 200 if requester is admin and role is student',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const rawData = [
                 {
                     username: 'CrUsrExStdnt0',
@@ -120,7 +117,7 @@ export const tests: Test[] = [
                 method: 'post',
                 url: '/user',
                 headers: {
-                    Cookie: `username=${taUser.username};secretKey=${taUser.secretKey}`,
+                    Cookie: getCookie(taUser),
                 },
                 data: {
                     role: UserRole.STUDENT,
@@ -139,7 +136,7 @@ export const tests: Test[] = [
                 method: 'post',
                 url: '/user',
                 headers: {
-                    Cookie: `username=${studentUser.username};secretKey=${studentUser.secretKey}`,
+                    Cookie: getCookie(studentUser),
                 },
                 data: {
                     role: UserRole.STUDENT,
@@ -208,7 +205,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 400 some usernames of usersData is not given',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'post',
                 url: '/user',
@@ -236,14 +233,14 @@ export const tests: Test[] = [
             expect(res.status).to.equal(400);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, ['CrUsrUn11', 'CrUsrUn13']);
+            const users = await getUsersByUsername(['CrUsrUn11', 'CrUsrUn13']);
 
             expect(users).to.be.empty;
         },
     },
     {
         name: 'should throw 400 if some usernames not consist of alphanum or hyphen',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'post',
                 url: '/user',
@@ -272,18 +269,14 @@ export const tests: Test[] = [
             expect(res.status).to.equal(400);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, [
-                'CrUsrUn21',
-                'CrUsrUn22',
-                'CrUsrUn23',
-            ]);
+            const users = await getUsersByUsername(['CrUsrUn21', 'CrUsrUn22', 'CrUsrUn23']);
 
             expect(users).to.be.empty;
         },
     },
     {
         name: 'should throw 400 some usernames of usersData is not given',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'post',
                 url: '/user',
@@ -311,18 +304,14 @@ export const tests: Test[] = [
             expect(res.status).to.equal(400);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, [
-                'CrUsrUn31',
-                'CrUsrUn32',
-                'CrUsrUn33',
-            ]);
+            const users = await getUsersByUsername(['CrUsrUn31', 'CrUsrUn32', 'CrUsrUn33']);
 
             expect(users).to.be.empty;
         },
     },
     {
         name: 'should throw 400 if some secretKeys exceed maxlength of 64',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'post',
                 url: '/user',
@@ -338,8 +327,7 @@ export const tests: Test[] = [
                         },
                         {
                             username: 'CrUsrSk12',
-                            secretKey:
-                                'CrUsrSk12SecretKeyCrUsrSk12SecretKeyCrUsrSk12SecretKeyCrUsrSk12SecretKey',
+                            secretKey: 'CrUsrSk12SecretKey'.repeat(4),
                         },
                         {
                             username: 'CrUsrSk13',
@@ -352,18 +340,14 @@ export const tests: Test[] = [
             expect(res.status).to.equal(400);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, [
-                'CrUsrSk11',
-                'CrUsrSk12',
-                'CrUsrSk13',
-            ]);
+            const users = await getUsersByUsername(['CrUsrSk11', 'CrUsrSk12', 'CrUsrSk13']);
 
             expect(users).to.be.empty;
         },
     },
     {
         name: 'should throw 409 if some usernames already exist',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const { username, secretKey } = duplicateUser;
             const res = await axios({
                 method: 'post',
@@ -389,7 +373,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(409);
             expect(res.data).to.be.empty;
 
-            const users = await getUsersByUsername(dataSource, ['CrUsrDp1', username]);
+            const users = await getUsersByUsername(['CrUsrDp1', username]);
 
             expect(users).to.be.lengthOf(1);
             expect(users[0].secretKey).to.not.equal(secretKey + secretKey);

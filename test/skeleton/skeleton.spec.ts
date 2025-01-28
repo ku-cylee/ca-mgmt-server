@@ -1,46 +1,44 @@
 import '../../src/env';
 import { after, before, describe } from 'mocha';
-import { DatabaseManager } from '../commons';
 import { admin } from './admin';
-import { GetSkeletonListTests } from './getSkeletonList';
-import { CreateSkeletonTests } from './createSkeleton';
-import { DeleteSkeletonListTests } from './deleteSkeletonList';
+import * as GetSkeletonListTests from './getSkeletonList';
+import * as CreateSkeletonTests from './createSkeleton';
+import * as DeleteSkeletonListTests from './deleteSkeletonList';
+import { executeTests, initAxios } from '../commons/tests';
+import { dataSource } from './database';
+import { cleanDatabase, createAdmin } from '../commons/database';
 
 describe('Skeleton', () => {
-    const dbManager = new DatabaseManager('test:skeleton', admin);
-
-    const getSkeletonListTests = new GetSkeletonListTests(dbManager);
-    const createSkeletonTests = new CreateSkeletonTests(dbManager);
-    const deleteSkeletonListTests = new DeleteSkeletonListTests(dbManager);
+    initAxios();
 
     before(async () => {
-        await dbManager.init();
-        await dbManager.clean();
-        await dbManager.createAdmin();
+        await dataSource.initialize();
+        await cleanDatabase(dataSource, admin);
+        await createAdmin(dataSource, admin);
     });
 
     describe('GET /skeleton', () => {
         before(async () => {
-            await getSkeletonListTests.createMocks();
+            await GetSkeletonListTests.createMocks();
         });
-        getSkeletonListTests.executeTests();
+        executeTests(GetSkeletonListTests.tests);
     });
 
     describe('POST /skeleton', () => {
         before(async () => {
-            await createSkeletonTests.createMocks();
+            await CreateSkeletonTests.createMocks();
         });
-        createSkeletonTests.executeTests();
+        executeTests(CreateSkeletonTests.tests);
     });
 
     describe('DELETE /skeleton', () => {
         before(async () => {
-            await deleteSkeletonListTests.createMocks();
+            await DeleteSkeletonListTests.createMocks();
         });
-        deleteSkeletonListTests.executeTests();
+        executeTests(DeleteSkeletonListTests.tests);
     });
 
     after(async () => {
-        await dbManager.clean();
+        await cleanDatabase(dataSource, admin);
     });
 });

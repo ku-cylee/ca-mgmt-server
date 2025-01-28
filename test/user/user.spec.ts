@@ -1,45 +1,44 @@
 import '../../src/env';
 import { after, before, describe } from 'mocha';
-import { DatabaseManager } from '../commons';
-import { GetUserListTests } from './getUserList';
-import { CreateUserListTests } from './createUserList';
-import { DeleteUserTests } from './deleteUser';
 import { admin } from './admin';
+import { dataSource } from './database';
+import { executeTests, initAxios } from '../commons/tests';
+import { cleanDatabase, createAdmin } from '../commons/database';
+import * as GetUserListTests from './getUserList';
+import * as CreateUserListTests from './createUserList';
+import * as DeleteUserTests from './deleteUser';
 
 describe('User', () => {
-    const dbManager = new DatabaseManager('test:user', admin);
-    const getUserListTests = new GetUserListTests(dbManager);
-    const createUserListTests = new CreateUserListTests(dbManager);
-    const deleteUserTests = new DeleteUserTests(dbManager);
+    initAxios();
 
     before(async () => {
-        await dbManager.init();
-        await dbManager.clean();
-        await dbManager.createAdmin();
+        await dataSource.initialize();
+        await cleanDatabase(dataSource, admin);
+        await createAdmin(dataSource, admin);
     });
 
     describe('GET /user', () => {
         before(async () => {
-            await getUserListTests.createMocks();
+            await GetUserListTests.createMocks();
         });
-        getUserListTests.executeTests();
+        executeTests(GetUserListTests.tests);
     });
 
     describe('POST /user', () => {
         before(async () => {
-            await createUserListTests.createMocks();
+            await CreateUserListTests.createMocks();
         });
-        createUserListTests.executeTests();
+        executeTests(CreateUserListTests.tests);
     });
 
     describe('DELETE /user/:userId', () => {
         before(async () => {
-            await deleteUserTests.createMocks();
+            await DeleteUserTests.createMocks();
         });
-        deleteUserTests.executeTests();
+        executeTests(DeleteUserTests.tests);
     });
 
     after(async () => {
-        await dbManager.clean();
+        await cleanDatabase(dataSource, admin);
     });
 });

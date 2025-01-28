@@ -2,9 +2,9 @@
 import axios from 'axios';
 import { expect } from 'chai';
 import { deletedStudents, deletedTAs, undeletedStudents, undeletedTAs } from './mock';
-import { Test } from '../../commons';
 import { getCookie } from '../../commons/cookie';
 import { admin } from '../admin';
+import { Test } from '../../commons/tests';
 
 const ADMIN_COOKIE = getCookie(admin);
 const TA_COOKIE = getCookie(undeletedTAs[0]);

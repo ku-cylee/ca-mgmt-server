@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { DataSource } from 'typeorm';
-import { Test } from '../../commons';
+import { Test } from '../../commons/tests';
 import { getCookie } from '../../commons/cookie';
 import { admin } from '../admin';
 import { duplicateLab, studentUser, taUser } from './mock';
 import { Lab } from '../../../src/models';
+import { dataSource } from '../database';
 
 const TA_COOKIE = getCookie(taUser);
 
-const getLabByName = async (dataSource: DataSource, name: string): Promise<Lab | null> => {
+const getLabByName = async (name: string): Promise<Lab | null> => {
     const repo = dataSource.getRepository(Lab);
     const lab = await repo.findOneBy({ name });
     return lab;
@@ -34,7 +34,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond 200 if requester is ta and openAt < dueDate < closeAt',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const baseTime = Date.now();
 
             const res = await axios({
@@ -67,13 +67,13 @@ export const tests: Test[] = [
             expect(res.data.closeAt).to.equal(baseTime + 2000 * 3600);
             expect(res.data.deletedAt).to.equal(0);
 
-            const lab = await getLabByName(dataSource, 'CLabOdcTa1');
+            const lab = await getLabByName('CLabOdcTa1');
             expect(lab).to.be.not.null;
         },
     },
     {
         name: 'should respond 200 if requester is ta and openAt < dueDate = closeAt',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const baseTime = Date.now();
 
             const res = await axios({
@@ -106,7 +106,7 @@ export const tests: Test[] = [
             expect(res.data.closeAt).to.equal(baseTime + 1000 * 3600);
             expect(res.data.deletedAt).to.equal(0);
 
-            const lab = await getLabByName(dataSource, 'CLabOdcTa2');
+            const lab = await getLabByName('CLabOdcTa2');
             expect(lab).to.be.not.null;
         },
     },
@@ -450,7 +450,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond 409 if the lab already exists and the requester is ta',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const baseTime = Date.now();
 
             const res = await axios({
@@ -470,7 +470,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(409);
             expect(res.data).to.be.empty;
 
-            const lab = await getLabByName(dataSource, duplicateLab.name);
+            const lab = await getLabByName(duplicateLab.name);
             expect(lab).to.be.not.null;
             expect(lab?.openAt).to.be.not.equal(baseTime + 1000);
         },

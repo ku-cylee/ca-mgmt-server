@@ -1,64 +1,60 @@
 import '../../src/env';
 import { after, before, describe } from 'mocha';
-import { DatabaseManager } from '../commons';
-import { GetLabListTests } from './getLabList';
-import { GetLabTests } from './getLab';
 import { admin } from './admin';
-import { CreateLabTests } from './createLab';
-import { UpdateLabTests } from './updateLab';
-import { DeleteLabTests } from './deleteLab';
+import { executeTests, initAxios } from '../commons/tests';
+import { dataSource } from './database';
+import { cleanDatabase, createAdmin } from '../commons/database';
+import * as GetLabListTests from './getLabList';
+import * as GetLabTests from './getLab';
+import * as CreateLabTests from './createLab';
+import * as UpdateLabTests from './updateLab';
+import * as DeleteLabTests from './deleteLab';
 
 describe('Lab', () => {
-    const dbManager = new DatabaseManager('test:lab', admin);
-
-    const getLabListTests = new GetLabListTests(dbManager);
-    const getLabTests = new GetLabTests(dbManager);
-    const createLabTests = new CreateLabTests(dbManager);
-    const updateLabTests = new UpdateLabTests(dbManager);
-    const deleteLabTests = new DeleteLabTests(dbManager);
+    initAxios();
 
     before(async () => {
-        await dbManager.init();
-        await dbManager.clean();
-        await dbManager.createAdmin();
+        await dataSource.initialize();
+        await cleanDatabase(dataSource, admin);
+        await createAdmin(dataSource, admin);
     });
 
     describe('GET /lab', () => {
         before(async () => {
-            await getLabListTests.createMocks();
+            await GetLabListTests.createMocks();
         });
-        getLabListTests.executeTests();
+        executeTests(GetLabListTests.tests);
     });
 
     describe('GET /lab/:labName', () => {
         before(async () => {
-            await getLabTests.createMocks();
+            await GetLabTests.createMocks();
         });
-        getLabTests.executeTests();
+        executeTests(GetLabTests.tests);
     });
 
     describe('POST /lab', () => {
         before(async () => {
-            await createLabTests.createMocks();
+            await CreateLabTests.createMocks();
         });
-        createLabTests.executeTests();
+        executeTests(CreateLabTests.tests);
     });
 
     describe('PUT /lab/:labId', () => {
         before(async () => {
-            await updateLabTests.createMocks();
+            await UpdateLabTests.createMocks();
         });
-        updateLabTests.executeTests();
+        executeTests(UpdateLabTests.tests);
     });
 
     describe('DELETE /lab/:labId', () => {
         before(async () => {
-            await deleteLabTests.createMocks();
+            await DeleteLabTests.createMocks();
         });
-        deleteLabTests.executeTests();
+        executeTests(DeleteLabTests.tests);
     });
 
     after(async () => {
-        await dbManager.clean();
+        await cleanDatabase(dataSource, admin);
     });
 });

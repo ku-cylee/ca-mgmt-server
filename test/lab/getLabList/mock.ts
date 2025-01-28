@@ -1,6 +1,6 @@
-import { DataSource } from 'typeorm';
 import { UserRole } from '../../../src/lib/enums';
 import { Lab, SubmissionFile, User } from '../../../src/models';
+import { dataSource } from '../database';
 
 export const taUsers = [
     {
@@ -129,20 +129,24 @@ export const deletedUnopenLabs = [
     },
 ];
 
-export const createMock = async (dataSource: DataSource) => {
-    const userRepo = dataSource.getRepository(User);
-    const users = userRepo.create([...taUsers, studentUser]);
-    await userRepo.save(users);
+const labMocks = [
+    ...undeletedOpenLabs,
+    ...undeletedUnopenLabs,
+    ...deletedOpenLabs,
+    ...deletedUnopenLabs,
+];
 
-    const labMocks = [
-        ...undeletedOpenLabs,
-        ...undeletedUnopenLabs,
-        ...deletedOpenLabs,
-        ...deletedUnopenLabs,
-    ];
+const createUserMocks = async (): Promise<User[]> => {
+    const repo = dataSource.getRepository(User);
+    const users = repo.create([...taUsers, studentUser]);
+    await repo.save(users);
 
-    const labRepo = dataSource.getRepository(Lab);
-    const labs = labRepo.create(
+    return users;
+};
+
+const createLabMocks = async (users: User[]): Promise<Lab[]> => {
+    const repo = dataSource.getRepository(Lab);
+    const labs = repo.create(
         labMocks.map(lab => {
             const author = users.find(
                 user => user.username === lab.authorUsername,
@@ -157,10 +161,15 @@ export const createMock = async (dataSource: DataSource) => {
             };
         }),
     );
-    await labRepo.save(labs);
+    await repo.save(labs);
+    return labs;
+};
 
-    const sbfRepo = dataSource.getRepository(SubmissionFile);
-    const submissionFiles = sbfRepo.create(
+const createSubmissionFileMocks = async (
+    labs: Lab[],
+): Promise<SubmissionFile[]> => {
+    const repo = dataSource.getRepository(SubmissionFile);
+    const submissionFiles = repo.create(
         labMocks
             .map((labMock, labIdx) =>
                 labMock.submissionFilenames.map((name: string) => {
@@ -173,5 +182,12 @@ export const createMock = async (dataSource: DataSource) => {
             )
             .reduce((prev, next) => prev.concat(next), []),
     );
-    await sbfRepo.save(submissionFiles);
+    await repo.save(submissionFiles);
+    return submissionFiles;
+};
+
+export const createMocks = async (): Promise<void> => {
+    const users = await createUserMocks();
+    const labs = await createLabMocks(users);
+    await createSubmissionFileMocks(labs);
 };

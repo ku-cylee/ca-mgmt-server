@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { expect } from 'chai';
-import { Test } from '../../commons';
 import {
     deletedOpenLabs,
     deletedUnopenLabs,
@@ -11,6 +10,7 @@ import {
 } from './mock';
 import { getCookie } from '../../commons/cookie';
 import { admin } from '../admin';
+import { Test } from '../../commons/tests';
 
 const compareLabs = (actual: any, expected: any) => {
     expect(actual).to.be.an('object');

@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { Test } from '../../commons';
 import { getCookie } from '../../commons/cookie';
+import { Test } from '../../commons/tests';
 import { admin } from '../admin';
 import { getChecksum } from '../../../src/lib/checksum';
 import {

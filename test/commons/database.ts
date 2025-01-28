@@ -6,6 +6,7 @@ import {
     Lab,
     SkeletonFile,
     Submission,
+    SubmissionFile,
     User,
 } from '../../src/models';
 
@@ -25,50 +26,42 @@ export interface AuthData {
     secretKey: string;
 }
 
-export class DatabaseManager {
-    dataSource!: DataSource;
+export const generateDataSource = (name: string) =>
+    new DataSource({
+        name,
+        type: 'mariadb',
+        host: DB_HOST ?? '127.0.0.1',
+        port: parseInt(DB_PORT ?? '3306', 10),
+        username: DB_USER,
+        password: DB_PASS,
+        database: DB_NAME,
+        synchronize: DB_SYNC === 'true',
+        logging: DB_LOGGING === 'true',
+        entities: DB_ENTITIES?.split(',') ?? [],
+    });
 
-    admin!: AuthData;
+export const createAdmin = async (dataSource: DataSource, admin: AuthData) => {
+    const repo = dataSource.getRepository(User);
+    const user = repo.create({
+        ...admin,
+        role: UserRole.ADMIN,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+    });
+    await repo.save(user);
+};
 
-    constructor(name: string, admin: AuthData) {
-        this.dataSource = new DataSource({
-            name,
-            type: 'mariadb',
-            host: DB_HOST ?? '127.0.0.1',
-            port: parseInt(DB_PORT ?? '3306', 10),
-            username: DB_USER,
-            password: DB_PASS,
-            database: DB_NAME,
-            synchronize: DB_SYNC === 'true',
-            logging: DB_LOGGING === 'true',
-            entities: DB_ENTITIES?.split(',') ?? [],
-        });
-
-        this.admin = admin;
-    }
-
-    async init() {
-        await this.dataSource.initialize();
-    }
-
-    async createAdmin() {
-        const repo = this.dataSource.getRepository(User);
-        const user = repo.create({
-            ...this.admin,
-            role: UserRole.ADMIN,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-        });
-        await repo.save(user);
-    }
-
-    async clean() {
-        [Defuse, Bomb, SkeletonFile, Submission, Lab].forEach(async Entity => {
-            const repo = this.dataSource.getRepository(Entity);
+export const cleanDatabase = async (
+    dataSource: DataSource,
+    admin: AuthData,
+) => {
+    [Defuse, Bomb, SkeletonFile, Submission, SubmissionFile, Lab].forEach(
+        async Entity => {
+            const repo = dataSource.getRepository(Entity);
             await repo.delete({ id: Not(IsNull()) });
-        });
-        const userRepo = this.dataSource.getRepository(User);
-        await userRepo.delete({ role: Not(UserRole.ADMIN) });
-        await userRepo.delete({ username: this.admin.username });
-    }
-}
+        },
+    );
+    const userRepo = dataSource.getRepository(User);
+    await userRepo.delete({ role: Not(UserRole.ADMIN) });
+    await userRepo.delete({ username: admin.username });
+};

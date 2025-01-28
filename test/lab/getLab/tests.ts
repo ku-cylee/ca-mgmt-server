@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { DataSource } from 'typeorm';
-import { Test } from '../../commons';
 import { Lab } from '../../../src/models';
 import {
     deletedOpenLab,
@@ -14,12 +12,14 @@ import {
 } from './mock';
 import { getCookie } from '../../commons/cookie';
 import { admin } from '../admin';
+import { dataSource } from '../database';
+import { Test } from '../../commons/tests';
 
 const ADMIN_COOKIE = getCookie(admin);
 const TA_COOKIE = getCookie(taUser);
 const STUDENT_COOKIE = getCookie(studentUser);
 
-const getLabByName = async (dataSource: DataSource, name: string) => {
+const getLabByName = async (name: string) => {
     const repo = dataSource.getRepository(Lab);
     const lab = await repo.findOneBy({ name });
     if (!lab) throw new Error();
@@ -83,8 +83,8 @@ const compareLabs = (actual: any, expected: any) => {
 export const tests: Test[] = [
     {
         name: 'should respond lab data if lab is undeleted and open, requester is admin',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabUdO');
+        func: async () => {
+            const lab = await getLabByName('GlLabUdO');
 
             const res = await axios({
                 method: 'get',
@@ -101,8 +101,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond lab data if lab is undeleted and unopen, requester is admin',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabUdUo');
+        func: async () => {
+            const lab = await getLabByName('GlLabUdUo');
 
             const res = await axios({
                 method: 'get',
@@ -119,8 +119,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond lab data if lab is deleted and open, requester is admin',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabDO');
+        func: async () => {
+            const lab = await getLabByName('GlLabDO');
 
             const res = await axios({
                 method: 'get',
@@ -137,8 +137,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond lab data if lab is deleted and unopen, requester is admin',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabDUo');
+        func: async () => {
+            const lab = await getLabByName('GlLabDUo');
 
             const res = await axios({
                 method: 'get',
@@ -156,8 +156,8 @@ export const tests: Test[] = [
 
     {
         name: 'should respond lab data if lab is undeleted and open, requester is ta',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabUdO');
+        func: async () => {
+            const lab = await getLabByName('GlLabUdO');
 
             const res = await axios({
                 method: 'get',
@@ -174,8 +174,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond lab data if lab is undeleted and unopen, requester is ta',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabUdUo');
+        func: async () => {
+            const lab = await getLabByName('GlLabUdUo');
 
             const res = await axios({
                 method: 'get',
@@ -192,8 +192,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 404 if lab is deleted and open, requester is ta',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabDO');
+        func: async () => {
+            const lab = await getLabByName('GlLabDO');
 
             const res = await axios({
                 method: 'get',
@@ -209,8 +209,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 404 if lab is deleted and unopen, requester is ta',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabDUo');
+        func: async () => {
+            const lab = await getLabByName('GlLabDUo');
 
             const res = await axios({
                 method: 'get',
@@ -227,8 +227,8 @@ export const tests: Test[] = [
 
     {
         name: 'should respond lab data if lab is undeleted and open, requester is student',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabUdO');
+        func: async () => {
+            const lab = await getLabByName('GlLabUdO');
 
             const res = await axios({
                 method: 'get',
@@ -245,8 +245,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 403 if lab is undeleted and unopen, requester is student',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabUdUo');
+        func: async () => {
+            const lab = await getLabByName('GlLabUdUo');
 
             const res = await axios({
                 method: 'get',
@@ -262,8 +262,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 404 if lab is deleted and open, requester is student',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabDO');
+        func: async () => {
+            const lab = await getLabByName('GlLabDO');
 
             const res = await axios({
                 method: 'get',
@@ -279,8 +279,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 404 if lab is deleted and unopen, requester is student',
-        func: async (dataSource: DataSource) => {
-            const lab = await getLabByName(dataSource, 'GlLabDUo');
+        func: async () => {
+            const lab = await getLabByName('GlLabDUo');
 
             const res = await axios({
                 method: 'get',

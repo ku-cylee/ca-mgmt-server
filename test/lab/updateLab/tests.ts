@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { DataSource } from 'typeorm';
-import { Test } from '../../commons';
 import { otherTaUser, studentUser, taUser } from './mock';
 import { getCookie } from '../../commons/cookie';
 import { admin } from '../admin';
 import { Lab } from '../../../src/models';
+import { dataSource } from '../database';
+import { Test } from '../../commons/tests';
 
 const TA_COOKIE = getCookie(taUser);
 
-const getLabByName = async (dataSource: DataSource, name: string): Promise<Lab | null> => {
+const getLabByName = async (name: string): Promise<Lab | null> => {
     const repo = dataSource.getRepository(Lab);
     const lab = await repo.findOneBy({ name });
     return lab;
@@ -19,7 +19,7 @@ const getLabByName = async (dataSource: DataSource, name: string): Promise<Lab |
 export const tests: Test[] = [
     {
         name: 'should throw 403 if requester is admin',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'put',
                 url: `/lab/ULabOrigAdmin`,
@@ -37,16 +37,16 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            expect(await getLabByName(dataSource, 'ULabOrigAdmin')).to.be.not.null;
-            expect(await getLabByName(dataSource, 'ULabOrigAdminN')).to.be.null;
+            expect(await getLabByName('ULabOrigAdmin')).to.be.not.null;
+            expect(await getLabByName('ULabOrigAdminN')).to.be.null;
         },
     },
     {
         name: 'should respond updated lab data if requester is ta and the requester is the author of the lab',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const curTime = Date.now();
 
-            const origLab = await getLabByName(dataSource, 'ULabOrigTa');
+            const origLab = await getLabByName('ULabOrigTa');
             if (!origLab) throw new Error();
 
             const res = await axios({
@@ -78,7 +78,7 @@ export const tests: Test[] = [
             expect(res.data.dueDate).to.equal(curTime + 2000);
             expect(res.data.closeAt).to.equal(curTime + 3000);
 
-            const lab = await getLabByName(dataSource, 'ULabOrigTaN');
+            const lab = await getLabByName('ULabOrigTaN');
             expect(lab).to.be.not.null;
             expect(lab?.name).to.equal('ULabOrigTaN');
             expect(lab?.openAt).to.equal(curTime + 1000);
@@ -90,7 +90,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 403 if requester is student',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'put',
                 url: `/lab/ULabOrigStudent`,
@@ -108,8 +108,8 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            expect(await getLabByName(dataSource, 'ULabOrigStudent')).to.be.not.null;
-            expect(await getLabByName(dataSource, 'ULabOrigStudentN')).to.be.null;
+            expect(await getLabByName('ULabOrigStudent')).to.be.not.null;
+            expect(await getLabByName('ULabOrigStudentN')).to.be.null;
         },
     },
     {
@@ -135,7 +135,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 404 if the lab is deleted and the requester is ta',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             await dataSource
                 .getRepository(Lab)
                 .update({ name: 'ULabDeleted' }, { deletedAt: Date.now() });
@@ -160,7 +160,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should throw 403 if the author of the lab is not requester and the requester is ta',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const res = await axios({
                 method: 'put',
                 url: `/lab/ULabOther`,
@@ -178,7 +178,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const lab = await getLabByName(dataSource, 'ULabOther');
+            const lab = await getLabByName('ULabOther');
             expect(lab).to.be.not.null;
         },
     },
@@ -507,7 +507,7 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond 409 if the lab already exists and the requester is ta',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const baseTime = Date.now();
 
             const res = await axios({
@@ -527,9 +527,9 @@ export const tests: Test[] = [
             expect(res.status).to.equal(409);
             expect(res.data).to.be.empty;
 
-            const origLab = await getLabByName(dataSource, 'ULabDupOrig');
+            const origLab = await getLabByName('ULabDupOrig');
             expect(origLab).to.be.not.null;
-            const newLab = await getLabByName(dataSource, 'ULabDupNew');
+            const newLab = await getLabByName('ULabDupNew');
             expect(newLab).to.be.not.null;
             expect(newLab?.id).to.be.not.equal(origLab?.id);
         },

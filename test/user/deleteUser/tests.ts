@@ -1,18 +1,17 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { DataSource } from 'typeorm';
-import { Test } from '../../commons';
 import { UserRole } from '../../../src/lib/enums';
 import { studentUser, taUser } from './mock';
 import { User } from '../../../src/models';
 import { getCookie } from '../../commons/cookie';
 import { admin } from '../admin';
+import { dataSource } from '../database';
+import { Test } from '../../commons/tests';
 
 const ADMIN_COOKIE = getCookie(admin);
 
 const createUser = async (
-    dataSource: DataSource,
     username: string,
     secretKey: string,
     role: UserRole,
@@ -31,7 +30,7 @@ const createUser = async (
     return user;
 };
 
-const getUsersById = async (dataSource: DataSource, id: number): Promise<User[]> => {
+const getUsersById = async (id: number): Promise<User[]> => {
     const repo = dataSource.getRepository(User);
     const users = await repo.findBy({ id });
     return users;
@@ -40,8 +39,8 @@ const getUsersById = async (dataSource: DataSource, id: number): Promise<User[]>
 export const tests: Test[] = [
     {
         name: 'should respond 200 if requester is admin and the user exists',
-        func: async (dataSource: DataSource) => {
-            const user = await createUser(dataSource, 'DelUsr1', 'DelUsr1SecretKey', UserRole.TA);
+        func: async () => {
+            const user = await createUser('DelUsr1', 'DelUsr1SecretKey', UserRole.TA);
 
             const res = await axios({
                 method: 'delete',
@@ -54,15 +53,15 @@ export const tests: Test[] = [
             expect(res.status).to.equal(200);
             expect(res.data).to.be.empty;
 
-            const delUser = await getUsersById(dataSource, user.id);
+            const delUser = await getUsersById(user.id);
             expect(delUser[0]).to.be.an('object');
             expect(delUser[0].isDeleted).to.be.true;
         },
     },
     {
         name: 'should respond 404 if requester is admin and the user does not exist',
-        func: async (dataSource: DataSource) => {
-            const user = await createUser(dataSource, 'DelUsr2', 'DelUsr2SecretKey', UserRole.TA);
+        func: async () => {
+            const user = await createUser('DelUsr2', 'DelUsr2SecretKey', UserRole.TA);
             await dataSource.getRepository(User).delete({ id: user.id });
 
             const res = await axios({
@@ -79,14 +78,8 @@ export const tests: Test[] = [
     },
     {
         name: 'should respond 404 if requester is admin and the user is already deleted',
-        func: async (dataSource: DataSource) => {
-            const user = await createUser(
-                dataSource,
-                'DelUsr3',
-                'DelUsr3SecretKey',
-                UserRole.TA,
-                true,
-            );
+        func: async () => {
+            const user = await createUser('DelUsr3', 'DelUsr3SecretKey', UserRole.TA, true);
 
             const res = await axios({
                 method: 'delete',
@@ -99,14 +92,14 @@ export const tests: Test[] = [
             expect(res.status).to.equal(404);
             expect(res.data).to.be.empty;
 
-            const delUser = await getUsersById(dataSource, user.id);
+            const delUser = await getUsersById(user.id);
             expect(delUser[0]).to.be.an('object');
             expect(delUser[0].isDeleted).to.be.true;
         },
     },
     {
         name: 'should respond 403 if requester is admin and the user is admin',
-        func: async (dataSource: DataSource) => {
+        func: async () => {
             const adminUser = await dataSource
                 .getRepository(User)
                 .findOneBy({ username: admin.username });
@@ -124,7 +117,7 @@ export const tests: Test[] = [
             expect(res.status).to.equal(403);
             expect(res.data).to.be.empty;
 
-            const delUser = await getUsersById(dataSource, adminUser.id);
+            const delUser = await getUsersById(adminUser.id);
             expect(delUser[0]).to.be.an('object');
             expect(delUser[0].isDeleted).to.be.false;
         },
@@ -136,7 +129,7 @@ export const tests: Test[] = [
                 method: 'delete',
                 url: '/user/1',
                 headers: {
-                    Cookie: `username=${taUser.username};secretKey=${taUser.secretKey}`,
+                    Cookie: getCookie(taUser),
                 },
             });
 
@@ -151,7 +144,7 @@ export const tests: Test[] = [
                 method: 'delete',
                 url: '/user/1',
                 headers: {
-                    Cookie: `username=${studentUser.username};secretKey=${studentUser.secretKey}`,
+                    Cookie: getCookie(studentUser),
                 },
             });
 
