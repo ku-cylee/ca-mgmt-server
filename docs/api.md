@@ -356,7 +356,7 @@
         labName: string,
     },
     body: {
-        filenames: [string],
+        names: [string],
     },
 }
 ```
