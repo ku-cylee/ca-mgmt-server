@@ -2,8 +2,7 @@
 import axios from 'axios';
 import { expect } from 'chai';
 import { Test } from '../../commons/tests';
-import { getCookie } from '../../commons/cookie';
-import { admin } from '../admin';
+import { admin, getCookie } from '../../commons/auth';
 import { duplicateLab, studentUser, taUser } from './mock';
 import { Lab } from '../../../src/models';
 import { dataSource } from '../database';

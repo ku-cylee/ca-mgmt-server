@@ -9,6 +9,7 @@ import {
     SubmissionFile,
     User,
 } from '../../src/models';
+import { admin } from './auth';
 
 const {
     DB_HOST,
@@ -20,11 +21,6 @@ const {
     DB_LOGGING,
     DB_ENTITIES,
 } = process.env;
-
-export interface AuthData {
-    username: string;
-    secretKey: string;
-}
 
 export const generateDataSource = (name: string) =>
     new DataSource({
@@ -40,7 +36,7 @@ export const generateDataSource = (name: string) =>
         entities: DB_ENTITIES?.split(',') ?? [],
     });
 
-export const createAdmin = async (dataSource: DataSource, admin: AuthData) => {
+export const createAdmin = async (dataSource: DataSource) => {
     const repo = dataSource.getRepository(User);
     const user = repo.create({
         ...admin,
@@ -51,17 +47,11 @@ export const createAdmin = async (dataSource: DataSource, admin: AuthData) => {
     await repo.save(user);
 };
 
-export const cleanDatabase = async (
-    dataSource: DataSource,
-    admin: AuthData,
-) => {
-    [Defuse, Bomb, SkeletonFile, Submission, SubmissionFile, Lab].forEach(
+export const cleanDatabase = async (dataSource: DataSource) => {
+    [Defuse, Bomb, SkeletonFile, Submission, SubmissionFile, Lab, User].forEach(
         async Entity => {
             const repo = dataSource.getRepository(Entity);
             await repo.delete({ id: Not(IsNull()) });
         },
     );
-    const userRepo = dataSource.getRepository(User);
-    await userRepo.delete({ role: Not(UserRole.ADMIN) });
-    await userRepo.delete({ username: admin.username });
 };

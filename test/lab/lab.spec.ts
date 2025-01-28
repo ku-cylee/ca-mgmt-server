@@ -1,6 +1,5 @@
 import '../../src/env';
 import { after, before, describe } from 'mocha';
-import { admin } from './admin';
 import { executeTests, initAxios } from '../commons/tests';
 import { dataSource } from './database';
 import { cleanDatabase, createAdmin } from '../commons/database';
@@ -15,8 +14,8 @@ describe('Lab', () => {
 
     before(async () => {
         await dataSource.initialize();
-        await cleanDatabase(dataSource, admin);
-        await createAdmin(dataSource, admin);
+        await cleanDatabase(dataSource);
+        await createAdmin(dataSource);
     });
 
     describe('GET /lab', () => {
@@ -55,6 +54,6 @@ describe('Lab', () => {
     });
 
     after(async () => {
-        await cleanDatabase(dataSource, admin);
+        await cleanDatabase(dataSource);
     });
 });

@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { getCookie } from '../../commons/cookie';
+import { admin, getCookie } from '../../commons/auth';
 import { Test } from '../../commons/tests';
 import { SkeletonFile } from '../../../src/models';
-import { admin } from '../admin';
 import { otherTaUser, studentUser, taUser } from './mock';
 import { dataSource } from '../database';
 

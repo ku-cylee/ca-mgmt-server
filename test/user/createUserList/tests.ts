@@ -5,8 +5,7 @@ import { In } from 'typeorm';
 import { duplicateUser, studentUser, taUser } from './mock';
 import { UserRole } from '../../../src/lib/enums';
 import { User } from '../../../src/models';
-import { getCookie } from '../../commons/cookie';
-import { admin } from '../admin';
+import { admin, getCookie } from '../../commons/auth';
 import { dataSource } from '../database';
 import { Test } from '../../commons/tests';
 

@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-expressions */
 import axios from 'axios';
 import { expect } from 'chai';
-import { getCookie } from '../../commons/cookie';
+import { admin, getCookie } from '../../commons/auth';
 import { Test } from '../../commons/tests';
-import { admin } from '../admin';
 import { getChecksum } from '../../../src/lib/checksum';
 import { SkeletonFile } from '../../../src/models';
 import { otherTaUser, taUser } from './mock';

@@ -8,8 +8,7 @@ import {
     undeletedOpenLabs,
     undeletedUnopenLabs,
 } from './mock';
-import { getCookie } from '../../commons/cookie';
-import { admin } from '../admin';
+import { admin, getCookie } from '../../commons/auth';
 import { Test } from '../../commons/tests';
 
 const compareLabs = (actual: any, expected: any) => {

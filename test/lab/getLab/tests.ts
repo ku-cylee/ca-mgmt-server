@@ -10,8 +10,7 @@ import {
     undeletedOpenLab,
     undeletedUnopenLab,
 } from './mock';
-import { getCookie } from '../../commons/cookie';
-import { admin } from '../admin';
+import { admin, getCookie } from '../../commons/auth';
 import { dataSource } from '../database';
 import { Test } from '../../commons/tests';
 

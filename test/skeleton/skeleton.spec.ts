@@ -1,6 +1,5 @@
 import '../../src/env';
 import { after, before, describe } from 'mocha';
-import { admin } from './admin';
 import * as GetSkeletonListTests from './getSkeletonList';
 import * as CreateSkeletonTests from './createSkeleton';
 import * as DeleteSkeletonListTests from './deleteSkeletonList';
@@ -13,8 +12,8 @@ describe('Skeleton', () => {
 
     before(async () => {
         await dataSource.initialize();
-        await cleanDatabase(dataSource, admin);
-        await createAdmin(dataSource, admin);
+        await cleanDatabase(dataSource);
+        await createAdmin(dataSource);
     });
 
     describe('GET /skeleton', () => {
@@ -39,6 +38,6 @@ describe('Skeleton', () => {
     });
 
     after(async () => {
-        await cleanDatabase(dataSource, admin);
+        await cleanDatabase(dataSource);
     });
 });

@@ -2,8 +2,7 @@
 import axios from 'axios';
 import { expect } from 'chai';
 import { deletedStudents, deletedTAs, undeletedStudents, undeletedTAs } from './mock';
-import { getCookie } from '../../commons/cookie';
-import { admin } from '../admin';
+import { admin, getCookie } from '../../commons/auth';
 import { Test } from '../../commons/tests';
 
 const ADMIN_COOKIE = getCookie(admin);
