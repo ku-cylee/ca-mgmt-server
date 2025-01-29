@@ -5,32 +5,41 @@ import { schemes, validate } from '../../lib/dtos';
 export class GetSubmissionListRequest {
     content!: boolean;
 
-    authorUsername!: string | undefined;
+    authorName!: string | undefined;
 
     labName!: string | undefined;
 
     constructor(req: Request) {
         const { content, author, labName } = req.query;
 
-        this.content = validate(content, schemes.bool.required());
-        this.authorUsername = validate(author, schemes.username) ?? undefined;
-        this.labName = validate(labName, schemes.labName ?? undefined);
+        this.content = validate(content, schemes.bool.default(false));
+        this.authorName = validate(author, schemes.username);
+        this.labName = validate(labName, schemes.labName);
     }
 }
 
 export class CreateSubmissionRequest {
     labName!: string;
 
-    filename!: string;
+    fileName!: string;
 
     content!: string;
 
-    constructor(req: Request) {
-        const { labName } = req.query;
-        const { filename, content } = req.body;
+    checksum!: string;
 
-        this.filename = validate(labName, schemes.labName.required());
-        this.filename = validate(filename, schemes.string.max(256).required());
+    createdAt!: number;
+
+    constructor(req: Request) {
+        const { labName, fileName } = req.query;
+        const { content, checksum, createdAt } = req.body;
+
+        this.labName = validate(labName, schemes.labName.required());
+        this.fileName = validate(
+            fileName,
+            schemes.submissionFilename.required(),
+        );
         this.content = validate(content, Joi.string().max(65536).required());
+        this.checksum = validate(checksum, schemes.string.max(16).required());
+        this.createdAt = validate(createdAt, schemes.integer.required());
     }
 }

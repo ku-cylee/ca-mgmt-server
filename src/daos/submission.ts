@@ -1,40 +1,34 @@
 import { FindOptionsWhere } from 'typeorm';
-import { getChecksum } from '../lib/checksum';
 import { dataSource } from '../lib/database';
-import { Lab, Submission, User } from '../models';
+import { Lab, Submission, SubmissionFile, User } from '../models';
 
 const getRepo = () => dataSource.getRepository(Submission);
 
 export const getListByLabAndAuthor = async (
     author: User | null,
     lab: Lab | null,
-    includeContent: boolean,
+    _includeContent: boolean,
+    includeDeleted = false,
 ): Promise<Submission[]> => {
     const repo = getRepo();
 
-    const where: FindOptionsWhere<Submission> = {};
+    // includeContent?
+
+    const fileWhere: FindOptionsWhere<SubmissionFile> = {};
+    if (lab) fileWhere.lab = { id: lab.id };
+    if (!includeDeleted) fileWhere.deletedAt = 0;
+
+    const where: FindOptionsWhere<Submission> = { file: fileWhere };
     if (author) where.author = { id: author.id };
-    if (lab) where.lab = { id: lab.id };
+    if (!includeDeleted) where.deletedAt = 0;
 
     const submissions = await repo.find({
-        select: {
-            id: true,
-            lab: {
-                id: true,
-            },
-            author: {
-                username: true,
-            },
-            filename: true,
-            content: includeContent,
-            checksum: includeContent,
-            createdAt: true,
-            updatedAt: true,
-        },
         where,
         relations: {
             author: true,
-            lab: true,
+            file: {
+                lab: true,
+            },
         },
     });
 
@@ -42,24 +36,36 @@ export const getListByLabAndAuthor = async (
 };
 
 export const create = async (
-    lab: Lab,
     author: User,
-    filename: string,
+    file: SubmissionFile,
     content: string,
+    checksum: string,
 ): Promise<Submission> => {
     const currentTimestamp = Date.now();
     const repo = getRepo();
 
     const submission = repo.create({
-        lab,
         author,
-        filename,
+        file,
         content,
-        checksum: getChecksum(content),
+        checksum,
         createdAt: currentTimestamp,
-        updatedAt: currentTimestamp,
     });
     await repo.save(submission);
 
     return submission;
+};
+
+export const deleteListByAuthorAndFile = async (
+    author: User,
+    file: SubmissionFile,
+): Promise<number> => {
+    const repo = getRepo();
+
+    const result = await repo.update(
+        { author, file },
+        { deletedAt: Date.now() },
+    );
+
+    return result.affected ?? 0;
 };

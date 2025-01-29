@@ -4,6 +4,32 @@ import { Lab, SubmissionFile } from '../models';
 
 const getRepo = () => dataSource.getRepository(SubmissionFile);
 
+export const getByLabAndName = async (
+    labName: string,
+    fileName: string,
+    includeDeleted = false,
+): Promise<SubmissionFile | null> => {
+    const repo = getRepo();
+
+    const labWhere: FindOptionsWhere<Lab> = { name: labName };
+    if (!includeDeleted) labWhere.deletedAt = 0;
+
+    const where: FindOptionsWhere<SubmissionFile> = {
+        lab: labWhere,
+        name: fileName,
+    };
+    if (!includeDeleted) where.deletedAt = 0;
+
+    const submissionFile = await repo.findOne({
+        where,
+        relations: {
+            lab: true,
+        },
+    });
+
+    return submissionFile;
+};
+
 export const getListByLab = async (
     labId: number,
     includeDeleted = false,

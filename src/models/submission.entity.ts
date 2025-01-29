@@ -30,4 +30,7 @@ export default class Submission extends BaseEntity {
 
     @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
+
+    @Column({ type: 'bigint', name: 'deleted_at', transformer, default: 0 })
+    deletedAt!: number;
 }

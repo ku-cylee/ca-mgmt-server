@@ -4,29 +4,33 @@ import {
     CreateSubmissionRequest,
     GetSubmissionListRequest,
 } from './request.dto';
-import { NotFoundError, ForbiddenError } from '../../lib/http-errors';
-import { LabDAO, SubmissionDAO, UserDAO } from '../../daos';
+import {
+    NotFoundError,
+    ForbiddenError,
+    UnprocessableError,
+} from '../../lib/http-errors';
+import { LabDAO, SubmissionDAO, SubmissionFileDAO, UserDAO } from '../../daos';
 import { CreateSubmissionResponse } from './response.dto';
+import { getChecksum } from '../../lib/checksum';
 
 export const getSubmissionList: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
-    const { content, authorUsername, labName } = new GetSubmissionListRequest(
-        req,
-    );
+    const { content, authorName, labName } = new GetSubmissionListRequest(req);
 
-    if (!requester.isAdmin && content && !authorUsername && !labName)
+    if (!requester.isAdmin && content && !authorName && !labName)
         throw ForbiddenError;
 
-    const author = authorUsername
-        ? await UserDAO.getByUsername(authorUsername)
-        : null;
+    if (requester.isStudent && requester.username !== authorName)
+        throw ForbiddenError;
+
+    const author = authorName ? await UserDAO.getByUsername(authorName) : null;
+    if (authorName && !author) throw NotFoundError;
+
     const lab = labName
-        ? await LabDAO.getByName(
-              labName,
-              !requester.isStudent,
-              requester.isAdmin,
-          )
+        ? await LabDAO.getByName(labName, requester.isAdmin)
         : null;
+    if (labName && !lab) throw NotFoundError;
+    if (lab && requester.isStudent && !lab.isOpen) throw ForbiddenError;
 
     const submissionFiles = await SubmissionDAO.getListByLabAndAuthor(
         author,
@@ -41,16 +45,27 @@ export const createSubmission: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
     if (requester.isAdmin) throw ForbiddenError;
 
-    const { labName, filename, content } = new CreateSubmissionRequest(req);
+    const { labName, fileName, content, checksum } =
+        new CreateSubmissionRequest(req);
 
-    const lab = await LabDAO.getByName(labName, !requester.isStudent);
-    if (!lab) throw NotFoundError;
+    // TODO: Consider using createdAt
+
+    const file = await SubmissionFileDAO.getByLabAndName(
+        labName,
+        fileName,
+        requester.isAdmin,
+    );
+    if (!file) throw NotFoundError;
+
+    if (getChecksum(content) !== checksum) throw UnprocessableError;
+
+    SubmissionDAO.deleteListByAuthorAndFile(requester, file);
 
     const submission = await SubmissionDAO.create(
-        lab,
         requester,
-        filename,
+        file,
         content,
+        checksum,
     );
 
     return res.send(toResponse(CreateSubmissionResponse, submission));

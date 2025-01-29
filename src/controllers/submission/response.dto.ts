@@ -1,19 +1,43 @@
 import { Expose, Type } from 'class-transformer';
 import { AuthorDTO } from '../../lib/dtos';
 
-export class GetSubmissionListResponse {
+class LabDTO {
     @Expose()
     id!: number;
 
     @Expose()
-    labId!: number;
+    name!: string;
+
+    @Expose()
+    deletedAt!: number;
+}
+
+class FileDTO {
+    @Expose()
+    id!: number;
+
+    @Expose()
+    name!: string;
+
+    @Expose()
+    @Type(() => LabDTO)
+    lab!: LabDTO;
+
+    @Expose()
+    deletedAt!: number;
+}
+
+export class GetSubmissionListResponse {
+    @Expose()
+    id!: number;
 
     @Expose()
     @Type(() => AuthorDTO)
     author!: AuthorDTO;
 
     @Expose()
-    filename!: string;
+    @Type(() => FileDTO)
+    file!: FileDTO;
 
     @Expose()
     content!: string;
@@ -25,7 +49,7 @@ export class GetSubmissionListResponse {
     createdAt!: number;
 
     @Expose()
-    updatedAt!: number;
+    deletedAt!: number;
 }
 
 export class CreateSubmissionResponse {
