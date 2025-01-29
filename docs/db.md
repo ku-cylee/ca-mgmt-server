@@ -56,6 +56,7 @@
 * `content`: string (text)
 * `checksum`: string; maxlength: 16
 * `createdAt`: timestamp
+* `deletedAt`: timestamp
 
 ## bombs
 * `id`: string; primary key

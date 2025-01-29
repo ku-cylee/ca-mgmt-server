@@ -384,8 +384,8 @@
 ```
 {
     query: {
-        content: boolean,
-        author: string | undefined,
+        content = false,
+        authorName: string | undefined,
         labName: string | undefined,
     },
 }
@@ -400,15 +400,19 @@
                 username: string,
             },
             file: {
+                id: number,
                 name: string,
                 lab: {
                     id: number,
                     name: string,
+                    deletedAt: timestamp,
                 },
+                deletedAt: timestamp,
             },
             content: string,
             checksum: string,
-            createdAt: string,
+            createdAt: timestamp,
+            deletedAt: timestamp,
         }]
         ```
         + `content` is `false`
@@ -423,16 +427,23 @@
                 lab: {
                     id: number,
                     name: string,
+                    deletedAt: timestamp,
                 },
+                deletedAt: timestamp,
             },
-            createdAt: string,
+            createdAt: timestamp,
+            deletedAt: timestamp,
         }]
         ```
-        + If `author` or `labName` is invalid, the respond is an empty array.
-        + Invalid `author`: User `author` does not exist or is deleted. Requester is student and the user `author` is not the requester.
-        + Invalid `labName`: Lab `labName` does not exist or is deleted. Requester is student and the lab `labName` is not yet open.
     - 403
         + Requester is not admin and `content` is `true` and `author`, `labName` are both `undefined`.
+        + Requester is student and the user `author` is neither given nor the requester.
+        + Requester is student and the lab `labName` is not yet open.
+    - 404
+        + User `author` does not exist.
+        + User `author` is deleted.
+        + Lab `labName` does not exist.
+        + Requester is not admin and lab `labName` is deleted.
 
 ### POST /submission
 * Creates the submission of `labName`.
