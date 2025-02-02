@@ -48,4 +48,15 @@ export default class Bomb extends BaseEntity {
 
     @OneToMany(() => Defuse, defuse => defuse.bomb, { cascade: true })
     defuseTrials!: Defuse[];
+
+    public getAnswer(phase: number): string {
+        return [
+            this.answerPhase1,
+            this.answerPhase2,
+            this.answerPhase3,
+            this.answerPhase4,
+            this.answerPhase5,
+            this.answerPhase6,
+        ][phase - 1];
+    }
 }
