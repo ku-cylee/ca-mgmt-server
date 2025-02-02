@@ -385,7 +385,7 @@
 {
     query: {
         content = false,
-        authorName: string | undefined,
+        author: string | undefined,
         labName: string | undefined,
     },
 }
@@ -489,8 +489,8 @@
 ```
 {
     query: {
-        labName: number | undefined,
         author: string | undefined,
+        labName: string | undefined,
     },
 }
 ```
@@ -500,11 +500,9 @@
         ```
         [{
             id: number,
+            maxPhase: number,
+            explosions: number,
             createdAt: timestamp,
-            defuses: {
-                phase: number,
-                explosions: number,
-            },
         }]
         ```
         + Requester is not student
@@ -514,14 +512,13 @@
             author: {
                 username: string,
             },
+            maxPhase: number,
+            explosions: number,
             createdAt: timestamp,
-            defuses: {
-                phase: number,
-                explosions: number,
-            },
         }]
         ```
-        + If requester is student and `author` is not requester, response is an empty array.
+    - 403
+        + Requester is student and `authorName` is not requester
 
 ### POST /bomb
 * Creates a bomb for the requester, and responds its `longId` for download.
@@ -537,14 +534,15 @@
     - 200
     ```
     {
+        id: string,
         longId: string,
         createdAt: string,
     }
     ```
     - 403
         + Requester is admin.
-        + Lab `labName` is not yet open.
-        + Lab `labName` is closed.
+        + Requester is student and lab `labName` is not yet open.
+        + Requester is student and lab `labName` is closed.
     - 404
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
@@ -570,7 +568,8 @@
             id: string,
             author: {
                 username: string,
-            }
+            },
+            createdAt: timestamp,
         },
         phase: number,
         answer: string,
@@ -580,10 +579,10 @@
     ```
     - 403
         + Requester is student and the requester is not author of the bomb `bombId`.
-        + The lab of the bomb `bombId` is not yet open or closed.
+        + Requester is student and the lab of the bomb `bombId` is not yet open.
     - 404
         + Bomb `bombId` does not exist.
-        + The lab of the bomb `bombId` does not exist or is deleted.
+        + The lab of the bomb `bombId` is deleted.
 
 ### POST /defuse
 * Request
@@ -602,10 +601,11 @@
     }
     ```
     - 400
-        + `phase` value is not an integer in [1, 5].
+        + `phase` value is not an integer in [1, 6].
     - 403
+        + Requester is admin
         + Requester is not the author of bomb `bombId`.
         + The lab of the bomb `bombId` is not yet open or closed.
     - 404
         + Bomb `bombId` does not exist.
-        + The lab of the bomb `bombId` does not exist or is deleted.
+        + The lab of the bomb `bombId` is deleted.
