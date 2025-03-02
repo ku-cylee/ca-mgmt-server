@@ -42,7 +42,7 @@ export const create = async (
     longId: string,
     lab: Lab,
     author: User,
-    answers: string[],
+    solutions: string[],
 ): Promise<Bomb> => {
     const repo = getRepo();
     const bomb = repo.create({
@@ -50,12 +50,7 @@ export const create = async (
         longId,
         lab,
         author,
-        answerPhase1: answers[0],
-        answerPhase2: answers[1],
-        answerPhase3: answers[2],
-        answerPhase4: answers[3],
-        answerPhase5: answers[4],
-        answerPhase6: answers[5],
+        solutions,
         createdAt: Date.now(),
     });
     await repo.save(bomb);

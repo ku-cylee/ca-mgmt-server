@@ -1,10 +1,10 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Bomb from './bomb.entity';
 import { transformer } from './commons/timestamp-trasnformer';
 
 @Entity({ name: 'defuses' })
 export default class Defuse extends BaseEntity {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id!: number;
 
     @ManyToOne(() => Bomb, bomb => bomb.defuseTrials, { onDelete: 'CASCADE' })

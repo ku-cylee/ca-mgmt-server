@@ -25,23 +25,8 @@ export default class Bomb extends BaseEntity {
     @ManyToOne(() => User, user => user.bombs, { onDelete: 'CASCADE' })
     author!: User;
 
-    @Column()
-    answerPhase1!: string;
-
-    @Column()
-    answerPhase2!: string;
-
-    @Column()
-    answerPhase3!: string;
-
-    @Column()
-    answerPhase4!: string;
-
-    @Column()
-    answerPhase5!: string;
-
-    @Column()
-    answerPhase6!: string;
+    @Column({ type: 'json' })
+    solutions!: string[];
 
     @Column({ type: 'bigint', name: 'created_at', transformer })
     createdAt!: number;
@@ -49,14 +34,7 @@ export default class Bomb extends BaseEntity {
     @OneToMany(() => Defuse, defuse => defuse.bomb, { cascade: true })
     defuseTrials!: Defuse[];
 
-    public getAnswer(phase: number): string {
-        return [
-            this.answerPhase1,
-            this.answerPhase2,
-            this.answerPhase3,
-            this.answerPhase4,
-            this.answerPhase5,
-            this.answerPhase6,
-        ][phase - 1];
+    public getSolution(phase: number) {
+        return this.solutions[phase - 1];
     }
 }

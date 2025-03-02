@@ -63,12 +63,7 @@
 * `longId`: string; unique
 * `lab`: number; labs.id
 * `author`: number; users.id
-* `answerPhase1`: string
-* `answerPhase2`: string
-* `answerPhase3`: string
-* `answerPhase4`: string
-* `answerPhase5`: string
-* `answerPhase6`: string
+* `solutions`: string[]
 * `createdAt`: timestamp
 
 ## defuses

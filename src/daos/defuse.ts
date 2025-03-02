@@ -38,6 +38,7 @@ export const create = async (
         phase,
         answer,
         exploded,
+        createdAt: Date.now(),
     });
     await repo.save(defuse);
     return defuse;
