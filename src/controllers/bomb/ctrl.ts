@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { toResponse } from '../../lib/dtos';
-import { CreateBombRequest, GetBombListRequest } from './request.dto';
+import { CreateBombRequest, GetBombFileByLongIdRequest, GetBombListRequest } from './request.dto';
 import { ForbiddenError, NotFoundError } from '../../lib/http-errors';
 import { BombDAO, LabDAO, UserDAO } from '../../daos';
 import { CreateBombResponse, GetBombListResponse } from './response.dto';
@@ -47,6 +47,16 @@ export const getBombList: RequestHandler = async (req, res) => {
     return res.send(toResponse(GetBombListResponse, bombsWithDefuseSummary));
 };
 
+export const getBombFileByLongId: RequestHandler = async (req, res) => {
+    const { requester } = res.locals;
+
+    const { bombLongId } = new GetBombFileByLongIdRequest(req);
+
+    // To be implemented
+
+    return res.send();
+};
+
 export const createBomb: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
     if (requester.isAdmin) throw ForbiddenError;
@@ -68,10 +78,10 @@ export const createBomb: RequestHandler = async (req, res) => {
         }
     })();
 
-    // Get Bomb. To be implemented
-    const answers = ['', '', '', '', '', ''];
+    // TODO: Get Bomb. To be implemented
+    const solutions = ['', '', '', '', '', '', ''];
 
-    const bomb = await BombDAO.create(longId, lab, requester, answers);
+    const bomb = await BombDAO.create(longId, lab, requester, solutions);
 
     return res.send(toResponse(CreateBombResponse, bomb));
 };

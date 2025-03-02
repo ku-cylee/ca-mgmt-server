@@ -60,7 +60,9 @@
 
 ## bombs
 * `id`: string; primary key
-* `longId`: string; unique
+* `longId`: string
+    - unique
+    - maxlength: 32
 * `lab`: number; labs.id
 * `author`: number; users.id
 * `solutions`: string[]

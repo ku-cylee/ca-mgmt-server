@@ -520,6 +520,18 @@
     - 403
         + Requester is student and `authorName` is not requester
 
+### GET /bomb/:bombLongId
+* Gets bomb file
+* Request: `{}`
+* Response
+    - 200: Executable bomb file
+    - 403
+        + Requester is student and requester is not the author of the bomb `bombLongId`
+        + Requester is student and the lab of the bomb `bombLongId` is not yet open.
+    - 404
+        + Bomb `bombLongId` does not exist.
+        + The lab of the bomb `bombLongId` is deleted.
+
 ### POST /bomb
 * Creates a bomb for the requester, and responds its `longId` for download.
 * Request
@@ -588,9 +600,14 @@
 * Request
 ```
 {
-    bombId: string,
-    phase: number,
-    answer: string,
+    query: {
+        bombId: string,
+    },
+    body: {
+        phase: number,
+        answer: string,
+        defused: boolean,
+    },
 }
 ```
 * Response
