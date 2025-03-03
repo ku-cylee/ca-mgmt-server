@@ -10,7 +10,7 @@ import {
     UnprocessableError,
 } from '../../lib/http-errors';
 import { LabDAO, SubmissionDAO, SubmissionFileDAO, UserDAO } from '../../daos';
-import { CreateSubmissionResponse } from './response.dto';
+import { CreateSubmissionResponse, GetSubmissionListResponse } from './response.dto';
 import { getChecksum } from '../../lib/checksum';
 
 export const getSubmissionList: RequestHandler = async (req, res) => {
@@ -38,7 +38,7 @@ export const getSubmissionList: RequestHandler = async (req, res) => {
         content,
     );
 
-    return res.send(toResponse(GetSubmissionListRequest, submissionFiles));
+    return res.send(toResponse(GetSubmissionListResponse, submissionFiles));
 };
 
 export const createSubmission: RequestHandler = async (req, res) => {
@@ -56,6 +56,8 @@ export const createSubmission: RequestHandler = async (req, res) => {
         requester.isAdmin,
     );
     if (!file) throw NotFoundError;
+    if (requester.isStudent && (!file.lab.isOpen || file.lab.isClosed))
+        throw ForbiddenError;
 
     if (getChecksum(content) !== checksum) throw UnprocessableError;
 
