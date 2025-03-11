@@ -1,4 +1,4 @@
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, LessThan } from 'typeorm';
 import { dataSource } from '../lib/database';
 import { Lab, Submission, SubmissionFile, User } from '../models';
 
@@ -60,10 +60,15 @@ export const deleteListByAuthorAndFile = async (
     author: User,
     file: SubmissionFile,
 ): Promise<number> => {
+    const currentTimestamp = Date.now();
     const repo = getRepo();
 
     const result = await repo.update(
-        { author, file },
+        {
+            author,
+            file,
+            createdAt: LessThan(currentTimestamp),
+        },
         { deletedAt: Date.now() },
     );
 
