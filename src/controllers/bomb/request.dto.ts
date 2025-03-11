@@ -20,7 +20,10 @@ export class GetBombFileByLongIdRequest {
     constructor(req: Request) {
         const { bombLongId } = req.params;
 
-        this.bombLongId = validate(bombLongId, schemes.string.max(32).required());
+        this.bombLongId = validate(
+            bombLongId,
+            schemes.string.max(32).required(),
+        );
     }
 }
 

@@ -10,7 +10,10 @@ import {
     UnprocessableError,
 } from '../../lib/http-errors';
 import { LabDAO, SubmissionDAO, SubmissionFileDAO, UserDAO } from '../../daos';
-import { CreateSubmissionResponse, GetSubmissionListResponse } from './response.dto';
+import {
+    CreateSubmissionResponse,
+    GetSubmissionListResponse,
+} from './response.dto';
 import { getChecksum } from '../../lib/checksum';
 
 export const getSubmissionList: RequestHandler = async (req, res) => {
@@ -61,7 +64,7 @@ export const createSubmission: RequestHandler = async (req, res) => {
 
     if (getChecksum(content) !== checksum) throw UnprocessableError;
 
-    SubmissionDAO.deleteListByAuthorAndFile(requester, file);
+    await SubmissionDAO.deleteListByAuthorAndFile(requester, file);
 
     const submission = await SubmissionDAO.create(
         requester,
