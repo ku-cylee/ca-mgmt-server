@@ -102,6 +102,7 @@
         closeAt: timestamp,
         author: {
             username: string,
+            role: 'admin' | 'ta' | 'student',
         },
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -138,6 +139,7 @@
         closeAt: timestamp,
         author: {
             username: string,
+            role: 'admin' | 'ta' | 'student',
         },
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -398,6 +400,7 @@
             id: number,
             author: {
                 username: string,
+                role: 'admin' | 'ta' | 'student',
             },
             file: {
                 id: number,
@@ -421,8 +424,10 @@
             id: number,
             author: {
                 username: string,
+                role: 'admin' | 'ta' | 'student',
             },
             file: {
+                id: number,
                 name: string,
                 lab: {
                     id: number,
@@ -511,6 +516,7 @@
             id: number,
             author: {
                 username: string,
+                role: 'admin' | 'ta' | 'student',
             },
             maxPhase: number,
             explosions: number,
@@ -580,6 +586,7 @@
             id: string,
             author: {
                 username: string,
+                role: 'admin' | 'ta' | 'student',
             },
             createdAt: timestamp,
         },
