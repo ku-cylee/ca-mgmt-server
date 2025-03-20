@@ -38,7 +38,4 @@ export const toResponse = <T, V>(
 export class AuthorDTO {
     @Expose()
     username!: string;
-
-    @Expose()
-    role!: string;
 }
