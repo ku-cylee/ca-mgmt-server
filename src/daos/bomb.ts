@@ -13,7 +13,34 @@ export const getById = async (
     const where: FindOptionsWhere<Bomb> = { id };
     if (!includeDeleted) where.lab = { deletedAt: 0 };
 
-    const bomb = await repo.findOne({ where });
+    const bomb = await repo.findOne({
+        where,
+        relations: {
+            author: true,
+            lab: true,
+        },
+    });
+
+    return bomb;
+};
+
+export const getByLongId = async (
+    longId: string,
+    includeDeleted = false,
+): Promise<Bomb | null> => {
+    const repo = getRepo();
+
+    const where: FindOptionsWhere<Bomb> = { longId };
+    if (!includeDeleted) where.lab = { deletedAt: 0 };
+
+    const bomb = await repo.findOne({
+        where,
+        relations: {
+            author: true,
+            lab: true,
+        },
+    });
+
     return bomb;
 };
 

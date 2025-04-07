@@ -15,15 +15,12 @@ export class GetBombListRequest {
 }
 
 export class GetBombFileByLongIdRequest {
-    bombLongId!: string;
+    longId!: string;
 
     constructor(req: Request) {
-        const { bombLongId } = req.params;
+        const { longId } = req.params;
 
-        this.bombLongId = validate(
-            bombLongId,
-            schemes.string.max(32).required(),
-        );
+        this.longId = validate(longId, schemes.string.max(32).required());
     }
 }
 

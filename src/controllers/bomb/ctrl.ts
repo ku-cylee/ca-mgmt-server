@@ -8,7 +8,11 @@ import {
 import { ForbiddenError, NotFoundError } from '../../lib/http-errors';
 import { BombDAO, LabDAO, UserDAO } from '../../daos';
 import { CreateBombResponse, GetBombListResponse } from './response.dto';
-import { getChecksum } from '../../lib/checksum';
+import { createStringId } from '../../lib/string-id';
+import {
+    createBombAndGetSolution,
+    downloadBombFile,
+} from '../../lib/bomb-server';
 
 const MAX_GRADING_PHASE = parseInt(process.env.MAX_GRADING_PHASE ?? '5', 10);
 
@@ -58,11 +62,17 @@ export const getBombList: RequestHandler = async (req, res) => {
 export const getBombFileByLongId: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
 
-    const { bombLongId } = new GetBombFileByLongIdRequest(req);
+    const { longId } = new GetBombFileByLongIdRequest(req);
 
-    // To be implemented
+    const bomb = await BombDAO.getByLongId(longId);
+    if (!bomb) throw NotFoundError;
 
-    return res.send();
+    if (requester.isStudent && !bomb.author.is(requester)) throw ForbiddenError;
+    if (requester.isStudent && !bomb.lab.isOpen) throw ForbiddenError;
+
+    const file = await downloadBombFile(longId.slice(0, 4));
+
+    return res.end(file);
 };
 
 export const createBomb: RequestHandler = async (req, res) => {
@@ -76,18 +86,13 @@ export const createBomb: RequestHandler = async (req, res) => {
     if (requester.isStudent && (!lab.isOpen || lab.isClosed))
         throw ForbiddenError;
 
-    const longId = await (async () => {
-        // eslint-disable-next-line no-constant-condition
-        while (true) {
-            const hash = getChecksum(Date.now().toString(), 32);
-            // eslint-disable-next-line no-await-in-loop
-            const bomb = await BombDAO.getById(hash.slice(0, 4), true);
-            if (!bomb) return hash;
-        }
-    })();
+    const longId = await createStringId(32, async text => {
+        const bomb = await BombDAO.getById(text.slice(0, 4), true);
+        return !!bomb;
+    });
+    const bombId = longId.slice(0, 4);
 
-    // TODO: Get Bomb. To be implemented
-    const solutions = ['', '', '', '', '', '', ''];
+    const solutions = await createBombAndGetSolution(bombId, requester);
 
     const bomb = await BombDAO.create(longId, lab, requester, solutions);
 

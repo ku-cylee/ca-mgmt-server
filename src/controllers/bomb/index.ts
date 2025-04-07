@@ -4,7 +4,7 @@ import { getBombList, createBomb, getBombFileByLongId } from './ctrl';
 const router = Router();
 
 router.get('/', getBombList);
-router.get('/:bombLongId', getBombFileByLongId);
+router.get('/file/:longId', getBombFileByLongId);
 
 router.post('/', createBomb);
 
