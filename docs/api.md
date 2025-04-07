@@ -499,7 +499,7 @@
         + Requester is student
         ```
         [{
-            id: number,
+            id: string,
             maxPhase: number,
             explosions: number,
             createdAt: timestamp,
@@ -508,10 +508,11 @@
         + Requester is not student
         ```
         [{
-            id: number,
+            id: string,
             author: {
                 username: string,
             },
+            solutions: string[],
             maxPhase: number,
             explosions: number,
             createdAt: timestamp,

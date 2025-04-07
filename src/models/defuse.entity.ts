@@ -1,4 +1,10 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import Bomb from './bomb.entity';
 import { transformer } from './commons/timestamp-trasnformer';
 

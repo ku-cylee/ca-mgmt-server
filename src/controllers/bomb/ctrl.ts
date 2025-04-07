@@ -17,7 +17,7 @@ export const getBombList: RequestHandler = async (req, res) => {
 
     const { authorName, labName } = new GetBombListRequest(req);
 
-    if (requester.isStudent && requester.username !== authorName)
+    if (requester.isStudent && authorName && requester.username !== authorName)
         throw ForbiddenError;
 
     const author = authorName ? await UserDAO.getByUsername(authorName) : null;
@@ -48,7 +48,11 @@ export const getBombList: RequestHandler = async (req, res) => {
         return { ...bomb, ...summary };
     });
 
-    return res.send(toResponse(GetBombListResponse, bombsWithDefuseSummary));
+    return res.send(
+        toResponse(GetBombListResponse, bombsWithDefuseSummary, [
+            requester.role,
+        ]),
+    );
 };
 
 export const getBombFileByLongId: RequestHandler = async (req, res) => {

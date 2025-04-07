@@ -33,7 +33,9 @@ export const validate = Joi.attempt;
 export const toResponse = <T, V>(
     cls: ClassConstructor<T>,
     plain: V | V[],
-): T | T[] => plainToInstance(cls, plain, { excludeExtraneousValues: true });
+    groups: string[] = [],
+): T | T[] =>
+    plainToInstance(cls, plain, { groups, excludeExtraneousValues: true });
 
 export class AuthorDTO {
     @Expose()

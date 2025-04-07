@@ -5,9 +5,12 @@ export class GetBombListResponse {
     @Expose()
     id!: number;
 
-    @Expose()
+    @Expose({ groups: ['admin', 'ta'] })
     @Type(() => AuthorDTO)
     author!: AuthorDTO;
+
+    @Expose({ groups: ['admin', 'ta'] })
+    solutions!: string[];
 
     @Expose()
     maxPhase!: number;

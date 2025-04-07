@@ -70,7 +70,7 @@
 
 ## defuses
 * `id`: number; primary key
-* `bomb`: number; bombs.id
+* `bomb`: string; bombs.id
 * `phase`: number
 * `answer`: string
 * `exploded`: boolean
