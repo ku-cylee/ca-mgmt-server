@@ -2,11 +2,7 @@ import { RequestHandler } from 'express';
 import { toResponse } from '../../lib/dtos';
 import { BombDAO, DefuseDAO } from '../../daos';
 import { CreateDefuseRequest, GetDefuseListRequest } from './request.dto';
-import {
-    ConflictError,
-    ForbiddenError,
-    NotFoundError,
-} from '../../lib/http-errors';
+import { ForbiddenError, NotFoundError } from '../../lib/http-errors';
 import { CreateDefuseResponse, GetDefuseListResponse } from './response.dto';
 
 export const getDefuseList: RequestHandler = async (req, res) => {
@@ -36,14 +32,7 @@ export const createDefuse: RequestHandler = async (req, res) => {
     if (requester.isStudent && (!bomb.lab.isOpen || bomb.lab.isClosed))
         throw ForbiddenError;
 
-    const exploded = answer !== bomb.getSolution(phase);
-
-    // TODO
-    // Improve deceiving case
-    // Report this case.
-    if (exploded === defused) throw ConflictError;
-
-    const defuse = await DefuseDAO.create(bomb, phase, answer, exploded);
+    const defuse = await DefuseDAO.create(bomb, phase, answer, !defused);
 
     return res.send(toResponse(CreateDefuseResponse, defuse));
 };

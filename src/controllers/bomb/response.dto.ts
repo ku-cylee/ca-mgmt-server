@@ -20,6 +20,9 @@ export class GetBombListResponse {
 
     @Expose()
     createdAt!: number;
+
+    @Expose()
+    lastSubmittedAt!: number;
 }
 
 export class CreateBombResponse {

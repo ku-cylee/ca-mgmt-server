@@ -38,16 +38,17 @@ export const getBombList: RequestHandler = async (req, res) => {
     const bombsWithDefuseSummary = bombs.map(bomb => {
         const summary = bomb.defuseTrials.reduce(
             (acc, cur) => {
-                const { maxPhase, explosions } = acc;
-                const { phase, exploded } = cur;
+                const { maxPhase, explosions, lastSubmittedAt } = acc;
+                const { phase, exploded, createdAt } = cur;
 
                 if (phase > MAX_GRADING_PHASE) return acc;
                 return {
                     maxPhase: exploded ? maxPhase : Math.max(maxPhase, phase),
                     explosions: explosions + (exploded ? 1 : 0),
+                    lastSubmittedAt: Math.max(lastSubmittedAt, createdAt),
                 };
             },
-            { maxPhase: 0, explosions: 0 },
+            { maxPhase: 0, explosions: 0, lastSubmittedAt: 0 },
         );
         return { ...bomb, ...summary };
     });
