@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc --build",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "start:prod": "cross-env NODE_ENV=prod yarn start",
     "start:dev": "cross-env NODE_ENV=dev ts-node-dev --rs --watch src --notify src/index.ts",
     "start:test": "cross-env NODE_ENV=test ts-node-dev --rs --watch src --notify src/index.ts",
