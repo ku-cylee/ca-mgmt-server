@@ -36,16 +36,24 @@ export const getBombList: RequestHandler = async (req, res) => {
     const bombs = await BombDAO.getListByLabAndAuthor(author, lab);
 
     const bombsWithDefuseSummary = bombs.map(bomb => {
+        let isMaxGradingPhaseDefused = false;
         const summary = bomb.defuseTrials.reduce(
             (acc, cur) => {
                 const { maxPhase, explosions, lastSubmittedAt } = acc;
                 const { phase, exploded, createdAt } = cur;
 
-                if (phase > MAX_GRADING_PHASE) return acc;
+                const includeGrading = !isMaxGradingPhaseDefused;
+
+                if (phase === MAX_GRADING_PHASE && !exploded)
+                    isMaxGradingPhaseDefused = true;
+
                 return {
                     maxPhase: exploded ? maxPhase : Math.max(maxPhase, phase),
-                    explosions: explosions + (exploded ? 1 : 0),
-                    lastSubmittedAt: Math.max(lastSubmittedAt, createdAt),
+                    explosions:
+                        explosions + (exploded && includeGrading ? 1 : 0),
+                    lastSubmittedAt: includeGrading
+                        ? Math.max(lastSubmittedAt, createdAt)
+                        : lastSubmittedAt,
                 };
             },
             { maxPhase: 0, explosions: 0, lastSubmittedAt: 0 },

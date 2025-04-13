@@ -60,6 +60,11 @@ export const getListByLabAndAuthor = async (
             author: true,
             defuseTrials: true,
         },
+        order: {
+            defuseTrials: {
+                id: 'ASC',
+            },
+        },
     });
 
     return bombs;
