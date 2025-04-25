@@ -22,6 +22,9 @@ export const getListByBomb = async (
                 author: true,
             },
         },
+        order: {
+            id: 'ASC',
+        },
     });
     return defuses;
 };
