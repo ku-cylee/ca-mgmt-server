@@ -509,6 +509,7 @@
         ```
         [{
             id: string,
+            longId: string,
             author: {
                 username: string,
             },
@@ -555,7 +556,6 @@
     - 403
         + Requester is admin.
         + Requester is student and lab `labName` is not yet open.
-        + Requester is student and lab `labName` is closed.
     - 404
         + Lab `labName` does not exist.
         + Lab `labName` is deleted.
