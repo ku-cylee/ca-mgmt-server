@@ -14,16 +14,6 @@ export class GetBombListRequest {
     }
 }
 
-export class GetBombFileByIdRequest {
-    bombId!: string;
-
-    constructor(req: Request) {
-        const { bombId } = req.params;
-
-        this.bombId = validate(bombId, schemes.string.max(4).required());
-    }
-}
-
 export class GetBombFileByLongIdRequest {
     longId!: string;
 

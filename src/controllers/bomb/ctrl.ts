@@ -2,7 +2,6 @@ import { RequestHandler } from 'express';
 import { toResponse } from '../../lib/dtos';
 import {
     CreateBombRequest,
-    GetBombFileByIdRequest,
     GetBombFileByLongIdRequest,
     GetBombListRequest,
 } from './request.dto';
@@ -69,23 +68,6 @@ export const getBombList: RequestHandler = async (req, res) => {
     );
 };
 
-// TODO: This API should be removed in the future
-export const getBombFileById: RequestHandler = async (req, res) => {
-    const { requester } = res.locals;
-
-    if (requester.isStudent) throw ForbiddenError;
-
-    const { bombId } = new GetBombFileByIdRequest(req);
-
-    const bomb = await BombDAO.getById(bombId);
-    if (!bomb) throw NotFoundError;
-
-    const file = await downloadBombFile(bombId);
-
-    return res.end(file);
-};
-
-// TODO: Remove lab open constraint
 export const getBombFileByLongId: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
 
@@ -102,7 +84,6 @@ export const getBombFileByLongId: RequestHandler = async (req, res) => {
     return res.end(file);
 };
 
-// TODO: Remove lab open constraint
 export const createBomb: RequestHandler = async (req, res) => {
     const { requester } = res.locals;
     if (requester.isAdmin) throw ForbiddenError;
@@ -111,8 +92,7 @@ export const createBomb: RequestHandler = async (req, res) => {
 
     const lab = await LabDAO.getByName(labName);
     if (!lab) throw NotFoundError;
-    if (requester.isStudent && (!lab.isOpen || lab.isClosed))
-        throw ForbiddenError;
+    if (requester.isStudent && !lab.isOpen) throw ForbiddenError;
 
     const longId = await createStringId(32, async text => {
         const bomb = await BombDAO.getById(text.slice(0, 4), true);

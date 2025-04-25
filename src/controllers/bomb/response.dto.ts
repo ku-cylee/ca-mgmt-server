@@ -6,6 +6,9 @@ export class GetBombListResponse {
     id!: number;
 
     @Expose({ groups: ['admin', 'ta'] })
+    longId!: string;
+
+    @Expose({ groups: ['admin', 'ta'] })
     @Type(() => AuthorDTO)
     author!: AuthorDTO;
 
